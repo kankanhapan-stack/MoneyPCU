@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ระบบการเงินบำรุง รพ.สต. — สสอ.ค้อวัง</title>
+<title>ระบบติดตามสถานะเงินบำรุง รพ.สต.</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Sarabun:wght@400;500;600&display=swap" rel="stylesheet">
@@ -156,7 +156,7 @@ tfoot td{border-top:1px solid var(--line);border-bottom:0;font-weight:600;backgr
 <div id="login" class="loginwrap">
   <div class="loginbox">
     <div class="mark">฿</div>
-    <h1>ระบบการเงินบำรุง รพ.สต.</h1>
+    <h1>ระบบติดตามสถานะเงินบำรุง รพ.สต.</h1>
     <p>สำนักงานสาธารณสุขอำเภอค้อวัง</p>
     <div class="field"><label>ชื่อผู้ใช้</label><input id="lg-u" type="text" placeholder="U03900" autocomplete="username"></div>
     <div class="field"><label>รหัสผ่าน</label><input id="lg-p" type="password" placeholder="P03900" autocomplete="current-password"></div>
@@ -164,8 +164,7 @@ tfoot td{border-top:1px solid var(--line);border-bottom:0;font-weight:600;backgr
     <div id="lg-msg"></div>
     <div class="hintbox">
       ชื่อผู้ใช้คือ <code>U</code> + รหัสสถานบริการ 5 หลัก และรหัสผ่านคือ <code>P</code> + รหัสเดียวกัน<br>
-      ผู้ดูแลระบบระดับอำเภอ: <code>U00342 / P00342</code>
-    </div>
+   </div>
   </div>
 </div>
 
@@ -174,7 +173,7 @@ tfoot td{border-top:1px solid var(--line);border-bottom:0;font-weight:600;backgr
   <aside class="rail">
     <div class="brand">
       <div class="mark">฿</div>
-      <div><b>การเงินบำรุง รพ.สต.</b><span>สสอ.ค้อวัง</span></div>
+      <div><b>สถานะการณ์เงินบำรุง รพ.สต.</b><span>สำนักงานสาธารณสุขอำเภอค้อวัง</span></div>
     </div>
     <nav>
       <div class="grp">ภาพรวม</div>
@@ -466,8 +465,8 @@ async function api(action, payload={}){
 
 /* ---- ข้อมูลตัวอย่างสำหรับทดลองใช้เมื่อยังไม่ผูก Google Sheets ---- */
 const SEED_FAC = [
-  {code:'03900', name:'รพ.สต.บ้านเหล่าน้อย',  addr:'ต.ฟ้าห่วน อ.ค้อวัง จ.ยโสธร',  role:'user'},
-  {code:'03901', name:'รพ.สต.บ้านโพนเมือง',   addr:'ต.ค้อวัง อ.ค้อวัง จ.ยโสธร',   role:'user'},
+  {code:'03900', name:'รพ.สต.บ้านเหล่าน้อย',  addr:'ต.ค้อวัง อ.ค้อวัง จ.ยโสธร',  role:'user'},
+  {code:'03901', name:'รพ.สต.บ้านโพนเมือง',   addr:'ต.ฟ้าห่วน อ.ค้อวัง จ.ยโสธร',   role:'user'},
   {code:'03903', name:'รพ.สต.บ้านตูม',        addr:'ต.กุดน้ำใส อ.ค้อวัง จ.ยโสธร', role:'user'},
   {code:'03904', name:'รพ.สต.บ้านศิริพัฒนา',  addr:'ต.น้ำอ้อม อ.ค้อวัง จ.ยโสธร',  role:'user'},
   {code:'03905', name:'รพ.สต.บ้านน้ำอ้อม',    addr:'ต.น้ำอ้อม อ.ค้อวัง จ.ยโสธร',  role:'user'},
