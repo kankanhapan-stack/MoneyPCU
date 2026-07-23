@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ระบบการเงินบำรุง รพ.สต. — สสอ.ค้อวัง</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Sarabun:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  --ink:#14231f; --ink-2:#4a5c56; --ink-3:#7b8a85;
+  --paper:#eef1ec; --surface:#ffffff; --line:#d6ded6; --line-2:#e9eee8;
+  --pine:#14524a; --pine-2:#1c6f63; --pine-soft:#e3ede9;
+  --sprout:#4f8a53; --brick:#9e4433; --gold:#a8791f;
+  --radius:10px;
+  --shadow:0 1px 2px rgba(20,35,31,.05), 0 8px 24px -18px rgba(20,35,31,.35);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:"Sarabun","IBM Plex Sans Thai",system-ui,sans-serif;
+  font-size:15px; line-height:1.55; -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4,.disp{font-family:"IBM Plex Sans Thai","Sarabun",sans-serif;font-weight:600;letter-spacing:-.01em;margin:0}
+.num{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--pine)}
+
+/* ---------- layout ---------- */
+.app{display:grid;grid-template-columns:238px 1fr;min-height:100vh}
+.rail{background:var(--pine);color:#dbe8e3;padding:20px 14px;display:flex;flex-direction:column;gap:26px;position:sticky;top:0;height:100vh}
+.brand{display:flex;gap:11px;align-items:flex-start;padding:0 6px}
+.brand .mark{width:34px;height:34px;flex:none;border-radius:9px;background:#dff0e8;color:var(--pine);display:grid;place-items:center;font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:15px}
+.brand b{display:block;color:#fff;font-family:"IBM Plex Sans Thai",sans-serif;font-size:14.5px;line-height:1.3}
+.brand span{font-size:11.5px;color:#a9c7bd;letter-spacing:.04em}
+.rail nav{display:flex;flex-direction:column;gap:2px}
+.rail .grp{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#7fa79b;padding:14px 10px 6px;font-family:"IBM Plex Mono",monospace}
+.rail button{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:0;color:#cfe2db;padding:9px 10px;border-radius:8px;cursor:pointer;font-size:14.5px}
+.rail button:hover{background:rgba(255,255,255,.07);color:#fff}
+.rail button.on{background:#dff0e8;color:var(--pine);font-weight:600}
+.rail button .ic{width:17px;text-align:center;opacity:.85}
+.rail .foot{margin-top:auto;border-top:1px solid rgba(255,255,255,.14);padding-top:14px;font-size:12.5px;color:#a9c7bd}
+.rail .foot b{color:#fff;display:block;font-weight:600;font-size:13.5px}
+.rail .foot button{margin-top:8px;border:1px solid rgba(255,255,255,.2);justify-content:center;font-size:13px;padding:7px}
+
+main{padding:26px 30px 60px;max-width:1360px}
+.topbar{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;justify-content:space-between;margin-bottom:22px}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3)}
+h1{font-size:25px;margin-top:3px}
+.sub{color:var(--ink-2);font-size:13.5px;margin-top:3px}
+
+.filters{display:flex;gap:10px;flex-wrap:wrap}
+.field{display:flex;flex-direction:column;gap:4px}
+.field label{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-family:"IBM Plex Mono",monospace}
+select,input[type=text],input[type=date],input[type=number],input[type=password],textarea{
+  background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 11px;min-width:120px;outline:0;
+}
+select:focus,input:focus,textarea:focus{border-color:var(--pine-2);box-shadow:0 0 0 3px rgba(28,111,99,.15)}
+input[type=number],input.money{font-family:"IBM Plex Mono",monospace;text-align:right}
+
+/* ---------- ledger strip (signature) ---------- */
+.ledger{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);display:flex;align-items:stretch;overflow:hidden;margin-bottom:22px}
+.ledger .cell{flex:1 1 0;padding:16px 18px 15px;min-width:0}
+.ledger .op{flex:none;display:grid;place-items:center;width:34px;color:var(--ink-3);font-family:"IBM Plex Mono",monospace;font-size:19px;background:linear-gradient(var(--line-2),var(--line-2)) center/1px 100% no-repeat}
+.ledger .cell .k{font-size:12.5px;color:var(--ink-2);display:flex;align-items:center;gap:7px}
+.ledger .cell .dot{width:7px;height:7px;border-radius:2px;flex:none}
+.ledger .cell .v{font-size:25px;font-weight:600;margin-top:7px;line-height:1.15}
+.ledger .cell .m{font-size:11.5px;color:var(--ink-3);margin-top:3px;font-family:"IBM Plex Mono",monospace}
+.ledger .cell.total{background:var(--pine);color:#fff;flex:1.25 1 0}
+.ledger .cell.total .k,.ledger .cell.total .m{color:#b9d5cc}
+.neg{color:var(--brick)}
+
+.grid{display:grid;gap:18px}
+.g2{grid-template-columns:1fr 1fr}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.card>header{padding:14px 18px 0;display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.card>header h3{font-size:15.5px}
+.card>header .hint{font-size:11.5px;color:var(--ink-3);font-family:"IBM Plex Mono",monospace}
+.card .body{padding:14px 18px 18px}
+.chartbox{position:relative;height:250px}
+.chartbox.tall{height:300px}
+
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-family:"IBM Plex Mono",monospace;font-weight:500;text-align:right;padding:9px 10px;border-bottom:1px solid var(--line)}
+th:first-child,th.l{text-align:left}
+td{padding:10px;border-bottom:1px solid var(--line-2);text-align:right}
+td:first-child,td.l{text-align:left}
+tbody tr:hover{background:#f7faf7}
+tfoot td{border-top:1px solid var(--line);border-bottom:0;font-weight:600;background:#f7faf7}
+.linkish{background:none;border:0;padding:0;color:var(--pine);font-weight:600;cursor:pointer;text-align:left;text-decoration:underline;text-underline-offset:3px;text-decoration-color:#a9cabf}
+.linkish:hover{color:var(--pine-2)}
+.code{font-family:"IBM Plex Mono",monospace;color:var(--ink-2);font-size:13px}
+.tagline{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:3px 9px;border-radius:99px;background:var(--pine-soft);color:var(--pine)}
+
+.btn{background:var(--pine);color:#fff;border:1px solid var(--pine);border-radius:8px;padding:9px 16px;cursor:pointer;font-weight:500}
+.btn:hover{background:var(--pine-2)}
+.btn.ghost{background:transparent;color:var(--pine);border-color:var(--line)}
+.btn.ghost:hover{background:var(--pine-soft)}
+.btn.danger{background:transparent;color:var(--brick);border-color:#e6cdc7}
+.btn.danger:hover{background:#fbf0ee}
+.btn.sm{padding:5px 10px;font-size:13px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:18px;flex-wrap:wrap}
+.tabs button{background:none;border:0;padding:10px 15px;cursor:pointer;color:var(--ink-2);border-bottom:2px solid transparent;margin-bottom:-1px}
+.tabs button.on{color:var(--pine);border-bottom-color:var(--pine);font-weight:600}
+
+.formgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}
+.formgrid .wide{grid-column:1/-1}
+.empty{padding:34px 18px;text-align:center;color:var(--ink-3);font-size:14px}
+.hidden{display:none!important}
+
+/* login */
+.loginwrap{min-height:100vh;display:grid;place-items:center;padding:24px;background:
+  radial-gradient(1200px 600px at 15% -10%, #dfeae4 0%, transparent 60%), var(--paper)}
+.loginbox{width:100%;max-width:390px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:30px 28px}
+.loginbox .mark{width:42px;height:42px;border-radius:11px;background:var(--pine);color:#dff0e8;display:grid;place-items:center;font-family:"IBM Plex Mono",monospace;font-weight:600}
+.loginbox h1{font-size:20px;margin:16px 0 4px}
+.loginbox p{color:var(--ink-2);font-size:13.5px;margin:0 0 22px}
+.loginbox .field{margin-bottom:13px}
+.loginbox input{width:100%}
+.loginbox .btn{width:100%;margin-top:8px;padding:11px}
+.msg{font-size:13px;padding:9px 12px;border-radius:8px;margin-top:12px}
+.msg.err{background:#fbeeeb;color:var(--brick)}
+.msg.ok{background:var(--pine-soft);color:var(--pine)}
+.hintbox{margin-top:18px;font-size:12.5px;color:var(--ink-3);border-top:1px dashed var(--line);padding-top:13px;line-height:1.7}
+.hintbox code{font-family:"IBM Plex Mono",monospace;color:var(--pine)}
+
+#toast{position:fixed;right:20px;bottom:20px;z-index:60;display:flex;flex-direction:column;gap:8px}
+#toast div{background:var(--ink);color:#eaf1ee;padding:11px 16px;border-radius:9px;font-size:13.5px;box-shadow:var(--shadow);animation:pop .25s ease}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}}
+.banner{background:#fdf6e6;border:1px solid #ecd9a8;color:#6b551d;padding:10px 14px;border-radius:9px;font-size:13px;margin-bottom:18px}
+
+@media (max-width:900px){
+  .app{grid-template-columns:1fr}
+  .rail{position:static;height:auto;flex-direction:column}
+  .rail nav{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+  .rail .grp{grid-column:1/-1}
+  main{padding:20px 16px 50px}
+  .g2{grid-template-columns:1fr}
+  .ledger{flex-wrap:wrap}
+  .ledger .cell{flex:1 1 45%;border-top:1px solid var(--line-2)}
+  .ledger .op{display:none}
+  .tablewrap{overflow-x:auto}
+  table{min-width:760px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<!-- ==================== LOGIN ==================== -->
+<div id="login" class="loginwrap">
+  <div class="loginbox">
+    <div class="mark">฿</div>
+    <h1>ระบบการเงินบำรุง รพ.สต.</h1>
+    <p>สำนักงานสาธารณสุขอำเภอค้อวัง</p>
+    <div class="field"><label>ชื่อผู้ใช้</label><input id="lg-u" type="text" placeholder="U03900" autocomplete="username"></div>
+    <div class="field"><label>รหัสผ่าน</label><input id="lg-p" type="password" placeholder="P03900" autocomplete="current-password"></div>
+    <button class="btn" id="lg-btn">เข้าสู่ระบบ</button>
+    <div id="lg-msg"></div>
+    <div class="hintbox">
+      ชื่อผู้ใช้คือ <code>U</code> + รหัสสถานบริการ 5 หลัก และรหัสผ่านคือ <code>P</code> + รหัสเดียวกัน<br>
+      ผู้ดูแลระบบระดับอำเภอ: <code>U00342 / P00342</code>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== APP ==================== -->
+<div id="app" class="app hidden">
+  <aside class="rail">
+    <div class="brand">
+      <div class="mark">฿</div>
+      <div><b>การเงินบำรุง รพ.สต.</b><span>สสอ.ค้อวัง</span></div>
+    </div>
+    <nav>
+      <div class="grp">ภาพรวม</div>
+      <button data-view="dashboard" class="on"><span class="ic">◧</span>แดชบอร์ด</button>
+      <div class="grp">งานประจำ</div>
+      <button data-view="entry"><span class="ic">✎</span>บันทึกรายรับ-รายจ่าย</button>
+      <div class="grp">ตั้งค่า</div>
+      <button data-view="opening"><span class="ic">▤</span>ตั้งค่ายอดยกมา</button>
+      <button data-view="facilities"><span class="ic">⌂</span>ตั้งค่าสถานบริการ</button>
+    </nav>
+    <div class="foot">
+      <b id="me-name">—</b>
+      <span id="me-role" class="code">—</span>
+      <button id="logout">ออกจากระบบ</button>
+    </div>
+  </aside>
+
+  <main>
+    <div id="demo-banner" class="banner hidden">
+      กำลังใช้ <b>ข้อมูลตัวอย่างในเครื่อง</b> — ยังไม่ได้เชื่อม Google Sheets ข้อมูลที่บันทึกจะหายเมื่อรีเฟรช ตั้งค่า <code>API_URL</code> และ <code>API_KEY</code> ที่ต้นไฟล์เพื่อเชื่อมต่อจริง
+    </div>
+
+    <!-- ---------- DASHBOARD ---------- -->
+    <section id="v-dashboard">
+      <div class="topbar">
+        <div>
+          <div class="eyebrow">ภาพรวมสถานการณ์การเงิน</div>
+          <h1 id="dash-title">แดชบอร์ดเงินบำรุง</h1>
+          <div class="sub" id="dash-sub">—</div>
+        </div>
+        <div class="filters">
+          <div class="field"><label>ปีงบประมาณ</label><select id="f-fy"></select></div>
+          <div class="field"><label>สถานบริการ</label><select id="f-fac"></select></div>
+          <div class="field"><label>เดือน</label><select id="f-month"></select></div>
+        </div>
+      </div>
+
+      <div class="ledger" id="dash-ledger"></div>
+
+      <div class="grid g2" style="margin-bottom:18px">
+        <div class="card">
+          <header><h3>ประเภทรายรับ</h3><span class="hint" id="in-total">—</span></header>
+          <div class="body"><div class="chartbox"><canvas id="c-income"></canvas></div></div>
+        </div>
+        <div class="card">
+          <header><h3>ประเภทรายจ่าย</h3><span class="hint" id="ex-total">—</span></header>
+          <div class="body"><div class="chartbox"><canvas id="c-expense"></canvas></div></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:18px">
+        <header><h3>เงินบำรุงคงเหลือรายเดือน</h3><span class="hint">ยอดคงเหลือสะสม ณ สิ้นเดือน · แยกรายสถานบริการ</span></header>
+        <div class="body"><div class="chartbox tall"><canvas id="c-monthly"></canvas></div></div>
+      </div>
+
+      <div class="card">
+        <header><h3>สถานะเงินบำรุงรายสถานบริการ</h3><span class="hint">คลิกชื่อสถานบริการเพื่อดูรายละเอียด</span></header>
+        <div class="body tablewrap"><table id="t-status"></table></div>
+      </div>
+    </section>
+
+    <!-- ---------- FACILITY DETAIL ---------- -->
+    <section id="v-facility" class="hidden">
+      <div class="topbar">
+        <div>
+          <button class="btn ghost sm" id="back-dash" style="margin-bottom:10px">← กลับแดชบอร์ด</button>
+          <div class="eyebrow" id="fd-code">—</div>
+          <h1 id="fd-name">—</h1>
+          <div class="sub" id="fd-sub">—</div>
+        </div>
+        <div class="filters">
+          <div class="field"><label>ปีงบประมาณ</label><select id="fd-fy"></select></div>
+          <div class="field"><label>เดือน</label><select id="fd-month"></select></div>
+        </div>
+      </div>
+      <div class="ledger" id="fd-ledger"></div>
+      <div class="grid g2" style="margin-bottom:18px">
+        <div class="card"><header><h3>ประเภทรายรับ</h3><span class="hint" id="fd-in-total">—</span></header>
+          <div class="body"><div class="chartbox"><canvas id="c-fd-income"></canvas></div></div></div>
+        <div class="card"><header><h3>ประเภทรายจ่าย</h3><span class="hint" id="fd-ex-total">—</span></header>
+          <div class="body"><div class="chartbox"><canvas id="c-fd-expense"></canvas></div></div></div>
+      </div>
+      <div class="card" style="margin-bottom:18px">
+        <header><h3>เงินบำรุงคงเหลือรายเดือน</h3><span class="hint">ยอดคงเหลือสะสม ณ สิ้นเดือน</span></header>
+        <div class="body"><div class="chartbox tall"><canvas id="c-fd-monthly"></canvas></div></div>
+      </div>
+      <div class="card">
+        <header><h3>รายการล่าสุด</h3><span class="hint">20 รายการล่าสุดในปีงบประมาณนี้</span></header>
+        <div class="body tablewrap"><table id="t-fd-txn"></table></div>
+      </div>
+    </section>
+
+    <!-- ---------- ENTRY ---------- -->
+    <section id="v-entry" class="hidden">
+      <div class="topbar">
+        <div>
+          <div class="eyebrow">งานประจำ</div>
+          <h1>บันทึกรายรับ-รายจ่าย</h1>
+          <div class="sub">บันทึกลงชีตของแต่ละสถานบริการโดยตรง</div>
+        </div>
+        <div class="filters">
+          <div class="field"><label>ปีงบประมาณ</label><select id="e-fy"></select></div>
+          <div class="field"><label>สถานบริการ</label><select id="e-fac"></select></div>
+          <div class="field"><label>ช่วงเวลา</label><select id="e-scope">
+            <option value="month">รายเดือน</option><option value="year">รายปีงบประมาณ</option></select></div>
+          <div class="field" id="e-month-wrap"><label>เดือน</label><select id="e-month"></select></div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button data-tab="income" class="on">บันทึกรายรับ</button>
+        <button data-tab="expense">บันทึกรายจ่าย</button>
+        <button data-tab="summary">สรุปสถานการณ์เงินบำรุง</button>
+      </div>
+
+      <div id="tab-income">
+        <div class="card" style="margin-bottom:18px">
+          <header><h3>เพิ่มรายการรับ</h3></header>
+          <div class="body">
+            <div class="formgrid">
+              <div class="field"><label>วันที่</label><input type="date" id="i-date"></div>
+              <div class="field"><label>ประเภทรายรับ</label><select id="i-cat"></select></div>
+              <div class="field"><label>บัญชีที่รับเข้า</label><select id="i-acc"></select></div>
+              <div class="field"><label>จำนวนเงิน (บาท)</label><input type="number" id="i-amt" class="money" step="0.01" min="0" placeholder="0.00"></div>
+              <div class="field wide"><label>รายละเอียด</label><input type="text" id="i-note" placeholder="เช่น รับโอนงบ PP จาก CUP งวดที่ 1"></div>
+            </div>
+            <div style="margin-top:14px"><button class="btn" id="i-save">บันทึกรายรับ</button></div>
+          </div>
+        </div>
+        <div class="card"><header><h3>รายการรับ</h3><span class="hint" id="i-count">—</span></header>
+          <div class="body tablewrap"><table id="t-income"></table></div></div>
+      </div>
+
+      <div id="tab-expense" class="hidden">
+        <div class="card" style="margin-bottom:18px">
+          <header><h3>เพิ่มรายการจ่าย</h3></header>
+          <div class="body">
+            <div class="formgrid">
+              <div class="field"><label>วันที่</label><input type="date" id="x-date"></div>
+              <div class="field"><label>ประเภทรายจ่าย</label><select id="x-cat"></select></div>
+              <div class="field"><label>บัญชีที่จ่ายออก</label><select id="x-acc"></select></div>
+              <div class="field"><label>จำนวนเงิน (บาท)</label><input type="number" id="x-amt" class="money" step="0.01" min="0" placeholder="0.00"></div>
+              <div class="field wide"><label>รายละเอียด</label><input type="text" id="x-note" placeholder="เช่น ค่าไฟฟ้าประจำเดือน"></div>
+            </div>
+            <div style="margin-top:14px"><button class="btn" id="x-save">บันทึกรายจ่าย</button></div>
+          </div>
+        </div>
+        <div class="card"><header><h3>รายการจ่าย</h3><span class="hint" id="x-count">—</span></header>
+          <div class="body tablewrap"><table id="t-expense"></table></div></div>
+      </div>
+
+      <div id="tab-summary" class="hidden">
+        <div class="ledger" id="e-ledger"></div>
+        <div class="card"><header><h3>สรุปตามประเภท</h3><span class="hint" id="e-sum-scope">—</span></header>
+          <div class="body tablewrap"><table id="t-summary"></table></div></div>
+      </div>
+    </section>
+
+    <!-- ---------- OPENING ---------- -->
+    <section id="v-opening" class="hidden">
+      <div class="topbar">
+        <div>
+          <div class="eyebrow">ตั้งค่า</div>
+          <h1>ยอดยกมา ณ 30 กันยายน</h1>
+          <div class="sub">ยอดตั้งต้นของปีงบประมาณ (1 ตุลาคม – 30 กันยายน)</div>
+        </div>
+        <div class="filters">
+          <div class="field"><label>ปีงบประมาณ</label><select id="o-fy"></select></div>
+          <div class="field"><label>สถานบริการ</label><select id="o-fac"></select></div>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:18px">
+        <header><h3>กรอกยอดยกมา</h3><span class="hint" id="o-period">—</span></header>
+        <div class="body">
+          <div class="formgrid">
+            <div class="field"><label>เงินสดในมือ</label><input type="number" id="o-cash" class="money" step="0.01" placeholder="0.00"></div>
+            <div class="field"><label>เงินฝากธนาคาร (เงินบำรุง)</label><input type="number" id="o-bank" class="money" step="0.01" placeholder="0.00"></div>
+            <div class="field"><label>เงินฝากธนาคาร (ค่าเสื่อม)</label><input type="number" id="o-dep" class="money" step="0.01" placeholder="0.00"></div>
+            <div class="field"><label>เงินบำรุงคงเหลือ (รวมอัตโนมัติ)</label><input type="text" id="o-total" class="money" readonly style="background:var(--pine-soft);border-color:#c3dbd2;font-weight:600"></div>
+          </div>
+          <div style="margin-top:14px"><button class="btn" id="o-save">บันทึกยอดยกมา</button></div>
+        </div>
+      </div>
+      <div class="card"><header><h3>ยอดยกมาที่บันทึกไว้</h3><span class="hint" id="o-fy-label">—</span></header>
+        <div class="body tablewrap"><table id="t-opening"></table></div></div>
+    </section>
+
+    <!-- ---------- FACILITIES ---------- -->
+    <section id="v-facilities" class="hidden">
+      <div class="topbar">
+        <div>
+          <div class="eyebrow">ตั้งค่า</div>
+          <h1>สถานบริการ</h1>
+          <div class="sub">รหัส 5 หลักใช้สร้างชื่อผู้ใช้และรหัสผ่านโดยอัตโนมัติ</div>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:18px">
+        <header><h3 id="fc-form-title">เพิ่มสถานบริการ</h3><span class="hint" id="fc-hint">รหัสสถานบริการ 5 หลัก</span></header>
+        <div class="body">
+          <div class="formgrid">
+            <div class="field"><label>รหัสสถานบริการ</label><input type="text" id="fc-code" maxlength="5" placeholder="03900" class="num"></div>
+            <div class="field"><label>ชื่อสถานบริการ</label><input type="text" id="fc-name" placeholder="รพ.สต.บ้าน..."></div>
+            <div class="field wide"><label>ที่อยู่</label><input type="text" id="fc-addr" placeholder="หมู่ที่ ... ตำบล ... อำเภอค้อวัง จังหวัดยโสธร"></div>
+            <div class="field"><label>ชื่อผู้ใช้</label><input type="text" id="fc-user" class="num" readonly style="background:var(--line-2)"></div>
+            <div class="field"><label>รหัสผ่าน</label><input type="text" id="fc-pass" class="num"></div>
+            <div class="field"><label>สิทธิ์ใช้งาน</label><select id="fc-role"><option value="user">เฉพาะสถานบริการนี้</option><option value="admin">ดูได้ทุกสถานบริการ</option></select></div>
+          </div>
+          <div style="margin-top:14px;display:flex;gap:10px">
+            <button class="btn" id="fc-save">บันทึกสถานบริการ</button>
+            <button class="btn ghost hidden" id="fc-cancel">ยกเลิกการแก้ไข</button>
+          </div>
+        </div>
+      </div>
+      <div class="card"><header><h3>รายชื่อสถานบริการ</h3><span class="hint" id="fc-count">—</span></header>
+        <div class="body tablewrap"><table id="t-facilities"></table></div></div>
+    </section>
+  </main>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ============================================================
+   1. ตั้งค่าการเชื่อมต่อ  — แก้ 2 บรรทัดนี้ก่อน deploy
+   ============================================================ */
+const CONFIG = {
+  API_URL: 'https://script.google.com/macros/s/AKfycbwcO_26juqPyh3E8DnaTBFNGtqiUX_4FycsOFvNGri_VAZUmb0jNhV7a4kaGSbcNLM63w/exec',                 // วาง Web app URL ของ Google Apps Script ที่นี่
+  API_KEY: 'kwv-XwNseMgWuDSbSUZEEn7_1Ds9zu8Qgfck'    // ต้องตรงกับ API_KEY ใน Code.gs
+};
+
+/* ============================================================
+   2. ค่าคงที่
+   ============================================================ */
+const FYS = [2567,2568,2569,2570,2571,2572,2573,2574];
+const TH_M  = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+const TH_MS = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+
+const ACCOUNTS = [
+  {k:'cash',    name:'เงินสดในมือ',                  color:'#a8791f'},
+  {k:'bankOp',  name:'เงินฝากธนาคาร (เงินบำรุง)',    color:'#1c6f63'},
+  {k:'bankDep', name:'เงินฝากธนาคาร (ค่าเสื่อม)',     color:'#4f6f8a'}
+];
+
+const CAT_IN = ['เงินงบประมาณ (งบดำเนินงาน)','งบเหมาจ่ายรายหัว (OP/PP) จาก CUP','งบส่งเสริมป้องกันโรค (PP)','งบบริการผู้ป่วยนอก (OP)','ค่าบริการทางการแพทย์ (ค่าเสื่อม)','เงินอุดหนุนจาก อปท.','รายได้ค่ารักษาพยาบาล','เงินบริจาค','ดอกเบี้ยเงินฝาก','รายรับอื่น'];
+const CAT_EX = ['ค่าตอบแทน','ค่าใช้สอย','ค่าวัสดุสำนักงาน','ค่าวัสดุการแพทย์','ค่าวัสดุเชื้อเพลิงและหล่อลื่น','ค่าสาธารณูปโภค','ค่าจ้างเหมาบริการ','ค่าครุภัณฑ์','ค่าที่ดินและสิ่งก่อสร้าง','รายจ่ายอื่น'];
+
+const PIE_IN = ['#14524a','#1c6f63','#3f8f7a','#5faa8c','#84c2a4','#a8d6bd','#c9e6d6','#7a9e6b','#4f8a53','#2f6b3f'];
+const PIE_EX = ['#9e4433','#b4593f','#c47456','#cf8f6e','#a8791f','#c19a45','#8a5b3f','#6f4436','#d6a889','#7c3c46'];
+const FAC_COLORS = ['#14524a','#a8791f','#9e4433','#4f6f8a','#4f8a53','#7c3c46','#1c6f63','#c47456'];
+
+/* ============================================================
+   3. เครื่องมือช่วย
+   ============================================================ */
+const $  = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const money = n => (Number(n)||0).toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2});
+const short = n => { n=Number(n)||0; const a=Math.abs(n);
+  if(a>=1e6) return (n/1e6).toFixed(1)+' ล.'; if(a>=1e3) return (n/1e3).toFixed(0)+' พ.'; return n.toFixed(0); };
+const uid = () => 'T'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+
+function fyOfDate(iso){ const [y,m]=iso.split('-').map(Number); return (m>=10 ? y+1 : y) + 543; }
+function ymOf(iso){ return iso.slice(0,7); }
+function fyMonths(fyBE){
+  const endCE = fyBE-543, out=[];
+  for(let i=0;i<12;i++){ const m=(9+i)%12+1, y = m>=10 ? endCE-1 : endCE;
+    out.push({key:`${y}-${String(m).padStart(2,'0')}`, m, y, label:`${TH_M[m-1]} ${y+543}`, short:`${TH_MS[m-1]} ${String(y+543).slice(2)}`}); }
+  return out;
+}
+function fyRange(fyBE){ const e=fyBE-543; return {from:`${e-1}-10-01`, to:`${e}-09-30`}; }
+function toast(msg){ const d=document.createElement('div'); d.textContent=msg; $('#toast').append(d); setTimeout(()=>d.remove(),3200); }
+function fill(sel, items, val){ sel.innerHTML = items.map(o=>`<option value="${o.v}">${o.t}</option>`).join(''); if(val!=null) sel.value=val; }
+
+/* ============================================================
+   4. ชั้นเชื่อมต่อข้อมูล (Google Sheets ผ่าน Apps Script)
+   ============================================================ */
+const DEMO = !CONFIG.API_URL;
+
+async function api(action, payload={}){
+  if(DEMO) return demoApi(action, payload);
+  const res = await fetch(CONFIG.API_URL, {
+    method:'POST', redirect:'follow',
+    headers:{'Content-Type':'text/plain;charset=utf-8'},
+    body: JSON.stringify(Object.assign({action, apiKey:CONFIG.API_KEY}, payload))
+  });
+  const json = await res.json();
+  if(!json.ok) throw new Error(json.error || 'เซิร์ฟเวอร์ตอบกลับไม่สำเร็จ');
+  return json.data;
+}
+
+/* ---- ข้อมูลตัวอย่างสำหรับทดลองใช้เมื่อยังไม่ผูก Google Sheets ---- */
+const SEED_FAC = [
+  {code:'03900', name:'รพ.สต.บ้านเหล่าน้อย',  addr:'ต.ฟ้าห่วน อ.ค้อวัง จ.ยโสธร',  role:'user'},
+  {code:'03901', name:'รพ.สต.บ้านโพนเมือง',   addr:'ต.ค้อวัง อ.ค้อวัง จ.ยโสธร',   role:'user'},
+  {code:'03903', name:'รพ.สต.บ้านตูม',        addr:'ต.กุดน้ำใส อ.ค้อวัง จ.ยโสธร', role:'user'},
+  {code:'03904', name:'รพ.สต.บ้านศิริพัฒนา',  addr:'ต.น้ำอ้อม อ.ค้อวัง จ.ยโสธร',  role:'user'},
+  {code:'03905', name:'รพ.สต.บ้านน้ำอ้อม',    addr:'ต.น้ำอ้อม อ.ค้อวัง จ.ยโสธร',  role:'user'},
+  {code:'00342', name:'สสอ.ค้อวัง',           addr:'ต.ค้อวัง อ.ค้อวัง จ.ยโสธร',   role:'admin'}
+];
+const demoDB = { facilities: SEED_FAC.map(f=>({...f, user:'U'+f.code, pass:'P'+f.code})), openings: [], txns: [] };
+
+(function seedDemo(){
+  let s=7; const rnd=()=>{ s=(s*1103515245+12345)&0x7fffffff; return s/0x7fffffff; };
+  const base={'03900':820000,'03901':640000,'03903':510000,'03904':430000,'03905':370000,'00342':950000};
+  [2567,2568,2569].forEach((fy,fi)=>{
+    demoDB.facilities.forEach(f=>{
+      const b = base[f.code]*(1+fi*0.06);
+      demoDB.openings.push({fy, code:f.code, cash:Math.round(b*0.05), bankOp:Math.round(b*0.7), bankDep:Math.round(b*0.25)});
+      fyMonths(fy).forEach((mo,mi)=>{
+        if(fy===2569 && mi>9) return;
+        const d = k => `${mo.key}-${String(3+Math.floor(rnd()*22)).padStart(2,'0')}`;
+        for(let i=0;i<3;i++){
+          const cat=CAT_IN[Math.floor(rnd()*6)];
+          demoDB.txns.push({id:uid(),code:f.code,date:d(),fy,type:'income',
+            category:cat, account: cat.includes('ค่าเสื่อม')?'bankDep':(rnd()<.25?'cash':'bankOp'),
+            amount: Math.round((12000+rnd()*95000)/100)*100, note:'รับโอนงวดประจำเดือน'});
+        }
+        for(let i=0;i<4;i++){
+          const cat=CAT_EX[Math.floor(rnd()*CAT_EX.length)];
+          demoDB.txns.push({id:uid(),code:f.code,date:d(),fy,type:'expense',
+            category:cat, account: cat==='ค่าครุภัณฑ์'||cat==='ค่าที่ดินและสิ่งก่อสร้าง'?'bankDep':(rnd()<.35?'cash':'bankOp'),
+            amount: Math.round((4000+rnd()*52000)/100)*100, note:'เบิกจ่ายตามแผน'});
+        }
+      });
+    });
+  });
+})();
+
+function demoApi(action,p){
+  return new Promise(res=>setTimeout(()=>{
+    if(action==='login'){
+      const f = demoDB.facilities.find(x=>x.user===p.username && x.pass===p.password);
+      res(f ? {code:f.code,name:f.name,role:f.role} : null);
+    }
+    else if(action==='bootstrap') res({facilities:demoDB.facilities, openings:demoDB.openings, txns:demoDB.txns});
+    else if(action==='saveFacility'){
+      const i=demoDB.facilities.findIndex(x=>x.code===p.facility.code);
+      if(i>=0) demoDB.facilities[i]=p.facility; else demoDB.facilities.push(p.facility); res(true);
+    }
+    else if(action==='deleteFacility'){ demoDB.facilities=demoDB.facilities.filter(x=>x.code!==p.code); res(true); }
+    else if(action==='saveOpening'){
+      const i=demoDB.openings.findIndex(o=>o.code===p.code && +o.fy===+p.fy);
+      const rec={fy:+p.fy,code:p.code,cash:+p.cash,bankOp:+p.bankOp,bankDep:+p.bankDep};
+      if(i>=0) demoDB.openings[i]=rec; else demoDB.openings.push(rec); res(true);
+    }
+    else if(action==='addTxn'){ demoDB.txns.push(p.txn); res(true); }
+    else if(action==='deleteTxn'){ demoDB.txns=demoDB.txns.filter(t=>t.id!==p.id); res(true); }
+    else res(null);
+  }, 120));
+}
+
+/* ============================================================
+   5. สถานะแอป
+   ============================================================ */
+const S = {
+  user:null, facilities:[], openings:[], txns:[],
+  fy:2569, facCode:'ALL', ym:null,
+  fdCode:null, fdFy:2569, fdYm:null,
+  eFy:2569, eFac:null, eScope:'month', eYm:null, eTab:'income',
+  oFy:2569, oFac:null, editingCode:null
+};
+const charts = {};
+function draw(id, cfg){ if(charts[id]) charts[id].destroy(); charts[id] = new Chart($('#'+id), cfg); }
+
+const facName = c => (S.facilities.find(f=>f.code===c)||{}).name || c;
+const visibleFacilities = () => S.user.role==='admin' ? S.facilities : S.facilities.filter(f=>f.code===S.user.code);
+
+function opening(code, fy){
+  const o = S.openings.find(x=>x.code===code && +x.fy===+fy);
+  return {cash:+(o?.cash||0), bankOp:+(o?.bankOp||0), bankDep:+(o?.bankDep||0)};
+}
+function txnsOf(code, fy){ return S.txns.filter(t=>(code==='ALL'||t.code===code) && +t.fy===+fy); }
+
+/** ยอดคงเหลือแยกบัญชี ณ สิ้นเดือน uptoYm (ไม่ระบุ = ทั้งปี) */
+function balance(code, fy, uptoYm){
+  const codes = code==='ALL' ? visibleFacilities().map(f=>f.code) : [code];
+  let cash=0,bankOp=0,bankDep=0;
+  codes.forEach(c=>{ const o=opening(c,fy); cash+=o.cash; bankOp+=o.bankOp; bankDep+=o.bankDep; });
+  S.txns.forEach(t=>{
+    if(!codes.includes(t.code) || +t.fy!==+fy) return;
+    if(uptoYm && ymOf(t.date) > uptoYm) return;
+    const s = t.type==='income' ? 1 : -1, a=+t.amount||0;
+    if(t.account==='cash') cash+=s*a; else if(t.account==='bankOp') bankOp+=s*a; else bankDep+=s*a;
+  });
+  return {cash,bankOp,bankDep,total:cash+bankOp+bankDep};
+}
+function sumBy(list, key){ const m={}; list.forEach(t=>{ m[t[key]] = (m[t[key]]||0) + (+t.amount||0); }); return m; }
+
+/* ============================================================
+   6. แถบยอดคงเหลือ (ledger strip)
+   ============================================================ */
+function renderLedger(el, b, caption){
+  const cells = [
+    {k:ACCOUNTS[0].name, v:b.cash,    c:ACCOUNTS[0].color},
+    {k:ACCOUNTS[1].name, v:b.bankOp,  c:ACCOUNTS[1].color},
+    {k:ACCOUNTS[2].name, v:b.bankDep, c:ACCOUNTS[2].color}
+  ];
+  el.innerHTML = cells.map((x,i)=>`
+    <div class="cell">
+      <div class="k"><span class="dot" style="background:${x.c}"></span>${x.k}</div>
+      <div class="v num ${x.v<0?'neg':''}">${money(x.v)}</div>
+      <div class="m">บาท</div>
+    </div>${i<2?'<div class="op">+</div>':''}`).join('')
+    + `<div class="op">=</div>
+    <div class="cell total">
+      <div class="k">เงินบำรุงคงเหลือ</div>
+      <div class="v num">${money(b.total)}</div>
+      <div class="m">${caption||'บาท'}</div>
+    </div>`;
+}
+
+/* ============================================================
+   7. แดชบอร์ด
+   ============================================================ */
+function renderDashboard(){
+  const months = fyMonths(S.fy);
+  if(!months.some(m=>m.key===S.ym)) S.ym = defaultYm(S.fy);
+  const mo = months.find(m=>m.key===S.ym);
+  const code = S.facCode;
+  const b = balance(code, S.fy, S.ym);
+
+  $('#dash-title').textContent = code==='ALL' ? 'ภาพรวมทุกสถานบริการ' : facName(code);
+  $('#dash-sub').textContent = `ปีงบประมาณ ${S.fy} (ต.ค. ${S.fy-1} – ก.ย. ${S.fy}) · ข้อมูลสะสมถึงสิ้น${mo.label}`;
+  renderLedger($('#dash-ledger'), b, `ณ สิ้น${mo.label}`);
+
+  // กราฟวงกลม — ทั้งปีงบประมาณถึงเดือนที่เลือก
+  const upto = txnsOf(code, S.fy).filter(t=>ymOf(t.date)<=S.ym)
+    .filter(t=> code!=='ALL' || visibleFacilities().some(f=>f.code===t.code));
+  const inc = upto.filter(t=>t.type==='income'), exp = upto.filter(t=>t.type==='expense');
+  $('#in-total').textContent = 'รวม ' + money(inc.reduce((s,t)=>s+ +t.amount,0)) + ' บาท';
+  $('#ex-total').textContent = 'รวม ' + money(exp.reduce((s,t)=>s+ +t.amount,0)) + ' บาท';
+  doughnut('c-income', sumBy(inc,'category'), PIE_IN);
+  doughnut('c-expense', sumBy(exp,'category'), PIE_EX);
+
+  // กราฟแท่งรายเดือน แยกสถานบริการ
+  const facs = code==='ALL' ? visibleFacilities() : visibleFacilities().filter(f=>f.code===code);
+  draw('c-monthly', {
+    type:'bar',
+    data:{ labels: months.map(m=>m.short),
+      datasets: facs.map((f,i)=>({
+        label:f.name, backgroundColor:FAC_COLORS[i%FAC_COLORS.length], borderRadius:3, maxBarThickness:26,
+        data: months.map(m=> balance(f.code, S.fy, m.key).total)
+      }))},
+    options: barOpts()
+  });
+
+  renderStatusTable(months, mo);
+}
+
+function defaultYm(fy){
+  const ms = fyMonths(fy), now = new Date();
+  const nowKey = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  const hit = ms.find(m=>m.key===nowKey);
+  if(hit) return hit.key;
+  // ถ้าไม่ใช่ปีงบปัจจุบัน ให้ใช้เดือนล่าสุดที่มีข้อมูล
+  const inFy = S.txns.filter(t=>+t.fy===+fy).map(t=>ymOf(t.date)).sort();
+  return inFy.length ? inFy[inFy.length-1] : ms[0].key;
+}
+
+function renderStatusTable(months, mo){
+  const facs = visibleFacilities();
+  const rows = facs.map(f=>{
+    const op = opening(f.code, S.fy), carry = op.cash+op.bankOp+op.bankDep;
+    const all = S.txns.filter(t=>t.code===f.code && +t.fy===+S.fy && ymOf(t.date)<=S.ym);
+    const mth = all.filter(t=>ymOf(t.date)===S.ym);
+    const sum = (l,ty)=>l.filter(t=>t.type===ty).reduce((s,t)=>s+ +t.amount,0);
+    return {f, carry, inM:sum(mth,'income'), inY:sum(all,'income'), exM:sum(mth,'expense'), exY:sum(all,'expense'),
+            bal: balance(f.code,S.fy,S.ym).total};
+  });
+  const t = k => rows.reduce((s,r)=>s+r[k],0);
+  $('#t-status').innerHTML = `
+    <thead><tr>
+      <th class="l">รหัส</th><th class="l">สถานบริการ</th>
+      <th>ยอดยกมา ณ 30 ก.ย.</th><th>รายรับเดือนนี้</th><th>รายรับสะสม</th>
+      <th>รายจ่ายเดือนนี้</th><th>รายจ่ายสะสม</th><th>เงินบำรุงคงเหลือ</th>
+    </tr></thead>
+    <tbody>${rows.map(r=>`
+      <tr>
+        <td class="l code">${r.f.code}</td>
+        <td class="l"><button class="linkish" data-fac="${r.f.code}">${r.f.name}</button></td>
+        <td class="num">${money(r.carry)}</td>
+        <td class="num" style="color:var(--sprout)">${money(r.inM)}</td>
+        <td class="num">${money(r.inY)}</td>
+        <td class="num" style="color:var(--brick)">${money(r.exM)}</td>
+        <td class="num">${money(r.exY)}</td>
+        <td class="num ${r.bal<0?'neg':''}" style="font-weight:600">${money(r.bal)}</td>
+      </tr>`).join('')}</tbody>
+    <tfoot><tr>
+      <td class="l" colspan="2">รวมทุกสถานบริการ (${rows.length})</td>
+      <td class="num">${money(t('carry'))}</td><td class="num">${money(t('inM'))}</td><td class="num">${money(t('inY'))}</td>
+      <td class="num">${money(t('exM'))}</td><td class="num">${money(t('exY'))}</td><td class="num">${money(t('bal'))}</td>
+    </tr></tfoot>`;
+  $$('#t-status [data-fac]').forEach(b=>b.onclick=()=>openFacility(b.dataset.fac));
+}
+
+/* ============================================================
+   8. หน้ารายสถานบริการ
+   ============================================================ */
+function openFacility(code){
+  S.fdCode = code; S.fdFy = S.fy; S.fdYm = S.ym;
+  showView('facility'); renderFacility();
+}
+function renderFacility(){
+  const months = fyMonths(S.fdFy);
+  if(!months.some(m=>m.key===S.fdYm)) S.fdYm = defaultYm(S.fdFy);
+  fill($('#fd-fy'), FYS.map(y=>({v:y,t:'ปีงบประมาณ '+y})), S.fdFy);
+  fill($('#fd-month'), months.map(m=>({v:m.key,t:m.label})), S.fdYm);
+
+  const f = S.facilities.find(x=>x.code===S.fdCode)||{};
+  const mo = months.find(m=>m.key===S.fdYm);
+  $('#fd-code').textContent = 'รหัสสถานบริการ ' + S.fdCode;
+  $('#fd-name').textContent = f.name || S.fdCode;
+  $('#fd-sub').textContent  = (f.addr? f.addr+' · ' : '') + `ปีงบประมาณ ${S.fdFy} · สะสมถึงสิ้น${mo.label}`;
+  renderLedger($('#fd-ledger'), balance(S.fdCode,S.fdFy,S.fdYm), `ณ สิ้น${mo.label}`);
+
+  const upto = S.txns.filter(t=>t.code===S.fdCode && +t.fy===+S.fdFy && ymOf(t.date)<=S.fdYm);
+  const inc = upto.filter(t=>t.type==='income'), exp = upto.filter(t=>t.type==='expense');
+  $('#fd-in-total').textContent = 'รวม ' + money(inc.reduce((s,t)=>s+ +t.amount,0)) + ' บาท';
+  $('#fd-ex-total').textContent = 'รวม ' + money(exp.reduce((s,t)=>s+ +t.amount,0)) + ' บาท';
+  doughnut('c-fd-income', sumBy(inc,'category'), PIE_IN);
+  doughnut('c-fd-expense', sumBy(exp,'category'), PIE_EX);
+
+  draw('c-fd-monthly', {
+    type:'bar',
+    data:{ labels: months.map(m=>m.short), datasets:[{
+      label:'เงินบำรุงคงเหลือ', backgroundColor:'#14524a', borderRadius:3, maxBarThickness:34,
+      data: months.map(m=>balance(S.fdCode,S.fdFy,m.key).total) }]},
+    options: barOpts(false)
+  });
+
+  const rows = S.txns.filter(t=>t.code===S.fdCode && +t.fy===+S.fdFy)
+    .sort((a,b)=>b.date.localeCompare(a.date)).slice(0,20);
+  $('#t-fd-txn').innerHTML = rows.length ? `
+    <thead><tr><th class="l">วันที่</th><th class="l">ประเภท</th><th class="l">รายการ</th><th class="l">บัญชี</th><th>รับ</th><th>จ่าย</th></tr></thead>
+    <tbody>${rows.map(t=>`<tr>
+      <td class="l code">${beDate(t.date)}</td>
+      <td class="l">${t.category}</td>
+      <td class="l" style="color:var(--ink-2)">${t.note||'—'}</td>
+      <td class="l" style="font-size:13px">${accName(t.account)}</td>
+      <td class="num" style="color:var(--sprout)">${t.type==='income'?money(t.amount):''}</td>
+      <td class="num" style="color:var(--brick)">${t.type==='expense'?money(t.amount):''}</td>
+    </tr>`).join('')}</tbody>` : `<tbody><tr><td class="empty" colspan="6">ยังไม่มีรายการในปีงบประมาณนี้</td></tr></tbody>`;
+}
+const accName = k => (ACCOUNTS.find(a=>a.k===k)||{}).name || k;
+function beDate(iso){ const [y,m,d]=iso.split('-'); return `${d}/${m}/${+y+543}`; }
+
+/* ============================================================
+   9. กราฟ
+   ============================================================ */
+function doughnut(id, map, palette){
+  const entries = Object.entries(map).filter(([,v])=>v>0).sort((a,b)=>b[1]-a[1]);
+  if(!entries.length){
+    if(charts[id]) charts[id].destroy();
+    const cv=$('#'+id), ctx=cv.getContext('2d');
+    ctx.clearRect(0,0,cv.width,cv.height); return;
+  }
+  draw(id, {
+    type:'doughnut',
+    data:{ labels: entries.map(e=>e[0]),
+      datasets:[{ data: entries.map(e=>e[1]), backgroundColor: entries.map((_,i)=>palette[i%palette.length]),
+        borderColor:'#fff', borderWidth:2, hoverOffset:6 }]},
+    options:{ responsive:true, maintainAspectRatio:false, cutout:'56%',
+      plugins:{
+        legend:{position:'right', labels:{boxWidth:10,boxHeight:10,padding:9,font:{family:'Sarabun',size:12}}},
+        tooltip:{ callbacks:{ label: c => ` ${c.label}: ${money(c.raw)} บาท (${(c.raw/c.dataset.data.reduce((a,b)=>a+b,0)*100).toFixed(1)}%)` } }
+      }}
+  });
+}
+function barOpts(legend=true){
+  return { responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{display:legend, position:'bottom', labels:{boxWidth:10,boxHeight:10,padding:12,font:{family:'Sarabun',size:12}}},
+      tooltip:{ callbacks:{ label: c => ` ${c.dataset.label}: ${money(c.raw)} บาท` } } },
+    scales:{ x:{grid:{display:false}, ticks:{font:{family:'IBM Plex Mono',size:11}}},
+      y:{ grid:{color:'#e9eee8'}, border:{display:false},
+        ticks:{ font:{family:'IBM Plex Mono',size:11}, callback:v=>short(v) } } } };
+}
+
+/* ============================================================
+   10. บันทึกรายรับ-รายจ่าย
+   ============================================================ */
+function renderEntry(){
+  const months = fyMonths(S.eFy);
+  if(!months.some(m=>m.key===S.eYm)) S.eYm = defaultYm(S.eFy);
+  fill($('#e-month'), months.map(m=>({v:m.key,t:m.label})), S.eYm);
+  $('#e-month-wrap').classList.toggle('hidden', S.eScope!=='month');
+
+  const list = S.txns.filter(t=>t.code===S.eFac && +t.fy===+S.eFy &&
+    (S.eScope==='year' || ymOf(t.date)===S.eYm)).sort((a,b)=>b.date.localeCompare(a.date));
+  const inc = list.filter(t=>t.type==='income'), exp = list.filter(t=>t.type==='expense');
+  $('#i-count').textContent = `${inc.length} รายการ · รวม ${money(inc.reduce((s,t)=>s+ +t.amount,0))} บาท`;
+  $('#x-count').textContent = `${exp.length} รายการ · รวม ${money(exp.reduce((s,t)=>s+ +t.amount,0))} บาท`;
+  txnTable($('#t-income'), inc, 'ยังไม่มีรายการรับในช่วงที่เลือก');
+  txnTable($('#t-expense'), exp, 'ยังไม่มีรายการจ่ายในช่วงที่เลือก');
+
+  // สรุป
+  const upto = S.eScope==='year' ? months[11].key : S.eYm;
+  renderLedger($('#e-ledger'), balance(S.eFac, S.eFy, upto),
+    S.eScope==='year' ? `ณ สิ้นปีงบประมาณ ${S.eFy}` : 'ณ สิ้น'+months.find(m=>m.key===S.eYm).label);
+  $('#e-sum-scope').textContent = `${facName(S.eFac)} · ` + (S.eScope==='year' ? `ทั้งปีงบประมาณ ${S.eFy}` : months.find(m=>m.key===S.eYm).label);
+
+  const mIn=sumBy(inc,'category'), mEx=sumBy(exp,'category');
+  const line = (label,map,color)=> Object.entries(map).sort((a,b)=>b[1]-a[1])
+    .map(([k,v])=>`<tr><td class="l">${label}</td><td class="l">${k}</td><td class="num" style="color:${color}">${money(v)}</td></tr>`).join('');
+  const ti=inc.reduce((s,t)=>s+ +t.amount,0), tx=exp.reduce((s,t)=>s+ +t.amount,0);
+  $('#t-summary').innerHTML = `
+    <thead><tr><th class="l">หมวด</th><th class="l">ประเภท</th><th>จำนวนเงิน</th></tr></thead>
+    <tbody>${line('รายรับ',mIn,'var(--sprout)')}${line('รายจ่าย',mEx,'var(--brick)')}
+      ${!inc.length&&!exp.length?'<tr><td class="empty" colspan="3">ยังไม่มีข้อมูลในช่วงที่เลือก</td></tr>':''}</tbody>
+    <tfoot>
+      <tr><td class="l" colspan="2">รวมรายรับ</td><td class="num">${money(ti)}</td></tr>
+      <tr><td class="l" colspan="2">รวมรายจ่าย</td><td class="num">${money(tx)}</td></tr>
+      <tr><td class="l" colspan="2">รายรับสูงกว่ารายจ่าย</td><td class="num ${ti-tx<0?'neg':''}">${money(ti-tx)}</td></tr>
+    </tfoot>`;
+}
+function txnTable(el, rows, emptyMsg){
+  el.innerHTML = rows.length ? `
+    <thead><tr><th class="l">วันที่</th><th class="l">ประเภท</th><th class="l">รายละเอียด</th><th class="l">บัญชี</th><th>จำนวนเงิน</th><th></th></tr></thead>
+    <tbody>${rows.map(t=>`<tr>
+      <td class="l code">${beDate(t.date)}</td>
+      <td class="l">${t.category}</td>
+      <td class="l" style="color:var(--ink-2)">${t.note||'—'}</td>
+      <td class="l" style="font-size:13px">${accName(t.account)}</td>
+      <td class="num" style="font-weight:600">${money(t.amount)}</td>
+      <td><button class="btn danger sm" data-del="${t.id}">ลบ</button></td>
+    </tr>`).join('')}</tbody>` : `<tbody><tr><td class="empty" colspan="6">${emptyMsg}</td></tr></tbody>`;
+  el.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>delTxn(b.dataset.del));
+}
+async function delTxn(id){
+  if(!confirm('ลบรายการนี้ออกจากชีตของสถานบริการ?')) return;
+  const t = S.txns.find(x=>x.id===id);
+  await api('deleteTxn',{code:t.code,id});
+  S.txns = S.txns.filter(x=>x.id!==id);
+  toast('ลบรายการแล้ว'); renderEntry();
+}
+async function addTxn(type){
+  const p = type==='income' ? 'i' : 'x';
+  const date=$('#'+p+'-date').value, cat=$('#'+p+'-cat').value, acc=$('#'+p+'-acc').value;
+  const amt=parseFloat($('#'+p+'-amt').value), note=$('#'+p+'-note').value.trim();
+  if(!date) return toast('เลือกวันที่ก่อนบันทึก');
+  if(!(amt>0)) return toast('กรอกจำนวนเงินให้มากกว่า 0');
+  const fy = fyOfDate(date);
+  if(fy !== +S.eFy && !confirm(`วันที่ ${beDate(date)} อยู่ในปีงบประมาณ ${fy} ไม่ใช่ ${S.eFy} ต้องการบันทึกต่อหรือไม่?`)) return;
+  const txn = {id:uid(), code:S.eFac, date, fy, type, category:cat, account:acc, amount:amt, note};
+  await api('addTxn',{code:S.eFac, txn});
+  S.txns.push(txn);
+  $('#'+p+'-amt').value=''; $('#'+p+'-note').value='';
+  toast(type==='income'?'บันทึกรายรับแล้ว':'บันทึกรายจ่ายแล้ว');
+  renderEntry();
+}
+
+/* ============================================================
+   11. ยอดยกมา
+   ============================================================ */
+function renderOpening(){
+  const o = S.openings.find(x=>x.code===S.oFac && +x.fy===+S.oFy);
+  $('#o-cash').value = o? o.cash : '';
+  $('#o-bank').value = o? o.bankOp : '';
+  $('#o-dep').value  = o? o.bankDep : '';
+  $('#o-period').textContent = `ยอด ณ 30 กันยายน ${S.oFy-1} ยกไปเป็นยอดตั้งต้นปีงบประมาณ ${S.oFy}`;
+  $('#o-fy-label').textContent = `ปีงบประมาณ ${S.oFy}`;
+  calcOpeningTotal();
+
+  const facs = visibleFacilities();
+  $('#t-opening').innerHTML = `
+    <thead><tr><th class="l">รหัส</th><th class="l">สถานบริการ</th><th>เงินสดในมือ</th><th>ธนาคาร (เงินบำรุง)</th><th>ธนาคาร (ค่าเสื่อม)</th><th>รวมยกมา</th></tr></thead>
+    <tbody>${facs.map(f=>{ const x=opening(f.code,S.oFy); const tot=x.cash+x.bankOp+x.bankDep;
+      return `<tr><td class="l code">${f.code}</td><td class="l">${f.name}</td>
+        <td class="num">${money(x.cash)}</td><td class="num">${money(x.bankOp)}</td>
+        <td class="num">${money(x.bankDep)}</td><td class="num" style="font-weight:600">${money(tot)}</td></tr>`;}).join('')}</tbody>
+    <tfoot><tr><td class="l" colspan="2">รวม</td>
+      ${['cash','bankOp','bankDep'].map(k=>`<td class="num">${money(facs.reduce((s,f)=>s+opening(f.code,S.oFy)[k],0))}</td>`).join('')}
+      <td class="num">${money(facs.reduce((s,f)=>{const x=opening(f.code,S.oFy);return s+x.cash+x.bankOp+x.bankDep;},0))}</td></tr></tfoot>`;
+}
+function calcOpeningTotal(){
+  const v = id => parseFloat($(id).value)||0;
+  $('#o-total').value = money(v('#o-cash')+v('#o-bank')+v('#o-dep'));
+}
+
+/* ============================================================
+   12. ตั้งค่าสถานบริการ
+   ============================================================ */
+function renderFacilities(){
+  const admin = S.user.role==='admin';
+  $('#fc-count').textContent = `${S.facilities.length} แห่ง`;
+  $('#t-facilities').innerHTML = `
+    <thead><tr><th class="l">รหัส</th><th class="l">ชื่อสถานบริการ</th><th class="l">ที่อยู่</th><th class="l">ชื่อผู้ใช้</th><th class="l">รหัสผ่าน</th><th class="l">สิทธิ์</th><th class="l">การจัดการ</th></tr></thead>
+    <tbody>${S.facilities.map(f=>`<tr>
+      <td class="l code">${f.code}</td>
+      <td class="l">${f.name}</td>
+      <td class="l" style="color:var(--ink-2);font-size:13.5px">${f.addr||'—'}</td>
+      <td class="l code">${f.user}</td>
+      <td class="l code">${admin? f.pass : '••••••'}</td>
+      <td class="l">${f.role==='admin'?'<span class="tagline">ทุกสถานบริการ</span>':'เฉพาะแห่งนี้'}</td>
+      <td class="l">${admin?`<button class="btn ghost sm" data-edit="${f.code}">แก้ไข</button>
+        <button class="btn danger sm" data-rm="${f.code}">ลบ</button>`:'—'}</td>
+    </tr>`).join('')}</tbody>`;
+  $$('#t-facilities [data-edit]').forEach(b=>b.onclick=()=>editFacility(b.dataset.edit));
+  $$('#t-facilities [data-rm]').forEach(b=>b.onclick=()=>removeFacility(b.dataset.rm));
+}
+function editFacility(code){
+  const f = S.facilities.find(x=>x.code===code);
+  S.editingCode = code;
+  $('#fc-code').value=f.code; $('#fc-code').readOnly=true;
+  $('#fc-name').value=f.name; $('#fc-addr').value=f.addr||'';
+  $('#fc-user').value=f.user; $('#fc-pass').value=f.pass; $('#fc-role').value=f.role||'user';
+  $('#fc-form-title').textContent='แก้ไขสถานบริการ '+code;
+  $('#fc-cancel').classList.remove('hidden');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function resetFacilityForm(){
+  S.editingCode=null;
+  ['#fc-code','#fc-name','#fc-addr','#fc-user','#fc-pass'].forEach(i=>$(i).value='');
+  $('#fc-code').readOnly=false; $('#fc-role').value='user';
+  $('#fc-form-title').textContent='เพิ่มสถานบริการ';
+  $('#fc-cancel').classList.add('hidden');
+}
+async function saveFacility(){
+  const code=$('#fc-code').value.trim(), name=$('#fc-name').value.trim();
+  if(!/^\d{5}$/.test(code)) return toast('รหัสสถานบริการต้องเป็นตัวเลข 5 หลัก');
+  if(!name) return toast('กรอกชื่อสถานบริการ');
+  if(!S.editingCode && S.facilities.some(f=>f.code===code)) return toast('มีรหัสนี้ในระบบแล้ว');
+  const facility = {code, name, addr:$('#fc-addr').value.trim(),
+    user:'U'+code, pass:$('#fc-pass').value.trim()||'P'+code, role:$('#fc-role').value};
+  await api('saveFacility',{facility});
+  const i=S.facilities.findIndex(f=>f.code===code);
+  if(i>=0) S.facilities[i]=facility; else S.facilities.push(facility);
+  resetFacilityForm(); renderFacilities(); refreshFacilityPickers();
+  toast('บันทึกสถานบริการแล้ว');
+}
+async function removeFacility(code){
+  if(code===S.user.code) return toast('ลบสถานบริการของผู้ใช้ที่กำลังเข้าระบบไม่ได้');
+  if(!confirm(`ลบ ${facName(code)} ออกจากระบบ? ข้อมูลในชีตของสถานบริการจะยังอยู่`)) return;
+  await api('deleteFacility',{code});
+  S.facilities = S.facilities.filter(f=>f.code!==code);
+  renderFacilities(); refreshFacilityPickers(); toast('ลบสถานบริการแล้ว');
+}
+
+/* ============================================================
+   13. เมนู / มุมมอง
+   ============================================================ */
+const VIEWS = ['dashboard','facility','entry','opening','facilities'];
+function showView(v){
+  VIEWS.forEach(x=>$('#v-'+x).classList.toggle('hidden', x!==v));
+  $$('.rail nav button').forEach(b=>b.classList.toggle('on', b.dataset.view===v || (v==='facility'&&b.dataset.view==='dashboard')));
+  if(v==='dashboard') renderDashboard();
+  if(v==='entry') renderEntry();
+  if(v==='opening') renderOpening();
+  if(v==='facilities') renderFacilities();
+  window.scrollTo({top:0});
+}
+function refreshFacilityPickers(){
+  const facs = visibleFacilities();
+  const opts = facs.map(f=>({v:f.code,t:f.name}));
+  fill($('#f-fac'), (S.user.role==='admin'?[{v:'ALL',t:'ทุกสถานบริการ'}]:[]).concat(opts), S.facCode);
+  if(!$('#f-fac').value){ S.facCode = facs[0]?.code; $('#f-fac').value=S.facCode; }
+  if(!facs.some(f=>f.code===S.eFac)) S.eFac = facs[0]?.code;
+  if(!facs.some(f=>f.code===S.oFac)) S.oFac = facs[0]?.code;
+  fill($('#e-fac'), opts, S.eFac);
+  fill($('#o-fac'), opts, S.oFac);
+}
+
+/* ============================================================
+   14. เข้าสู่ระบบ / เริ่มต้น
+   ============================================================ */
+$('#lg-btn').onclick = doLogin;
+$('#lg-p').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
+$('#lg-u').addEventListener('keydown', e=>{ if(e.key==='Enter') $('#lg-p').focus(); });
+
+async function doLogin(){
+  const u=$('#lg-u').value.trim(), p=$('#lg-p').value;
+  const msg=$('#lg-msg');
+  if(!u||!p){ msg.className='msg err'; msg.textContent='กรอกชื่อผู้ใช้และรหัสผ่าน'; return; }
+  $('#lg-btn').disabled=true; $('#lg-btn').textContent='กำลังตรวจสอบ…';
+  try{
+    const user = await api('login',{username:u,password:p});
+    if(!user){ msg.className='msg err'; msg.textContent='ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง'; return; }
+    S.user=user; await start();
+  }catch(err){ msg.className='msg err'; msg.textContent='เชื่อมต่อไม่สำเร็จ: '+err.message; }
+  finally{ $('#lg-btn').disabled=false; $('#lg-btn').textContent='เข้าสู่ระบบ'; }
+}
+
+async function start(){
+  const d = await api('bootstrap',{});
+  S.facilities = d.facilities; S.openings = d.openings; S.txns = d.txns;
+  $('#login').classList.add('hidden'); $('#app').classList.remove('hidden');
+  $('#demo-banner').classList.toggle('hidden', !DEMO);
+  $('#me-name').textContent = S.user.name;
+  $('#me-role').textContent = S.user.role==='admin' ? 'ผู้ดูแลระดับอำเภอ' : 'รหัส '+S.user.code;
+
+  const fyOpts = FYS.map(y=>({v:y,t:'ปีงบประมาณ '+y}));
+  const nowFy = fyOfDate(new Date().toISOString().slice(0,10));
+  S.fy = S.eFy = S.oFy = FYS.includes(nowFy) ? nowFy : 2569;
+  fill($('#f-fy'), fyOpts, S.fy); fill($('#e-fy'), fyOpts, S.eFy); fill($('#o-fy'), fyOpts, S.oFy);
+  fill($('#f-month'), fyMonths(S.fy).map(m=>({v:m.key,t:m.label})), defaultYm(S.fy));
+  S.ym = $('#f-month').value;
+  S.facCode = S.user.role==='admin' ? 'ALL' : S.user.code;
+  refreshFacilityPickers();
+
+  fill($('#i-cat'), CAT_IN.map(c=>({v:c,t:c})));
+  fill($('#x-cat'), CAT_EX.map(c=>({v:c,t:c})));
+  fill($('#i-acc'), ACCOUNTS.map(a=>({v:a.k,t:a.name})));
+  fill($('#x-acc'), ACCOUNTS.map(a=>({v:a.k,t:a.name})));
+  const today = new Date().toISOString().slice(0,10);
+  $('#i-date').value = today; $('#x-date').value = today;
+
+  showView('dashboard');
+}
+
+/* ---- ผูก event ---- */
+$$('.rail nav button').forEach(b=>b.onclick=()=>showView(b.dataset.view));
+$('#logout').onclick = ()=>location.reload();
+$('#back-dash').onclick = ()=>showView('dashboard');
+
+$('#f-fy').onchange = e=>{ S.fy=+e.target.value; S.ym=defaultYm(S.fy);
+  fill($('#f-month'), fyMonths(S.fy).map(m=>({v:m.key,t:m.label})), S.ym); renderDashboard(); };
+$('#f-fac').onchange = e=>{ S.facCode=e.target.value; renderDashboard(); };
+$('#f-month').onchange = e=>{ S.ym=e.target.value; renderDashboard(); };
+
+$('#fd-fy').onchange = e=>{ S.fdFy=+e.target.value; S.fdYm=defaultYm(S.fdFy); renderFacility(); };
+$('#fd-month').onchange = e=>{ S.fdYm=e.target.value; renderFacility(); };
+
+$$('.tabs [data-tab]').forEach(b=>b.onclick=()=>{
+  S.eTab=b.dataset.tab;
+  $$('.tabs [data-tab]').forEach(x=>x.classList.toggle('on', x===b));
+  ['income','expense','summary'].forEach(t=>$('#tab-'+t).classList.toggle('hidden', t!==S.eTab));
+});
+$('#e-fy').onchange = e=>{ S.eFy=+e.target.value; renderEntry(); };
+$('#e-fac').onchange = e=>{ S.eFac=e.target.value; renderEntry(); };
+$('#e-scope').onchange = e=>{ S.eScope=e.target.value; renderEntry(); };
+$('#e-month').onchange = e=>{ S.eYm=e.target.value; renderEntry(); };
+$('#i-save').onclick = ()=>addTxn('income');
+$('#x-save').onclick = ()=>addTxn('expense');
+
+$('#o-fy').onchange = e=>{ S.oFy=+e.target.value; renderOpening(); };
+$('#o-fac').onchange = e=>{ S.oFac=e.target.value; renderOpening(); };
+['#o-cash','#o-bank','#o-dep'].forEach(i=>$(i).addEventListener('input', calcOpeningTotal));
+$('#o-save').onclick = async ()=>{
+  const v = id => parseFloat($(id).value)||0;
+  const rec = {fy:S.oFy, code:S.oFac, cash:v('#o-cash'), bankOp:v('#o-bank'), bankDep:v('#o-dep')};
+  await api('saveOpening', rec);
+  const i = S.openings.findIndex(o=>o.code===rec.code && +o.fy===+rec.fy);
+  if(i>=0) S.openings[i]=rec; else S.openings.push(rec);
+  toast('บันทึกยอดยกมาแล้ว'); renderOpening();
+};
+
+$('#fc-code').addEventListener('input', e=>{
+  const c=e.target.value.trim();
+  $('#fc-user').value = c? 'U'+c : '';
+  if(!S.editingCode) $('#fc-pass').value = c? 'P'+c : '';
+});
+$('#fc-save').onclick = saveFacility;
+$('#fc-cancel').onclick = resetFacilityForm;
+
+/* แสดงคำใบ้เมื่อยังไม่ผูก Google Sheets */
+if(DEMO){
+  $('#lg-u').value='U00342'; $('#lg-p').value='P00342';
+}
+</script>
+</body>
+</html>
+
