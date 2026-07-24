@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ระบบการเงินบำรุง รพ.สต. — สสอ.ค้อวัง</title>
+<title>ระบบบริหารจัดการการเงินการคลัง</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Sarabun:wght@400;500;600&display=swap" rel="stylesheet">
@@ -183,7 +183,7 @@ table.wide th,table.wide td{padding:7px 8px}
   <aside class="rail">
     <div class="brand">
       <div class="mark">฿</div>
-      <div><b>การเงินบำรุง รพ.สต.</b><span>สสอ.ค้อวัง</span></div>
+      <div><b>สถานการณ์เงินบำรุง รพ.สต.</b><span>สสอ.ค้อวัง</span></div>
     </div>
     <nav>
       <div class="grp">ภาพรวม</div>
@@ -509,8 +509,8 @@ table.wide th,table.wide td{padding:7px 8px}
    1. ตั้งค่าการเชื่อมต่อ — แก้ 2 บรรทัดนี้ก่อน deploy
    ============================================================ */
 const CONFIG = {
-  API_URL: '',                 // วาง Web app URL ของ Google Apps Script ที่นี่
-  API_KEY: 'CHANGE-ME-1234'    // ต้องตรงกับ API_KEY ใน Code.gs
+ API_URL: 'https://script.google.com/macros/s/AKfycbwcO_26juqPyh3E8DnaTBFNGtqiUX_4FycsOFvNGri_VAZUmb0jNhV7a4kaGSbcNLM63w/exec',                 // วาง Web app URL ของ Google Apps Script ที่นี่
+  API_KEY: 'kwv-XwNseMgWuDSbSUZEEn7_1Ds9zu8Qgfck'    // ต้องตรงกับ API_KEY ใน Code.gs
 };
 
 /* ============================================================
@@ -560,7 +560,7 @@ const EXPENSE_TREE = {
   'ค่าสาธารณูปโภค': ['ค่าน้ำประปา','ค่าไฟฟ้า','ค่าโทรศัพท์/ค่าอินเทอร์เน็ต'],
   'ค่าที่ดินและสิ่งก่อสร้าง': ['ค่าที่ดิน','ค่าก่อสร้าง'],
   'ค่าใช้จ่ายอื่น ๆ': [
-    'ค่าใช้จ่ายโครงการ CUP/กองทุน UC ตำบล','ภาษีหัก ณ ที่จ่าย','รายจ่ายงบค่าเสื่อม',
+    'ค่าใช้จ่ายโครงการ CUP/กองทุน UC ตำบล','นำส่งภาษีหัก ณ ที่จ่าย','รายจ่ายงบค่าเสื่อม',
     'รายจ่ายโอนคืน รพ.สต./สสอ.','ค่าใช้จ่ายอื่น ๆ']
 };
 
