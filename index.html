@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>เธฃเธฐเธเธเธเธฒเธฃเน€เธเธดเธเธเธณเธฃเธธเธ เธฃเธ.เธชเธ•. โ€” เธชเธชเธญ.เธเนเธญเธงเธฑเธ</title>
+<title>ระบบการเงินบำรุง รพ.สต. — สสอ.ค้อวัง</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Sarabun:wght@400;500;600&display=swap" rel="stylesheet">
@@ -111,7 +111,7 @@ tr.sechead td{background:var(--pine);color:#fff;font-weight:600;font-size:13px;l
 .tabs button{background:none;border:0;padding:10px 15px;cursor:pointer;color:var(--ink-2);border-bottom:2px solid transparent;margin-bottom:-1px}
 .tabs button.on{color:var(--pine);border-bottom-color:var(--pine);font-weight:600}
 
-/* เธเธธเนเธกเน€เธฅเธทเธญเธเธฃเธฒเธขเธเธฒเธเนเธเธเธเธฒเธฃเนเธ” */
+/* ปุ่มเลือกรายงานแบบการ์ด */
 .repchoice{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:14px;margin-bottom:22px}
 .repbtn{text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;cursor:pointer;box-shadow:var(--shadow);transition:border-color .15s}
 .repbtn:hover{border-color:var(--pine-2)}
@@ -182,46 +182,46 @@ table.wide th,table.wide td{padding:7px 8px}
 <div class="app">
   <aside class="rail">
     <div class="brand">
-      <div class="mark">เธฟ</div>
-      <div><b>เธเธฒเธฃเน€เธเธดเธเธเธณเธฃเธธเธ เธฃเธ.เธชเธ•.</b><span>เธชเธชเธญ.เธเนเธญเธงเธฑเธ</span></div>
+      <div class="mark">฿</div>
+      <div><b>การเงินบำรุง รพ.สต.</b><span>สสอ.ค้อวัง</span></div>
     </div>
     <nav>
-      <div class="grp">เธ เธฒเธเธฃเธงเธก</div>
-      <button data-view="dashboard" class="on"><span class="ic">โ—ง</span>เนเธ”เธเธเธญเธฃเนเธ”</button>
-      <div class="grp" data-auth>เธเธฒเธเธเธฃเธฐเธเธณ</div>
-      <button data-view="entry" data-auth><span class="ic">โ</span>เธเธฑเธเธ—เธถเธเธฃเธฒเธขเธฃเธฑเธ-เธฃเธฒเธขเธเนเธฒเธข</button>
-      <button data-view="reports" data-auth><span class="ic">โ–ค</span>เธฃเธฒเธขเธเธฒเธเธเธฒเธฃเน€เธเธดเธ</button>
-      <div class="grp" data-auth>เธฃเธฐเธเธ</div>
-      <button data-view="settings" data-auth><span class="ic">โ</span>เธ•เธฑเนเธเธเนเธฒเธฃเธฐเธเธ</button>
+      <div class="grp">ภาพรวม</div>
+      <button data-view="dashboard" class="on"><span class="ic">◧</span>แดชบอร์ด</button>
+      <div class="grp" data-auth>งานประจำ</div>
+      <button data-view="entry" data-auth><span class="ic">✎</span>บันทึกรายรับ-รายจ่าย</button>
+      <button data-view="reports" data-auth><span class="ic">▤</span>รายงานการเงิน</button>
+      <div class="grp" data-auth>ระบบ</div>
+      <button data-view="settings" data-auth><span class="ic">⚙</span>ตั้งค่าระบบ</button>
     </nav>
     <div class="foot">
-      <b id="me-name">เธเธนเนเน€เธขเธตเนเธขเธกเธเธก</b>
-      <span id="me-role" class="code">เธ”เธนเธ เธฒเธเธฃเธงเธกเนเธ”เนเธญเธขเนเธฒเธเน€เธ”เธตเธขเธง</span>
-      <button id="btn-login">เน€เธเนเธฒเธชเธนเนเธฃเธฐเธเธ</button>
-      <button id="btn-logout" class="hidden">เธญเธญเธเธเธฒเธเธฃเธฐเธเธ</button>
+      <b id="me-name">ผู้เยี่ยมชม</b>
+      <span id="me-role" class="code">ดูภาพรวมได้เท่านั้น</span>
+      <button id="btn-login">เข้าสู่ระบบ</button>
+      <button id="btn-logout" class="hidden">ออกจากระบบ</button>
     </div>
   </aside>
 
   <main>
     <div id="demo-banner" class="banner hidden">
-      เธเธณเธฅเธฑเธเนเธเน <b>เธเนเธญเธกเธนเธฅเธ•เธฑเธงเธญเธขเนเธฒเธเนเธเน€เธเธฃเธทเนเธญเธ</b> โ€” เธขเธฑเธเนเธกเนเนเธ”เนเน€เธเธทเนเธญเธก Google Sheets เธเนเธญเธกเธนเธฅเธ—เธตเนเธเธฑเธเธ—เธถเธเธเธฐเธซเธฒเธขเน€เธกเธทเนเธญเธฃเธตเน€เธเธฃเธ เธ•เธฑเนเธเธเนเธฒ <code>API_URL</code> เนเธฅเธฐ <code>API_KEY</code> เธ—เธตเนเธ•เนเธเนเธเธฅเนเน€เธเธทเนเธญเน€เธเธทเนเธญเธกเธ•เนเธญเธเธฃเธดเธ
+      กำลังใช้ <b>ข้อมูลตัวอย่างในเครื่อง</b> — ยังไม่ได้เชื่อม Google Sheets ข้อมูลที่บันทึกจะหายเมื่อโหลดหน้าใหม่ ตั้งค่า <code>API_URL</code> และ <code>API_KEY</code> ที่ต้นไฟล์เพื่อเชื่อมต่อจริง
     </div>
 
     <!-- ================= LOGIN ================= -->
     <section id="v-login" class="hidden">
       <div class="topbar"><div>
-        <div class="eyebrow">เน€เธเนเธฒเธชเธนเนเธฃเธฐเธเธ</div>
-        <h1>เน€เธเนเธฒเธชเธนเนเธฃเธฐเธเธเธชเธ–เธฒเธเธเธฃเธดเธเธฒเธฃ</h1>
-        <div class="sub">เน€เธเนเธฒเธฃเธฐเธเธเน€เธเธทเนเธญเธเธฑเธเธ—เธถเธเธฃเธฒเธขเธเธฒเธฃ เธญเธญเธเธฃเธฒเธขเธเธฒเธ เนเธฅเธฐเนเธเนเนเธเธเนเธญเธกเธนเธฅเธเธญเธเธชเธ–เธฒเธเธเธฃเธดเธเธฒเธฃเธ•เธเน€เธญเธ</div>
+        <div class="eyebrow">เข้าสู่ระบบ</div>
+        <h1>เข้าสู่ระบบสถานบริการ</h1>
+        <div class="sub">เข้าระบบเพื่อบันทึกรายการ ออกรายงาน และแก้ไขข้อมูลของสถานบริการตนเอง</div>
       </div></div>
       <div class="loginbox">
-        <div class="field"><label>เธเธทเนเธญเธเธนเนเนเธเน</label><input id="lg-u" type="text" placeholder="U03900" autocomplete="username"></div>
-        <div class="field"><label>เธฃเธซเธฑเธชเธเนเธฒเธ</label><input id="lg-p" type="password" placeholder="P03900" autocomplete="current-password"></div>
-        <button class="btn" id="lg-btn">เน€เธเนเธฒเธชเธนเนเธฃเธฐเธเธ</button>
+        <div class="field"><label>ชื่อผู้ใช้</label><input id="lg-u" type="text" placeholder="U03900" autocomplete="username"></div>
+        <div class="field"><label>รหัสผ่าน</label><input id="lg-p" type="password" placeholder="P03900" autocomplete="current-password"></div>
+        <button class="btn" id="lg-btn">เข้าสู่ระบบ</button>
         <div id="lg-msg"></div>
         <div class="hintbox">
-          เธเธทเนเธญเธเธนเนเนเธเนเธเธทเธญ <code>U</code> + เธฃเธซเธฑเธชเธชเธ–เธฒเธเธเธฃเธดเธเธฒเธฃ 5 เธซเธฅเธฑเธ เธฃเธซเธฑเธชเธเนเธฒเธเธเธทเธญ <code>P</code> + เธฃเธซเธฑเธชเน€เธ”เธตเธขเธงเธเธฑเธ<br>
-          เธเธนเนเธ”เธนเนเธฅเธฃเธฐเธ”เธฑเธเธญเธณเน€เธ เธญ: <code>U00342 / P00342</code>
+          ชื่อผู้ใช้คือ <code>U</code> + รหัสสถานบริการ 5 หลัก รหัสผ่านคือ <code>P</code> + รหัสเดียวกัน<br>
+          ผู้ดูแลระดับอำเภอ: <code>U00342 / P00342</code>
         </div>
       </div>
     </section>
@@ -230,14 +230,14 @@ table.wide th,table.wide td{padding:7px 8px}
     <section id="v-dashboard">
       <div class="topbar">
         <div>
-          <div class="eyebrow">เธ เธฒเธเธฃเธงเธกเธ—เธฑเนเธเธญเธณเน€เธ เธญ</div>
-          <h1 id="dash-title">เธชเธ–เธฒเธเธเธฒเธฃเธ“เนเธเธฒเธฃเน€เธเธดเธเธเธณเธฃเธธเธ เธญเธณเน€เธ เธญเธเนเธญเธงเธฑเธ</h1>
-          <div class="sub" id="dash-sub">โ€”</div>
+          <div class="eyebrow">ภาพรวมทั้งอำเภอ</div>
+          <h1 id="dash-title">สถานการณ์การเงินบำรุง อำเภอค้อวัง</h1>
+          <div class="sub" id="dash-sub">—</div>
         </div>
         <div class="filters">
-          <div class="field"><label>เธเธตเธเธเธเธฃเธฐเธกเธฒเธ“</label><select id="f-fy"></select></div>
-          <div class="field"><label>เธชเธ–เธฒเธเธเธฃเธดเธเธฒเธฃ</label><select id="f-fac"></select></div>
-          <div class="field"><label>เน€เธ”เธทเธญเธ</label><select id="f-month"></select></div>
+          <div class="field"><label>ปีงบประมาณ</label><select id="f-fy"></select></div>
+          <div class="field"><label>สถานบริการ</label><select id="f-fac"></select></div>
+          <div class="field"><label>เดือน</label><select id="f-month"></select></div>
         </div>
       </div>
 
@@ -245,24 +245,24 @@ table.wide th,table.wide td{padding:7px 8px}
 
       <div class="grid g2" style="margin-bottom:18px">
         <div class="card">
-          <header><h3>เธเธฃเธฐเน€เธ เธ—เธฃเธฒเธขเธฃเธฑเธ</h3><div class="hgroup"><span class="hint" id="in-total">โ€”</span>
-            <select class="mini" id="in-level"><option value="group">เธ•เธฒเธกเธซเธกเธงเธ”</option><option value="sub">เธ•เธฒเธกเธเธฃเธฐเน€เธ เธ—เธขเนเธญเธข</option></select></div></header>
+          <header><h3>ประเภทรายรับ</h3><div class="hgroup"><span class="hint" id="in-total">—</span>
+            <select class="mini" id="in-level"><option value="group">ตามหมวด</option><option value="sub">ตามประเภทย่อย</option></select></div></header>
           <div class="body"><div class="chartbox"><canvas id="c-income"></canvas></div></div>
         </div>
         <div class="card">
-          <header><h3>เธเธฃเธฐเน€เธ เธ—เธฃเธฒเธขเธเนเธฒเธข</h3><div class="hgroup"><span class="hint" id="ex-total">โ€”</span>
-            <select class="mini" id="ex-level"><option value="group">เธ•เธฒเธกเธซเธกเธงเธ”</option><option value="sub">เธ•เธฒเธกเธเธฃเธฐเน€เธ เธ—เธขเนเธญเธข</option></select></div></header>
+          <header><h3>ประเภทรายจ่าย</h3><div class="hgroup"><span class="hint" id="ex-total">—</span>
+            <select class="mini" id="ex-level"><option value="group">ตามหมวด</option><option value="sub">ตามประเภทย่อย</option></select></div></header>
           <div class="body"><div class="chartbox"><canvas id="c-expense"></canvas></div></div>
         </div>
       </div>
 
       <div class="card" style="margin-bottom:18px">
-        <header><h3>เน€เธเธดเธเธเธณเธฃเธธเธเธเธเน€เธซเธฅเธทเธญเธฃเธฒเธขเน€เธ”เธทเธญเธ</h3><span class="hint">เธเธณเธเธงเธเน€เธเธดเธ (เธเธฒเธ—) เธ“ เธชเธดเนเธเน€เธ”เธทเธญเธ ยท เนเธขเธเธฃเธฒเธขเธชเธ–เธฒเธเธเธฃเธดเธเธฒเธฃ</span></header>
+        <header><h3>เงินบำรุงคงเหลือรายเดือน</h3><span class="hint">จำนวนเงิน (บาท) ณ สิ้นเดือน · แยกรายสถานบริการ</span></header>
         <div class="body"><div class="chartbox tall"><canvas id="c-monthly"></canvas></div></div>
       </div>
 
       <div class="card">
-        <header><h3>เธชเธ–เธฒเธเธฐเน€เธเธดเธเธเธณเธฃเธธเธเธฃเธฒเธขเธชเธ–เธฒเธเธเธฃเธดเธเธฒเธฃ</h3><span class="hint">เธเธฅเธดเธเธเธทเนเธญเธชเธ–เธฒเธเธเธฃเธดเธเธฒเธฃเน€เธเธทเนเธญเธ”เธนเธฃเธฒเธขเธฅเธฐเน€เธญเธตเธขเธ”</span></header>
+        <header><h3>สถานะเงินบำรุงรายสถานบริการ</h3><span class="hint">คลิกชื่อสถานบริการเพื่อดูรายละเอียด</span></header>
         <div class="body tablewrap"><table id="t-status"></table></div>
       </div>
     </section>
@@ -271,31 +271,31 @@ table.wide th,table.wide td{padding:7px 8px}
     <section id="v-facility" class="hidden">
       <div class="topbar">
         <div>
-          <button class="btn ghost sm" id="back-dash" style="margin-bottom:10px">โ เธเธฅเธฑเธเนเธ”เธเธเธญเธฃเนเธ”</button>
-          <div class="eyebrow" id="fd-code">โ€”</div>
-          <h1 id="fd-name">โ€”</h1>
-          <div class="sub" id="fd-sub">โ€”</div>
+          <button class="btn ghost sm" id="back-dash" style="margin-bottom:10px">← กลับแดชบอร์ด</button>
+          <div class="eyebrow" id="fd-code">—</div>
+          <h1 id="fd-name">—</h1>
+          <div class="sub" id="fd-sub">—</div>
         </div>
         <div class="filters">
-          <div class="field"><label>เธเธตเธเธเธเธฃเธฐเธกเธฒเธ“</label><select id="fd-fy"></select></div>
-          <div class="field"><label>เน€เธ”เธทเธญเธ</label><select id="fd-month"></select></div>
+          <div class="field"><label>ปีงบประมาณ</label><select id="fd-fy"></select></div>
+          <div class="field"><label>เดือน</label><select id="fd-month"></select></div>
         </div>
       </div>
       <div class="ledger" id="fd-ledger"></div>
       <div class="grid g2" style="margin-bottom:18px">
-        <div class="card"><header><h3>เธเธฃเธฐเน€เธ เธ—เธฃเธฒเธขเธฃเธฑเธ</h3><div class="hgroup"><span class="hint" id="fd-in-total">โ€”</span>
-          <select class="mini" id="fd-in-level"><option value="group">เธ•เธฒเธกเธซเธกเธงเธ”</option><option value="sub">เธ•เธฒเธกเธเธฃเธฐเน€เธ เธ—เธขเนเธญเธข</option></select></div></header>
+        <div class="card"><header><h3>ประเภทรายรับ</h3><div class="hgroup"><span class="hint" id="fd-in-total">—</span>
+          <select class="mini" id="fd-in-level"><option value="group">ตามหมวด</option><option value="sub">ตามประเภทย่อย</option></select></div></header>
           <div class="body"><div class="chartbox"><canvas id="c-fd-income"></canvas></div></div></div>
-        <div class="card"><header><h3>เธเธฃเธฐเน€เธ เธ—เธฃเธฒเธขเธเนเธฒเธข</h3><div class="hgroup"><span class="hint" id="fd-ex-total">โ€”</span>
-          <select class="mini" id="fd-ex-level"><option value="group">เธ•เธฒเธกเธซเธกเธงเธ”</option><option value="sub">เธ•เธฒเธกเธเธฃเธฐเน€เธ เธ—เธขเนเธญเธข</option></select></div></header>
+        <div class="card"><header><h3>ประเภทรายจ่าย</h3><div class="hgroup"><span class="hint" id="fd-ex-total">—</span>
+          <select class="mini" id="fd-ex-level"><option value="group">ตามหมวด</option><option value="sub">ตามประเภทย่อย</option></select></div></header>
           <div class="body"><div class="chartbox"><canvas id="c-fd-expense"></canvas></div></div></div>
       </div>
       <div class="card" style="margin-bottom:18px">
-        <header><h3>เน€เธเธดเธเธเธณเธฃเธธเธเธเธเน€เธซเธฅเธทเธญเธฃเธฒเธขเน€เธ”เธทเธญเธ</h3><span class="hint">เธเธณเธเธงเธเน€เธเธดเธ (เธเธฒเธ—) เธ“ เธชเธดเนเธเน€เธ”เธทเธญเธ</span></header>
+        <header><h3>เงินบำรุงคงเหลือรายเดือน</h3><span class="hint">จำนวนเงิน (บาท) ณ สิ้นเดือน</span></header>
         <div class="body"><div class="chartbox tall"><canvas id="c-fd-monthly"></canvas></div></div>
       </div>
       <div class="card">
-        <header><h3>เธฃเธฒเธขเธเธฒเธฃเธฅเนเธฒเธชเธธเธ”</h3><span class="hint">20 เธฃเธฒเธขเธเธฒเธฃเธฅเนเธฒเธชเธธเธ”เนเธเธเธตเธเธเธเธฃเธฐเธกเธฒเธ“เธเธตเน</span></header>
+        <header><h3>รายการล่าสุด</h3><span class="hint">20 รายการล่าสุดในปีงบประมาณนี้</span></header>
         <div class="body tablewrap"><table id="t-fd-txn"></table></div>
       </div>
     </section>
@@ -304,68 +304,68 @@ table.wide th,table.wide td{padding:7px 8px}
     <section id="v-entry" class="hidden">
       <div class="topbar">
         <div>
-          <div class="eyebrow">เธเธฒเธเธเธฃเธฐเธเธณ</div>
-          <h1>เธเธฑเธเธ—เธถเธเธฃเธฒเธขเธฃเธฑเธ-เธฃเธฒเธขเธเนเธฒเธข</h1>
-          <div class="sub">เธเธฑเธเธ—เธถเธเธฅเธเธเธตเธ•เธเธญเธเนเธ•เนเธฅเธฐเธชเธ–เธฒเธเธเธฃเธดเธเธฒเธฃเนเธ”เธขเธ•เธฃเธ</div>
+          <div class="eyebrow">งานประจำ</div>
+          <h1>บันทึกรายรับ-รายจ่าย</h1>
+          <div class="sub">บันทึกลงชีตของแต่ละสถานบริการโดยตรง</div>
         </div>
         <div class="filters">
-          <div class="field"><label>เธเธตเธเธเธเธฃเธฐเธกเธฒเธ“</label><select id="e-fy"></select></div>
-          <div class="field"><label>เธชเธ–เธฒเธเธเธฃเธดเธเธฒเธฃ</label><select id="e-fac"></select></div>
-          <div class="field"><label>เธเนเธงเธเน€เธงเธฅเธฒ</label><select id="e-scope">
-            <option value="month">เธฃเธฒเธขเน€เธ”เธทเธญเธ</option><option value="year">เธฃเธฒเธขเธเธตเธเธเธเธฃเธฐเธกเธฒเธ“</option></select></div>
-          <div class="field" id="e-month-wrap"><label>เน€เธ”เธทเธญเธ</label><select id="e-month"></select></div>
+          <div class="field"><label>ปีงบประมาณ</label><select id="e-fy"></select></div>
+          <div class="field"><label>สถานบริการ</label><select id="e-fac"></select></div>
+          <div class="field"><label>ช่วงเวลา</label><select id="e-scope">
+            <option value="month">รายเดือน</option><option value="year">รายปีงบประมาณ</option></select></div>
+          <div class="field" id="e-month-wrap"><label>เดือน</label><select id="e-month"></select></div>
         </div>
       </div>
 
       <div class="tabs">
-        <button data-tab="income" class="on">เธเธฑเธเธ—เธถเธเธฃเธฒเธขเธฃเธฑเธ</button>
-        <button data-tab="expense">เธเธฑเธเธ—เธถเธเธฃเธฒเธขเธเนเธฒเธข</button>
-        <button data-tab="summary">เธชเธฃเธธเธเธชเธ–เธฒเธเธเธฒเธฃเธ“เนเน€เธเธดเธเธเธณเธฃเธธเธ</button>
+        <button data-tab="income" class="on">บันทึกรายรับ</button>
+        <button data-tab="expense">บันทึกรายจ่าย</button>
+        <button data-tab="summary">สรุปสถานการณ์เงินบำรุง</button>
       </div>
 
       <div id="tab-income">
         <div class="card" style="margin-bottom:18px">
-          <header><h3>เน€เธเธดเนเธกเธฃเธฒเธขเธเธฒเธฃเธฃเธฑเธ</h3></header>
+          <header><h3>เพิ่มรายการรับ</h3></header>
           <div class="body">
             <div class="formgrid">
-              <div class="field"><label>เธงเธฑเธเธ—เธตเน</label><input type="date" id="i-date"></div>
-              <div class="field"><label>เธซเธกเธงเธ”เธฃเธฒเธขเธฃเธฑเธ</label><select id="i-grp"></select></div>
-              <div class="field"><label>เธเธฃเธฐเน€เธ เธ—เธขเนเธญเธข</label><select id="i-cat"></select></div>
-              <div class="field"><label>เธเธฑเธเธเธตเธ—เธตเนเธฃเธฑเธเน€เธเนเธฒ</label><select id="i-acc"></select></div>
-              <div class="field"><label>เธเธณเธเธงเธเน€เธเธดเธ (เธเธฒเธ—)</label><input type="number" id="i-amt" class="money" step="0.01" min="0" placeholder="0.00"></div>
-              <div class="field"><label>เธญเนเธฒเธเธญเธดเธ (เน€เธฅเธเธ—เธตเนเนเธเน€เธชเธฃเนเธ/เน€เธเนเธ)</label><input type="text" id="i-ref" placeholder="เน€เธเนเธ เธเธ.6812-004"></div>
-              <div class="field wide"><label>เธฃเธฒเธขเธฅเธฐเน€เธญเธตเธขเธ”</label><input type="text" id="i-note" placeholder="เน€เธเนเธ เธฃเธฑเธเนเธญเธ Fixcost UC เธเธงเธ”เธ—เธตเน 1"></div>
+              <div class="field"><label>วันที่</label><input type="date" id="i-date"></div>
+              <div class="field"><label>หมวดรายรับ</label><select id="i-grp"></select></div>
+              <div class="field"><label>ประเภทย่อย</label><select id="i-cat"></select></div>
+              <div class="field"><label>บัญชีที่รับเข้า</label><select id="i-acc"></select></div>
+              <div class="field"><label>จำนวนเงิน (บาท)</label><input type="number" id="i-amt" class="money" step="0.01" min="0" placeholder="0.00"></div>
+              <div class="field"><label>อ้างอิง (เลขที่ใบเสร็จ/เลขที่เช็ค)</label><input type="text" id="i-ref" placeholder="เช่น บช.6812-004"></div>
+              <div class="field wide"><label>รายละเอียด</label><input type="text" id="i-note" placeholder="เช่น รับโอน Fixcost UC งวดที่ 1"></div>
             </div>
-            <div style="margin-top:14px"><button class="btn" id="i-save">เธเธฑเธเธ—เธถเธเธฃเธฒเธขเธฃเธฑเธ</button></div>
+            <div style="margin-top:14px"><button class="btn" id="i-save">บันทึกรายรับ</button></div>
           </div>
         </div>
-        <div class="card"><header><h3>เธฃเธฒเธขเธเธฒเธฃเธฃเธฑเธ</h3><span class="hint" id="i-count">โ€”</span></header>
+        <div class="card"><header><h3>รายการรับ</h3><span class="hint" id="i-count">—</span></header>
           <div class="body tablewrap"><table id="t-income"></table></div></div>
       </div>
 
       <div id="tab-expense" class="hidden">
         <div class="card" style="margin-bottom:18px">
-          <header><h3>เน€เธเธดเนเธกเธฃเธฒเธขเธเธฒเธฃเธเนเธฒเธข</h3></header>
+          <header><h3>เพิ่มรายการจ่าย</h3></header>
           <div class="body">
             <div class="formgrid">
-              <div class="field"><label>เธงเธฑเธเธ—เธตเน</label><input type="date" id="x-date"></div>
-              <div class="field"><label>เธซเธกเธงเธ”เธฃเธฒเธขเธเนเธฒเธข</label><select id="x-grp"></select></div>
-              <div class="field"><label>เธเธฃเธฐเน€เธ เธ—เธขเนเธญเธข</label><select id="x-cat"></select></div>
-              <div class="field"><label>เธเธฑเธเธเธตเธ—เธตเนเธเนเธฒเธขเธญเธญเธ</label><select id="x-acc"></select></div>
-              <div class="field"><label>เธเธณเธเธงเธเน€เธเธดเธ (เธเธฒเธ—)</label><input type="number" id="x-amt" class="money" step="0.01" min="0" placeholder="0.00"></div>
-              <div class="field"><label>เธญเนเธฒเธเธญเธดเธ (เน€เธฅเธเธ—เธตเนเนเธเน€เธชเธฃเนเธ/เน€เธเนเธ)</label><input type="text" id="x-ref" placeholder="เน€เธเนเธ เธเธ.6812-017"></div>
-              <div class="field wide"><label>เธฃเธฒเธขเธฅเธฐเน€เธญเธตเธขเธ”</label><input type="text" id="x-note" placeholder="เน€เธเนเธ เธเนเธฒเนเธเธเนเธฒเธเธฃเธฐเธเธณเน€เธ”เธทเธญเธ"></div>
+              <div class="field"><label>วันที่</label><input type="date" id="x-date"></div>
+              <div class="field"><label>หมวดรายจ่าย</label><select id="x-grp"></select></div>
+              <div class="field"><label>ประเภทย่อย</label><select id="x-cat"></select></div>
+              <div class="field"><label>บัญชีที่จ่ายออก</label><select id="x-acc"></select></div>
+              <div class="field"><label>จำนวนเงิน (บาท)</label><input type="number" id="x-amt" class="money" step="0.01" min="0" placeholder="0.00"></div>
+              <div class="field"><label>อ้างอิง (เลขที่ใบเสร็จ/เลขที่เช็ค)</label><input type="text" id="x-ref" placeholder="เช่น ชค.6812-017"></div>
+              <div class="field wide"><label>รายละเอียด</label><input type="text" id="x-note" placeholder="เช่น ค่าไฟฟ้าประจำเดือน"></div>
             </div>
-            <div style="margin-top:14px"><button class="btn" id="x-save">เธเธฑเธเธ—เธถเธเธฃเธฒเธขเธเนเธฒเธข</button></div>
+            <div style="margin-top:14px"><button class="btn" id="x-save">บันทึกรายจ่าย</button></div>
           </div>
         </div>
-        <div class="card"><header><h3>เธฃเธฒเธขเธเธฒเธฃเธเนเธฒเธข</h3><span class="hint" id="x-count">โ€”</span></header>
+        <div class="card"><header><h3>รายการจ่าย</h3><span class="hint" id="x-count">—</span></header>
           <div class="body tablewrap"><table id="t-expense"></table></div></div>
       </div>
 
       <div id="tab-summary" class="hidden">
         <div class="ledger" id="e-ledger"></div>
-        <div class="card"><header><h3>เธชเธฃเธธเธเธ•เธฒเธกเธเธฃเธฐเน€เธ เธ—</h3><span class="hint" id="e-sum-scope">โ€”</span></header>
+        <div class="card"><header><h3>สรุปตามประเภท</h3><span class="hint" id="e-sum-scope">—</span></header>
           <div class="body tablewrap"><table id="t-summary"></table></div></div>
       </div>
     </section>
@@ -373,38 +373,38 @@ table.wide th,table.wide td{padding:7px 8px}
     <!-- ================= REPORTS ================= -->
     <section id="v-reports" class="hidden">
       <div class="topbar"><div>
-        <div class="eyebrow">เธฃเธฒเธขเธเธฒเธเธเธฒเธฃเน€เธเธดเธ</div>
-        <h1>เธฃเธฒเธขเธเธฒเธเธเธฒเธฃเน€เธเธดเธ</h1>
-        <div class="sub">เธ”เธถเธเธเนเธญเธกเธนเธฅเธเธฒเธเธฃเธฒเธขเธเธฒเธฃเธ—เธตเนเธเธฑเธเธ—เธถเธเนเธงเนเนเธ”เธขเธญเธฑเธ•เนเธเธกเธฑเธ•เธด</div>
+        <div class="eyebrow">รายงานการเงิน</div>
+        <h1>รายงานการเงิน</h1>
+        <div class="sub">ดึงข้อมูลจากรายการที่บันทึกไว้โดยอัตโนมัติ</div>
       </div></div>
 
       <div class="repchoice">
         <button class="repbtn on" data-rep="407">
-          <span class="no">เนเธเธ 407</span><b>เธฃเธฒเธขเธเธฒเธเน€เธเธดเธเธเธเน€เธซเธฅเธทเธญเธเธฃเธฐเธเธณเธงเธฑเธ</b>
-          <small>เธชเธฃเธธเธเธขเธญเธ”เธฃเธฑเธ-เธเนเธฒเธขเนเธฅเธฐเน€เธเธดเธเธเธเน€เธซเธฅเธทเธญ เธฃเธงเธกเธขเธญเธ”เน€เธเนเธเธฃเธฒเธขเธงเธฑเธ</small>
+          <span class="no">แบบ 407</span><b>รายงานเงินคงเหลือประจำวัน</b>
+          <small>สรุปยอดรับ-จ่ายและเงินคงเหลือ รวมยอดเป็นรายวัน</small>
         </button>
         <button class="repbtn" data-rep="404">
-          <span class="no">เนเธเธ 404</span><b>เธ—เธฐเน€เธเธตเธขเธเธเธธเธกเน€เธเธดเธเธเธญเธเธเธเธเธฃเธฐเธกเธฒเธ“</b>
-          <small>เนเธชเธ”เธเธ—เธธเธเธฃเธฒเธขเธเธฒเธฃเน€เธฃเธตเธขเธเธ•เธฒเธกเธงเธฑเธเธ—เธตเน เธเธฃเนเธญเธกเธขเธญเธ”เธเธเน€เธซเธฅเธทเธญเธชเธฐเธชเธก</small>
+          <span class="no">แบบ 404</span><b>ทะเบียนคุมเงินนอกงบประมาณ</b>
+          <small>แสดงทุกรายการเรียงตามวันที่ พร้อมยอดคงเหลือสะสม</small>
         </button>
       </div>
 
       <div class="topbar">
         <div class="filters">
-          <div class="field"><label>เธเธตเธเธเธเธฃเธฐเธกเธฒเธ“</label><select id="r-fy"></select></div>
-          <div class="field"><label>เธชเธ–เธฒเธเธเธฃเธดเธเธฒเธฃ</label><select id="r-fac"></select></div>
-          <div class="field"><label>เธ•เธฑเนเธเนเธ•เนเธงเธฑเธเธ—เธตเน</label><select id="r-from"></select></div>
-          <div class="field"><label>เธ–เธถเธเธงเธฑเธเธ—เธตเน</label><select id="r-to"></select></div>
-          <div class="field"><label>&nbsp;</label><button class="btn ghost" id="r-print">เธเธดเธกเธเนเธฃเธฒเธขเธเธฒเธ</button></div>
-          <div class="field"><label>&nbsp;</label><button class="btn ghost" id="r-csv">เธ”เธฒเธงเธเนเนเธซเธฅเธ” CSV</button></div>
+          <div class="field"><label>ปีงบประมาณ</label><select id="r-fy"></select></div>
+          <div class="field"><label>สถานบริการ</label><select id="r-fac"></select></div>
+          <div class="field"><label>ตั้งแต่วันที่</label><select id="r-from"></select></div>
+          <div class="field"><label>ถึงวันที่</label><select id="r-to"></select></div>
+          <div class="field"><label>&nbsp;</label><button class="btn ghost" id="r-print">พิมพ์รายงาน</button></div>
+          <div class="field"><label>&nbsp;</label><button class="btn ghost" id="r-csv">ดาวน์โหลด CSV</button></div>
         </div>
       </div>
 
       <div class="card">
         <div class="rephead">
-          <h2 id="r-title">โ€”</h2>
-          <p id="r-sub1">โ€”</p>
-          <p id="r-sub2">โ€”</p>
+          <h2 id="r-title">—</h2>
+          <p id="r-sub1">—</p>
+          <p id="r-sub2">—</p>
         </div>
         <div class="body tablewrap"><table id="t-report" class="wide"></table></div>
         <div class="signrow" id="r-signs"></div>
@@ -414,88 +414,88 @@ table.wide th,table.wide td{padding:7px 8px}
     <!-- ================= SETTINGS ================= -->
     <section id="v-settings" class="hidden">
       <div class="topbar"><div>
-        <div class="eyebrow">เธฃเธฐเธเธ</div>
-        <h1>เธ•เธฑเนเธเธเนเธฒเธฃเธฐเธเธ</h1>
-        <div class="sub" id="set-sub">โ€”</div>
+        <div class="eyebrow">ระบบ</div>
+        <h1>ตั้งค่าระบบ</h1>
+        <div class="sub" id="set-sub">—</div>
       </div></div>
 
       <div class="tabs">
-        <button data-stab="fac" class="on">เธชเธ–เธฒเธเธเธฃเธดเธเธฒเธฃ</button>
-        <button data-stab="ppl">เธเธธเธเธฅเธฒเธเธฃ</button>
-        <button data-stab="fin">เธ•เธฑเนเธเธเนเธฒเธเธฒเธฃเน€เธเธดเธ</button>
+        <button data-stab="fac" class="on">สถานบริการ</button>
+        <button data-stab="ppl">บุคลากร</button>
+        <button data-stab="fin">ตั้งค่าการเงิน</button>
       </div>
 
-      <!-- ---- เธชเธ–เธฒเธเธเธฃเธดเธเธฒเธฃ ---- -->
+      <!-- ---- สถานบริการ ---- -->
       <div id="stab-fac">
         <div class="card" style="margin-bottom:18px">
-          <header><h3 id="fc-form-title">เน€เธเธดเนเธกเธชเธ–เธฒเธเธเธฃเธดเธเธฒเธฃ</h3><span class="hint">เธฃเธซเธฑเธชเธชเธ–เธฒเธเธเธฃเธดเธเธฒเธฃ 5 เธซเธฅเธฑเธ</span></header>
+          <header><h3 id="fc-form-title">เพิ่มสถานบริการ</h3><span class="hint">รหัสสถานบริการ 5 หลัก</span></header>
           <div class="body">
             <div class="formgrid">
-              <div class="field"><label>เธฃเธซเธฑเธชเธชเธ–เธฒเธเธเธฃเธดเธเธฒเธฃ</label><input type="text" id="fc-code" maxlength="5" placeholder="03900" class="num"></div>
-              <div class="field"><label>เธเธทเนเธญเธชเธ–เธฒเธเธเธฃเธดเธเธฒเธฃ</label><input type="text" id="fc-name" placeholder="เธฃเธ.เธชเธ•.เธเนเธฒเธ..."></div>
-              <div class="field wide"><label>เธ—เธตเนเธญเธขเธนเน</label><input type="text" id="fc-addr" placeholder="เธซเธกเธนเนเธ—เธตเน ... เธ•เธณเธเธฅ ... เธญเธณเน€เธ เธญเธเนเธญเธงเธฑเธ เธเธฑเธเธซเธงเธฑเธ”เธขเนเธชเธเธฃ"></div>
-              <div class="field"><label>เธเธทเนเธญเธเธนเนเนเธเน</label><input type="text" id="fc-user" class="num" readonly style="background:var(--line-2)"></div>
-              <div class="field"><label>เธฃเธซเธฑเธชเธเนเธฒเธ</label><input type="text" id="fc-pass" class="num"></div>
-              <div class="field"><label>เธชเธดเธ—เธเธดเนเนเธเนเธเธฒเธ</label><select id="fc-role"><option value="user">เน€เธเธเธฒเธฐเธชเธ–เธฒเธเธเธฃเธดเธเธฒเธฃเธเธตเน</option><option value="admin">เธ”เธนเนเธฅเธฐเนเธเนเนเธเนเธ”เนเธ—เธธเธเนเธซเนเธ</option></select></div>
+              <div class="field"><label>รหัสสถานบริการ</label><input type="text" id="fc-code" maxlength="5" placeholder="03900" class="num"></div>
+              <div class="field"><label>ชื่อสถานบริการ</label><input type="text" id="fc-name" placeholder="รพ.สต.บ้าน..."></div>
+              <div class="field wide"><label>ที่อยู่</label><input type="text" id="fc-addr" placeholder="หมู่ที่ ... ตำบล ... อำเภอค้อวัง จังหวัดยโสธร"></div>
+              <div class="field"><label>ชื่อผู้ใช้</label><input type="text" id="fc-user" class="num" readonly style="background:var(--line-2)"></div>
+              <div class="field"><label>รหัสผ่าน</label><input type="text" id="fc-pass" class="num"></div>
+              <div class="field"><label>สิทธิ์ใช้งาน</label><select id="fc-role"><option value="user">เฉพาะสถานบริการนี้</option><option value="admin">ดูและแก้ไขได้ทุกแห่ง</option></select></div>
             </div>
             <div style="margin-top:14px;display:flex;gap:10px">
-              <button class="btn" id="fc-save">เธเธฑเธเธ—เธถเธเธชเธ–เธฒเธเธเธฃเธดเธเธฒเธฃ</button>
-              <button class="btn ghost hidden" id="fc-cancel">เธขเธเน€เธฅเธดเธเธเธฒเธฃเนเธเนเนเธ</button>
+              <button class="btn" id="fc-save">บันทึกสถานบริการ</button>
+              <button class="btn ghost hidden" id="fc-cancel">ยกเลิกการแก้ไข</button>
             </div>
           </div>
         </div>
-        <div class="card"><header><h3>เธฃเธฒเธขเธเธทเนเธญเธชเธ–เธฒเธเธเธฃเธดเธเธฒเธฃ</h3><span class="hint" id="fc-count">โ€”</span></header>
+        <div class="card"><header><h3>รายชื่อสถานบริการ</h3><span class="hint" id="fc-count">—</span></header>
           <div class="body tablewrap"><table id="t-facilities"></table></div></div>
       </div>
 
-      <!-- ---- เธเธธเธเธฅเธฒเธเธฃ ---- -->
+      <!-- ---- บุคลากร ---- -->
       <div id="stab-ppl" class="hidden">
         <div class="card hidden" id="pp-formcard" style="margin-bottom:18px">
-          <header><h3 id="pp-form-title">เน€เธเธดเนเธกเธเธธเธเธฅเธฒเธเธฃ</h3><span class="hint">เน€เธฅเธเธเธฃเธฐเธเธฒเธเธ 13 เธซเธฅเธฑเธเนเธเนเน€เธเนเธเธ•เธฑเธงเธฃเธฐเธเธธเธ•เธฑเธงเธเธธเธเธเธฅ</span></header>
+          <header><h3 id="pp-form-title">เพิ่มบุคลากร</h3><span class="hint">เลขประจำตัวประชาชน 13 หลัก ใช้ระบุตัวบุคคล</span></header>
           <div class="body">
             <div class="formgrid">
-              <div class="field"><label>เน€เธฅเธเธเธฃเธฐเธเธฒเธเธ (13 เธซเธฅเธฑเธ)</label><input type="text" id="pp-cid" maxlength="13" class="num" placeholder="1234567890123"></div>
-              <div class="field"><label>เธเธทเนเธญ - เธชเธเธธเธฅ</label><input type="text" id="pp-name" placeholder="เธเธฒเธขเธชเธกเธเธฒเธข เนเธเธ”เธต"></div>
-              <div class="field"><label>เธ•เธณเนเธซเธเนเธ</label><input type="text" id="pp-pos" placeholder="เน€เธเนเธ เธเธฑเธเธงเธดเธเธฒเธเธฒเธฃเธชเธฒเธเธฒเธฃเธ“เธชเธธเธเธเธณเธเธฒเธเธเธฒเธฃ"></div>
-              <div class="field"><label>เธ•เธณเนเธซเธเนเธเธเธฒเธฃเน€เธเธดเธ</label><select id="pp-fin"></select></div>
-              <div class="field"><label>เธชเธ–เธฒเธเธเธฃเธดเธเธฒเธฃ</label><select id="pp-fac"></select></div>
-              <div class="field"><label>เน€เธเธญเธฃเนเนเธ—เธฃเธจเธฑเธเธ—เน</label><input type="tel" id="pp-tel" class="num" placeholder="0812345678"></div>
+              <div class="field"><label>เลขประจำตัวประชาชน (13 หลัก)</label><input type="text" id="pp-cid" maxlength="13" class="num" placeholder="1234567890123"></div>
+              <div class="field"><label>ชื่อ-สกุล</label><input type="text" id="pp-name" placeholder="นายสมชาย ใจดี"></div>
+              <div class="field"><label>ตำแหน่ง</label><input type="text" id="pp-pos" placeholder="เช่น นักวิชาการสาธารณสุขชำนาญการ"></div>
+              <div class="field"><label>ตำแหน่งการเงิน</label><select id="pp-fin"></select></div>
+              <div class="field"><label>สถานบริการ</label><select id="pp-fac"></select></div>
+              <div class="field"><label>เบอร์โทรศัพท์</label><input type="tel" id="pp-tel" class="num" placeholder="0812345678"></div>
             </div>
             <div style="margin-top:14px;display:flex;gap:10px">
-              <button class="btn" id="pp-save">เธเธฑเธเธ—เธถเธเธเธธเธเธฅเธฒเธเธฃ</button>
-              <button class="btn ghost" id="pp-cancel">เธขเธเน€เธฅเธดเธ</button>
+              <button class="btn" id="pp-save">บันทึกบุคลากร</button>
+              <button class="btn ghost" id="pp-cancel">ยกเลิก</button>
             </div>
           </div>
         </div>
-        <div class="card"><header><h3>เธ—เธฐเน€เธเธตเธขเธเธเธธเธเธฅเธฒเธเธฃ</h3>
-          <div class="hgroup"><span class="hint" id="pp-count">โ€”</span>
-          <button class="btn sm" id="pp-add">+ เน€เธเธดเนเธกเธเธธเธเธฅเธฒเธเธฃ</button></div></header>
+        <div class="card"><header><h3>ทะเบียนบุคลากร</h3>
+          <div class="hgroup"><span class="hint" id="pp-count">—</span>
+          <button class="btn sm" id="pp-add">+ เพิ่มบุคลากร</button></div></header>
           <div class="body tablewrap"><table id="t-people"></table></div></div>
       </div>
 
-      <!-- ---- เธ•เธฑเนเธเธเนเธฒเธเธฒเธฃเน€เธเธดเธ (เธขเธญเธ”เธขเธเธกเธฒ) ---- -->
+      <!-- ---- ตั้งค่าการเงิน (ยอดยกมา) ---- -->
       <div id="stab-fin" class="hidden">
         <div class="topbar">
-          <div><h3 style="font-size:17px">เธขเธญเธ”เธขเธเธกเธฒ เธ“ 30 เธเธฑเธเธขเธฒเธขเธ</h3>
-            <div class="sub">เธขเธญเธ”เธ•เธฑเนเธเธ•เนเธเธเธญเธเธเธตเธเธเธเธฃเธฐเธกเธฒเธ“ (1 เธ•เธธเธฅเธฒเธเธก โ€“ 30 เธเธฑเธเธขเธฒเธขเธ)</div></div>
+          <div><h3 style="font-size:17px">ยอดยกมา ณ 30 กันยายน</h3>
+            <div class="sub">ยอดตั้งต้นของปีงบประมาณ (1 ตุลาคม – 30 กันยายน)</div></div>
           <div class="filters">
-            <div class="field"><label>เธเธตเธเธเธเธฃเธฐเธกเธฒเธ“</label><select id="o-fy"></select></div>
-            <div class="field"><label>เธชเธ–เธฒเธเธเธฃเธดเธเธฒเธฃ</label><select id="o-fac"></select></div>
+            <div class="field"><label>ปีงบประมาณ</label><select id="o-fy"></select></div>
+            <div class="field"><label>สถานบริการ</label><select id="o-fac"></select></div>
           </div>
         </div>
         <div class="card" style="margin-bottom:18px">
-          <header><h3>เธเธฃเธญเธเธขเธญเธ”เธขเธเธกเธฒ</h3><span class="hint" id="o-period">โ€”</span></header>
+          <header><h3>กรอกยอดยกมา</h3><span class="hint" id="o-period">—</span></header>
           <div class="body">
             <div class="formgrid">
-              <div class="field"><label>เน€เธเธดเธเธชเธ”เนเธเธกเธทเธญ</label><input type="number" id="o-cash" class="money" step="0.01" placeholder="0.00"></div>
-              <div class="field"><label>เน€เธเธดเธเธเธฒเธเธเธเธฒเธเธฒเธฃ (เน€เธเธดเธเธเธณเธฃเธธเธ)</label><input type="number" id="o-bank" class="money" step="0.01" placeholder="0.00"></div>
-              <div class="field"><label>เน€เธเธดเธเธเธฒเธเธเธเธฒเธเธฒเธฃ (เธเนเธฒเน€เธชเธทเนเธญเธก)</label><input type="number" id="o-dep" class="money" step="0.01" placeholder="0.00"></div>
-              <div class="field"><label>เน€เธเธดเธเธเธณเธฃเธธเธเธเธเน€เธซเธฅเธทเธญ (เธฃเธงเธกเธญเธฑเธ•เนเธเธกเธฑเธ•เธด)</label><input type="text" id="o-total" class="money" readonly style="background:var(--pine-soft);border-color:#c3dbd2;font-weight:600"></div>
+              <div class="field"><label>เงินสดในมือ</label><input type="number" id="o-cash" class="money" step="0.01" placeholder="0.00"></div>
+              <div class="field"><label>เงินฝากธนาคาร (เงินบำรุง)</label><input type="number" id="o-bank" class="money" step="0.01" placeholder="0.00"></div>
+              <div class="field"><label>เงินฝากธนาคาร (ค่าเสื่อม)</label><input type="number" id="o-dep" class="money" step="0.01" placeholder="0.00"></div>
+              <div class="field"><label>เงินบำรุงคงเหลือ (รวมอัตโนมัติ)</label><input type="text" id="o-total" class="money" readonly style="background:var(--pine-soft);border-color:#c3dbd2;font-weight:600"></div>
             </div>
-            <div style="margin-top:14px"><button class="btn" id="o-save">เธเธฑเธเธ—เธถเธเธขเธญเธ”เธขเธเธกเธฒ</button></div>
+            <div style="margin-top:14px"><button class="btn" id="o-save">บันทึกยอดยกมา</button></div>
           </div>
         </div>
-        <div class="card"><header><h3>เธขเธญเธ”เธขเธเธกเธฒเธ—เธตเนเธเธฑเธเธ—เธถเธเนเธงเน</h3><span class="hint" id="o-fy-label">โ€”</span></header>
+        <div class="card"><header><h3>ยอดยกมาที่บันทึกไว้</h3><span class="hint" id="o-fy-label">—</span></header>
           <div class="body tablewrap"><table id="t-opening"></table></div></div>
       </div>
     </section>
@@ -506,93 +506,93 @@ table.wide th,table.wide td{padding:7px 8px}
 
 <script>
 /* ============================================================
-   1. เธ•เธฑเนเธเธเนเธฒเธเธฒเธฃเน€เธเธทเนเธญเธกเธ•เนเธญ โ€” เนเธเน 2 เธเธฃเธฃเธ—เธฑเธ”เธเธตเนเธเนเธญเธ deploy
+   1. ตั้งค่าการเชื่อมต่อ — แก้ 2 บรรทัดนี้ก่อน deploy
    ============================================================ */
 const CONFIG = {
-  API_URL: 'https://script.google.com/macros/s/AKfycbwcO_26juqPyh3E8DnaTBFNGtqiUX_4FycsOFvNGri_VAZUmb0jNhV7a4kaGSbcNLM63w/exec',                 // วาง Web app URL ของ Google Apps Script ที่นี่
-  API_KEY: 'kwv-XwNseMgWuDSbSUZEEn7_1Ds9zu8Qgfck'    // ต้องตรงกับ API_KEY ใน Code.gs
+  API_URL: '',                 // วาง Web app URL ของ Google Apps Script ที่นี่
+  API_KEY: 'CHANGE-ME-1234'    // ต้องตรงกับ API_KEY ใน Code.gs
 };
 
 /* ============================================================
-   2. เธเนเธฒเธเธเธ—เธตเน
+   2. ค่าคงที่
    ============================================================ */
 const FYS = [2567,2568,2569,2570,2571,2572,2573,2574];
-const TH_M  = ['เธกเธเธฃเธฒเธเธก','เธเธธเธกเธ เธฒเธเธฑเธเธเน','เธกเธตเธเธฒเธเธก','เน€เธกเธฉเธฒเธขเธ','เธเธคเธฉเธ เธฒเธเธก','เธกเธดเธ–เธธเธเธฒเธขเธ','เธเธฃเธเธเธฒเธเธก','เธชเธดเธเธซเธฒเธเธก','เธเธฑเธเธขเธฒเธขเธ','เธ•เธธเธฅเธฒเธเธก','เธเธคเธจเธเธดเธเธฒเธขเธ','เธเธฑเธเธงเธฒเธเธก'];
-const TH_MS = ['เธก.เธ.','เธ.เธ.','เธกเธต.เธ.','เน€เธก.เธข.','เธ.เธ.','เธกเธด.เธข.','เธ.เธ.','เธช.เธ.','เธ.เธข.','เธ•.เธ.','เธ.เธข.','เธ.เธ.'];
+const TH_M  = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+const TH_MS = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
 
 const ACCOUNTS = [
-  {k:'cash',    name:'เน€เธเธดเธเธชเธ”เนเธเธกเธทเธญ',                  color:'#a8791f'},
-  {k:'bankOp',  name:'เน€เธเธดเธเธเธฒเธเธเธเธฒเธเธฒเธฃ (เน€เธเธดเธเธเธณเธฃเธธเธ)',    color:'#1c6f63'},
-  {k:'bankDep', name:'เน€เธเธดเธเธเธฒเธเธเธเธฒเธเธฒเธฃ (เธเนเธฒเน€เธชเธทเนเธญเธก)',     color:'#4f6f8a'}
+  {k:'cash',    name:'เงินสดในมือ',                  color:'#a8791f'},
+  {k:'bankOp',  name:'เงินฝากธนาคาร (เงินบำรุง)',    color:'#1c6f63'},
+  {k:'bankDep', name:'เงินฝากธนาคาร (ค่าเสื่อม)',     color:'#4f6f8a'}
 ];
 
 const INCOME_TREE = {
-  'เธฃเธฒเธขเธฃเธฑเธเธเนเธฒเธฃเธฑเธเธฉเธฒเธเธขเธฒเธเธฒเธฅ': [
-    'เธฃเธฒเธขเนเธ”เนเธเนเธฒเธฃเธฑเธเธฉเธฒเน€เธเธดเธเธ•เนเธเธชเธฑเธเธเธฑเธ”','เธฃเธฒเธขเนเธ”เนเธเนเธฒเธฃเธฑเธเธฉเธฒเธเธณเธฃเธฐเน€เธเธดเธ','เธฃเธฒเธขเนเธ”เนเธเนเธฒเธฃเธฑเธเธฉเธฒ เธเธฃเธ.เธฃเธ–',
-    'เธฃเธฒเธขเนเธ”เนเธเนเธฒเธฃเธฑเธเธฉเธฒเน€เธเธดเธเธเนเธฒเธขเธ•เธฃเธ เธญเธเธ—.','เธฃเธฒเธขเนเธ”เนเธเนเธฒเธฃเธฑเธเธฉเธฒเธเธฃเธฐเธเธฑเธเธชเธฑเธเธเธก'],
-  'เธฃเธฒเธขเนเธ”เน UC': [
-    'เธฃเธฒเธขเนเธ”เน Fixcost UC','เธฃเธฒเธขเนเธ”เน Fee Schedule','เธฃเธฒเธขเนเธ”เนเธเธ”เน€เธเธขเธเนเธฒเธเธฃเธดเธเธฒเธฃเนเธเธ—เธขเนเนเธเธเนเธ—เธข',
-    'เธฃเธฒเธขเนเธ”เนเธฃเธฑเธเนเธญเธ เธฃเธ.เธชเธ•./เธชเธชเธญ.','เน€เธเธดเธเธเธญเธเธ—เธธเธเธซเธฅเธฑเธเธเธฃเธฐเธเธฑเธเธชเธธเธเธ เธฒเธเธ•เธณเธเธฅ','เธฃเธฒเธขเนเธ”เนเธเธฃเธดเธซเธฒเธฃเธเธฑเธ”เธเธฒเธฃ (5 เธเธฒเธ—/เธเธฃเธฐเธเธฒเธเธฃ)'],
-  'เธฃเธฒเธขเนเธ”เนเธญเธทเนเธ': [
-    'เน€เธเธดเธเธเธฃเธดเธเธฒเธ','เธ”เธญเธเน€เธเธตเนเธขเน€เธเธดเธเธเธฒเธเธเธเธฒเธเธฒเธฃ','เธ เธฒเธฉเธตเธซเธฑเธ เธ“ เธ—เธตเนเธเนเธฒเธข','เธฃเธฒเธขเนเธ”เนเธเธเธเนเธฒเน€เธชเธทเนเธญเธก',
-    'เธฃเธฒเธขเนเธ”เนเธญเธทเนเธเน (เนเธกเนเธฃเธงเธกเน€เธเธดเธเธชเธเธฑเธเธชเธเธธเธ เธญเธเธ—.)']
+  'รายรับค่ารักษาพยาบาล': [
+    'รายได้ค่ารักษาเบิกต้นสังกัด','รายได้ค่ารักษาชำระเงิน','รายได้ค่ารักษา พ.ร.บ. รถ',
+    'รายได้ค่ารักษาเบิกจ่ายตรง อปท.','รายได้ค่ารักษาประกันสังคม'],
+  'รายได้ UC': [
+    'รายได้ Fixcost UC','รายได้ Fee Schedule','รายได้ชดเชยค่าบริการแพทย์แผนไทย',
+    'รายได้รับโอน รพ.สต./สสอ.','เงินกองทุนหลักประกันสุขภาพตำบล','รายได้บริหารจัดการ (5 บาท/ประชากร)'],
+  'รายได้อื่น': [
+    'เงินบริจาค','ดอกเบี้ยเงินฝากธนาคาร','ภาษีหัก ณ ที่จ่าย','รายได้งบค่าเสื่อม',
+    'รายได้อื่น ๆ (ไม่รวมเงินสนับสนุน อปท.)']
 };
 
 const EXPENSE_TREE = {
-  'เธเนเธฒเนเธเนเธเนเธฒเธขเธเธธเธเธฅเธฒเธเธฃ': [
-    'เธเนเธฒเธเนเธฒเธเธฅเธนเธเธเนเธฒเธเธเธฅเธธเนเธกเธงเธดเธเธฒเธเธตเธ (เธเธ., เธ—เธฑเธเธ•เธฏ, เธเธงเธ., เธเธ.เธชเธ.)','เธเนเธฒเธเนเธฒเธเธฅเธนเธเธเนเธฒเธเน€เธซเธกเธฒเธเธฃเธดเธเธฒเธฃ','เธเนเธฒเธเนเธฒเธเธฅเธนเธเธเนเธฒเธ เธเธเธช.'],
-  'เธเนเธฒเธ•เธญเธเนเธ—เธ': [
-    'เธเนเธฒเธ•เธญเธเนเธ—เธเธเธฒเธฃเธเธเธดเธเธฑเธ•เธดเธเธฒเธเธฃเธฑเธเธฉเธฒเธเธขเธฒเธเธฒเธฅเธเธญเธเน€เธงเธฅเธฒเธฃเธฒเธเธเธฒเธฃเนเธฅเธฐเธงเธฑเธเธซเธขเธธเธ”เธฃเธฒเธเธเธฒเธฃ (OT)',
-    'เธเนเธฒเธ•เธญเธเนเธ—เธเธเธฒเธฃเธเธเธดเธเธฑเธ•เธดเธเธฒเธเธเธธเธ”เธ•เธฃเธงเธเธเนเธงเธเน€เธ—เธจเธเธฒเธฅ',
-    'เธเนเธฒเธ•เธญเธเนเธ—เธเนเธเธเธฒเธฃเธเธเธดเธเธฑเธ•เธดเธเธฒเธเน€เธเธดเธเธฃเธธเธ เธซเธฃเธทเธญเน€เธงเธเธเธเธดเธเธฑเธ•เธดเธเธธเธกเธเธ (เธ.11 เธเธเธเธฃเธฐเธกเธฒเธ“)',
-    'เธเนเธฒเธ•เธญเธเนเธ—เธ เธ.11 (เน€เธเธดเธเธเธณเธฃเธธเธ)',
-    'เธเนเธฒเนเธเนเธเนเธฒเธขเนเธเธเธฒเธฃเน€เธ”เธดเธเธ—เธฒเธเนเธเธฃเธฒเธเธเธฒเธฃ เธซเธฃเธทเธญเธเธถเธเธญเธเธฃเธกเธ เธฒเธขเนเธเธเธฑเธเธซเธงเธฑเธ”'],
-  'เธเนเธฒเนเธเนเธชเธญเธข': [
-    'เน€เธเธดเธเธชเธกเธ—เธเธเธฃเธฐเธเธฑเธเธชเธฑเธเธเธกเธชเนเธงเธเธเธญเธเธเธฒเธขเธเนเธฒเธ','เธเนเธฒเนเธเนเธเนเธฒเธขเนเธเธเธฒเธฃเน€เธ”เธดเธเธ—เธฒเธเนเธเธฃเธฒเธเธเธฒเธฃ','เธเนเธฒเธเนเธญเธกเนเธเธกเธขเธฒเธเธเธฒเธซเธเธฐ',
-    'เธเนเธฒเธเนเธญเธกเนเธเธกเธเธฃเธธเธ เธฑเธ“เธ‘เนเธ—เธฒเธเธเธฒเธฃเนเธเธ—เธขเน','เธเนเธฒเธเนเธญเธกเนเธเธกเธเธฃเธธเธ เธฑเธ“เธ‘เน','เธเนเธฒเธเนเธญเธกเนเธเธกเธชเธดเนเธเธเนเธญเธชเธฃเนเธฒเธ',
-    'เธเนเธฒเธเนเธฒเธเน€เธซเธกเธฒเธเธฃเธดเธเธฒเธฃเธญเธทเนเธเน (เธเนเธฒเธเธเธฒเธ)'],
-  'เธเนเธฒเธงเธฑเธชเธ”เธธ': [
-    'เธงเธฑเธชเธ”เธธเธเนเธณเธกเธฑเธเน€เธเธทเนเธญเน€เธเธฅเธดเธ','เธงเธฑเธชเธ”เธธเธเธฒเธเธเนเธฒเธเธเธฒเธเธเธฃเธฑเธง','เธงเธฑเธชเธ”เธธเธเธญเธกเธเธดเธงเน€เธ•เธญเธฃเน','เธงเธฑเธชเธ”เธธเธชเธณเธเธฑเธเธเธฒเธ',
-    'เธงเธฑเธชเธ”เธธเธงเธดเธ—เธขเธฒเธจเธฒเธชเธ•เธฃเนเนเธฅเธฐเธเธฒเธฃเนเธเธ—เธขเน','เธงเธฑเธชเธ”เธธเธเธฒเธฃเน€เธเธฉเธ•เธฃ'],
-  'เธเนเธฒเธเธฃเธธเธ เธฑเธ“เธ‘เน': [
-    'เธเธฃเธธเธ เธฑเธ“เธ‘เนเธชเธณเธเธฑเธเธเธฒเธ','เธเธฃเธธเธ เธฑเธ“เธ‘เนเธขเธฒเธเธเธฒเธซเธเธฐเนเธฅเธฐเธเธเธชเนเธ','เธเธฃเธธเธ เธฑเธ“เธ‘เนเธเธญเธกเธเธดเธงเน€เธ•เธญเธฃเน','เธเธฃเธธเธ เธฑเธ“เธ‘เนเธเธฒเธเธเนเธฒเธเธเธฒเธเธเธฃเธฑเธง',
-    'เธเธฃเธธเธ เธฑเธ“เธ‘เนเนเธเธฉเธ“เธฒเนเธฅเธฐเน€เธเธขเนเธเธฃเน','เธเธฃเธธเธ เธฑเธ“เธ‘เนเนเธเธเนเธฒเนเธฅเธฐเธงเธดเธ—เธขเธธ','เธเธฃเธธเธ เธฑเธ“เธ‘เนเธงเธดเธ—เธขเธฒเธจเธฒเธชเธ•เธฃเนเนเธฅเธฐเธเธฒเธฃเนเธเธ—เธขเน','เธเธฃเธธเธ เธฑเธ“เธ‘เนเธเธฒเธฃเน€เธเธฉเธ•เธฃ'],
-  'เธเนเธฒเธชเธฒเธเธฒเธฃเธ“เธนเธเนเธ เธ': ['เธเนเธฒเธเนเธณเธเธฃเธฐเธเธฒ','เธเนเธฒเนเธเธเนเธฒ','เธเนเธฒเนเธ—เธฃเธจเธฑเธเธ—เน/เธเนเธฒเธญเธดเธเน€เธ•เธญเธฃเนเน€เธเนเธ•'],
-  'เธเนเธฒเธ—เธตเนเธ”เธดเธเนเธฅเธฐเธชเธดเนเธเธเนเธญเธชเธฃเนเธฒเธ': ['เธเนเธฒเธ—เธตเนเธ”เธดเธ','เธเนเธฒเธเนเธญเธชเธฃเนเธฒเธ'],
-  'เธเนเธฒเนเธเนเธเนเธฒเธขเธญเธทเนเธเน': [
-    'เธเนเธฒเนเธเนเธเนเธฒเธขเนเธเธฃเธเธเธฒเธฃ CUP/เธเธญเธเธ—เธธเธ UC เธ•เธณเธเธฅ','เธ เธฒเธฉเธตเธซเธฑเธ เธ“ เธ—เธตเนเธเนเธฒเธข','เธฃเธฒเธขเธเนเธฒเธขเธเธเธเนเธฒเน€เธชเธทเนเธญเธก',
-    'เธฃเธฒเธขเธเนเธฒเธขเนเธญเธเธเธทเธ เธฃเธ.เธชเธ•./เธชเธชเธญ.','เธเนเธฒเนเธเนเธเนเธฒเธขเธญเธทเนเธเน']
+  'ค่าใช้จ่ายบุคลากร': [
+    'ค่าจ้างลูกจ้างกลุ่มวิชาชีพ (พบ., ทันตฯ, นวก., จพ.สธ.)','ค่าจ้างลูกจ้างเหมาบริการ','ค่าจ้างลูกจ้าง พกส.'],
+  'ค่าตอบแทน': [
+    'ค่าตอบแทนการปฏิบัติงานรักษาพยาบาลนอกเวลาราชการและวันหยุดราชการ (OT)',
+    'ค่าตอบแทนการปฏิบัติงานจุดตรวจช่วงเทศกาล',
+    'ค่าตอบแทนในการปฏิบัติงานเชิงรุกหรือเวชปฏิบัติชุมชน (ฉ.11 งบประมาณ)',
+    'ค่าตอบแทน ฉ.11 (เงินบำรุง)',
+    'ค่าใช้จ่ายในการเดินทางไปราชการหรือฝึกอบรมภายในจังหวัด'],
+  'ค่าใช้สอย': [
+    'เงินสมทบประกันสังคมส่วนของนายจ้าง','ค่าใช้จ่ายในการเดินทางไปราชการ','ค่าซ่อมแซมยานพาหนะ',
+    'ค่าซ่อมแซมครุภัณฑ์ทางการแพทย์','ค่าซ่อมแซมครุภัณฑ์','ค่าซ่อมแซมสิ่งก่อสร้าง',
+    'ค่าจ้างเหมาบริการอื่น ๆ (จ้างงาน)'],
+  'ค่าวัสดุ': [
+    'วัสดุน้ำมันเชื้อเพลิง','วัสดุงานบ้านงานครัว','วัสดุคอมพิวเตอร์','วัสดุสำนักงาน',
+    'วัสดุวิทยาศาสตร์และการแพทย์','วัสดุการเกษตร'],
+  'ค่าครุภัณฑ์': [
+    'ครุภัณฑ์สำนักงาน','ครุภัณฑ์ยานพาหนะและขนส่ง','ครุภัณฑ์คอมพิวเตอร์','ครุภัณฑ์งานบ้านงานครัว',
+    'ครุภัณฑ์โฆษณาและเผยแพร่','ครุภัณฑ์ไฟฟ้าและวิทยุ','ครุภัณฑ์วิทยาศาสตร์และการแพทย์','ครุภัณฑ์การเกษตร'],
+  'ค่าสาธารณูปโภค': ['ค่าน้ำประปา','ค่าไฟฟ้า','ค่าโทรศัพท์/ค่าอินเทอร์เน็ต'],
+  'ค่าที่ดินและสิ่งก่อสร้าง': ['ค่าที่ดิน','ค่าก่อสร้าง'],
+  'ค่าใช้จ่ายอื่น ๆ': [
+    'ค่าใช้จ่ายโครงการ CUP/กองทุน UC ตำบล','ภาษีหัก ณ ที่จ่าย','รายจ่ายงบค่าเสื่อม',
+    'รายจ่ายโอนคืน รพ.สต./สสอ.','ค่าใช้จ่ายอื่น ๆ']
 };
 
 const treeOf = type => type==='income' ? INCOME_TREE : EXPENSE_TREE;
 const groupOfSub = (type, sub) => {
   const t = treeOf(type);
-  return Object.keys(t).find(g => t[g].indexOf(sub) >= 0) || 'เนเธกเนเธฃเธฐเธเธธเธซเธกเธงเธ”';
+  return Object.keys(t).find(g => t[g].indexOf(sub) >= 0) || 'ไม่ระบุหมวด';
 };
-const DEP_SUBS = ['เธฃเธฒเธขเนเธ”เนเธเธเธเนเธฒเน€เธชเธทเนเธญเธก','เธฃเธฒเธขเธเนเธฒเธขเธเธเธเนเธฒเน€เธชเธทเนเธญเธก'];
+const DEP_SUBS = ['รายได้งบค่าเสื่อม','รายจ่ายงบค่าเสื่อม'];
 
-/* เธเธญเธฅเธฑเธกเธเนเธเธฃเธฐเน€เธ เธ—เธฃเธฒเธขเธเนเธฒเธขเธ•เธฒเธกเธซเธกเธงเธ”เธเธเธเธฃเธฐเธกเธฒเธ“เนเธเธฃเธฒเธขเธเธฒเธ 407 / 404 */
+/* คอลัมน์ประเภทรายจ่ายตามหมวดงบประมาณในรายงาน 407 / 404 */
 const BUDGET_COLS = [
-  {t:'เธฅเธนเธเธเนเธฒเธเธเธฑเนเธงเธเธฃเธฒเธง',       g:'เธเนเธฒเนเธเนเธเนเธฒเธขเธเธธเธเธฅเธฒเธเธฃ'},
-  {t:'เธเนเธฒเธ•เธญเธเนเธ—เธ',            g:'เธเนเธฒเธ•เธญเธเนเธ—เธ'},
-  {t:'เธเนเธฒเนเธเนเธชเธญเธข',            g:'เธเนเธฒเนเธเนเธชเธญเธข'},
-  {t:'เธเนเธฒเธชเธฒเธเธฒเธฃเธ“เธนเธเนเธ เธ',       g:'เธเนเธฒเธชเธฒเธเธฒเธฃเธ“เธนเธเนเธ เธ'},
-  {t:'เธเนเธฒเธงเธฑเธชเธ”เธธ',             g:'เธเนเธฒเธงเธฑเธชเธ”เธธ'},
-  {t:'เธเนเธฒเธเธฃเธธเธ เธฑเธ“เธ‘เน',          g:'เธเนเธฒเธเธฃเธธเธ เธฑเธ“เธ‘เน'},
-  {t:'เธเนเธฒเธ—เธตเนเธ”เธดเธเธชเธดเนเธเธเนเธญเธชเธฃเนเธฒเธ',  g:'เธเนเธฒเธ—เธตเนเธ”เธดเธเนเธฅเธฐเธชเธดเนเธเธเนเธญเธชเธฃเนเธฒเธ'},
-  {t:'เน€เธเธดเธเธญเธธเธ”เธซเธเธธเธ',          g:'เน€เธเธดเธเธญเธธเธ”เธซเธเธธเธ'},
-  {t:'เธฃเธฒเธขเธเนเธฒเธขเธญเธทเนเธเน',         g:'เธเนเธฒเนเธเนเธเนเธฒเธขเธญเธทเนเธเน'}
+  {t:'ลูกจ้างชั่วคราว',       g:'ค่าใช้จ่ายบุคลากร'},
+  {t:'ค่าตอบแทน',            g:'ค่าตอบแทน'},
+  {t:'ค่าใช้สอย',            g:'ค่าใช้สอย'},
+  {t:'ค่าสาธารณูปโภค',       g:'ค่าสาธารณูปโภค'},
+  {t:'ค่าวัสดุ',             g:'ค่าวัสดุ'},
+  {t:'ค่าครุภัณฑ์',          g:'ค่าครุภัณฑ์'},
+  {t:'ค่าที่ดินและสิ่งก่อสร้าง', g:'ค่าที่ดินและสิ่งก่อสร้าง'},
+  {t:'เงินอุดหนุน',          g:'เงินอุดหนุน'},
+  {t:'รายจ่ายอื่น ๆ',         g:'ค่าใช้จ่ายอื่น ๆ'}
 ];
 
-const FIN_ROLES = ['เนเธกเนเธฃเธฐเธเธธ','เธเธนเนเธญเธณเธเธงเธขเธเธฒเธฃ/เธซเธฑเธงเธซเธเนเธฒเธซเธเนเธงเธขเธเธฃเธดเธเธฒเธฃ','เธซเธฑเธงเธซเธเนเธฒเน€เธเนเธฒเธซเธเนเธฒเธ—เธตเนเธเธฒเธฃเน€เธเธดเธ',
-  'เน€เธเนเธฒเธซเธเนเธฒเธ—เธตเนเธเธฒเธฃเน€เธเธดเธ','เน€เธเนเธฒเธซเธเนเธฒเธ—เธตเนเธเธฑเธเธเธต','เน€เธเนเธฒเธซเธเนเธฒเธ—เธตเนเธเธฑเธชเธ”เธธ','เธเธฃเธฃเธกเธเธฒเธฃเน€เธเนเธเธฃเธฑเธเธฉเธฒเน€เธเธดเธ'];
+const FIN_ROLES = ['ไม่ระบุ','ผู้อำนวยการ/หัวหน้าหน่วยบริการ','หัวหน้าเจ้าหน้าที่การเงิน',
+  'เจ้าหน้าที่การเงิน','เจ้าหน้าที่บัญชี','เจ้าหน้าที่พัสดุ','กรรมการเก็บรักษาเงิน'];
 
 const PIE_IN = ['#14524a','#1c6f63','#3f8f7a','#5faa8c','#84c2a4','#a8d6bd','#c9e6d6','#7a9e6b','#4f8a53','#2f6b3f'];
 const PIE_EX = ['#9e4433','#b4593f','#c47456','#cf8f6e','#a8791f','#c19a45','#8a5b3f','#6f4436','#d6a889','#7c3c46'];
 const FAC_COLORS = ['#14524a','#a8791f','#9e4433','#4f6f8a','#4f8a53','#7c3c46','#1c6f63','#c47456'];
 
 /* ============================================================
-   3. เน€เธเธฃเธทเนเธญเธเธกเธทเธญเธเนเธงเธข
+   3. เครื่องมือช่วย
    ============================================================ */
 const $  = s => document.querySelector(s);
 const $$ = s => Array.from(document.querySelectorAll(s));
@@ -615,7 +615,7 @@ function toast(msg){ const d=document.createElement('div'); d.textContent=msg; $
 function fill(sel, items, val){ sel.innerHTML = items.map(o=>`<option value="${esc(o.v)}">${esc(o.t)}</option>`).join(''); if(val!=null) sel.value=val; }
 
 /* ============================================================
-   4. เธเธฑเนเธเน€เธเธทเนเธญเธกเธ•เนเธญเธเนเธญเธกเธนเธฅ
+   4. ชั้นเชื่อมต่อข้อมูล
    ============================================================ */
 const DEMO = !CONFIG.API_URL;
 
@@ -627,17 +627,17 @@ async function api(action, payload={}){
     body: JSON.stringify(Object.assign({action, apiKey:CONFIG.API_KEY}, payload))
   });
   const json = await res.json();
-  if(!json.ok) throw new Error(json.error || 'เน€เธเธดเธฃเนเธเน€เธงเธญเธฃเนเธ•เธญเธเธเธฅเธฑเธเนเธกเนเธชเธณเน€เธฃเนเธ');
+  if(!json.ok) throw new Error(json.error || 'เซิร์ฟเวอร์ตอบกลับไม่สำเร็จ');
   return json.data;
 }
 
 const SEED_FAC = [
-  {code:'03900', name:'เธฃเธ.เธชเธ•.เธเนเธฒเธเน€เธซเธฅเนเธฒเธเนเธญเธข',  addr:'เธ•.เธเนเธฒเธซเนเธงเธ เธญ.เธเนเธญเธงเธฑเธ เธ.เธขเนเธชเธเธฃ',  role:'user'},
-  {code:'03901', name:'เธฃเธ.เธชเธ•.เธเนเธฒเธเนเธเธเน€เธกเธทเธญเธ',   addr:'เธ•.เธเนเธญเธงเธฑเธ เธญ.เธเนเธญเธงเธฑเธ เธ.เธขเนเธชเธเธฃ',   role:'user'},
-  {code:'03903', name:'เธฃเธ.เธชเธ•.เธเนเธฒเธเธ•เธนเธก',        addr:'เธ•.เธเธธเธ”เธเนเธณเนเธช เธญ.เธเนเธญเธงเธฑเธ เธ.เธขเนเธชเธเธฃ', role:'user'},
-  {code:'03904', name:'เธฃเธ.เธชเธ•.เธเนเธฒเธเธจเธดเธฃเธดเธเธฑเธ’เธเธฒ',  addr:'เธ•.เธเนเธณเธญเนเธญเธก เธญ.เธเนเธญเธงเธฑเธ เธ.เธขเนเธชเธเธฃ',  role:'user'},
-  {code:'03905', name:'เธฃเธ.เธชเธ•.เธเนเธฒเธเธเนเธณเธญเนเธญเธก',    addr:'เธ•.เธเนเธณเธญเนเธญเธก เธญ.เธเนเธญเธงเธฑเธ เธ.เธขเนเธชเธเธฃ',  role:'user'},
-  {code:'00342', name:'เธชเธชเธญ.เธเนเธญเธงเธฑเธ',           addr:'เธ•.เธเนเธญเธงเธฑเธ เธญ.เธเนเธญเธงเธฑเธ เธ.เธขเนเธชเธเธฃ',   role:'admin'}
+  {code:'03900', name:'รพ.สต.บ้านเหล่าน้อย',  addr:'ต.ฟ้าห่วน อ.ค้อวัง จ.ยโสธร',  role:'user'},
+  {code:'03901', name:'รพ.สต.บ้านโพนเมือง',   addr:'ต.ค้อวัง อ.ค้อวัง จ.ยโสธร',   role:'user'},
+  {code:'03903', name:'รพ.สต.บ้านตูม',        addr:'ต.กุดน้ำใส อ.ค้อวัง จ.ยโสธร', role:'user'},
+  {code:'03904', name:'รพ.สต.บ้านศิริพัฒนา',  addr:'ต.น้ำอ้อม อ.ค้อวัง จ.ยโสธร',  role:'user'},
+  {code:'03905', name:'รพ.สต.บ้านน้ำอ้อม',    addr:'ต.น้ำอ้อม อ.ค้อวัง จ.ยโสธร',  role:'user'},
+  {code:'00342', name:'สสอ.ค้อวัง',           addr:'ต.ค้อวัง อ.ค้อวัง จ.ยโสธร',   role:'admin'}
 ];
 const demoDB = { facilities: SEED_FAC.map(f=>({...f, user:'U'+f.code, pass:'P'+f.code})), openings: [], txns: [], people: [] };
 
@@ -645,9 +645,9 @@ const demoDB = { facilities: SEED_FAC.map(f=>({...f, user:'U'+f.code, pass:'P'+f
   let s=7; const rnd=()=>{ s=(s*1103515245+12345)&0x7fffffff; return s/0x7fffffff; };
   const base={'03900':820000,'03901':640000,'03903':510000,'03904':430000,'03905':370000,'00342':950000};
   demoDB.people = [
-    {cid:'3350100112233', name:'เธเธฒเธเธชเธฒเธงเธเธดเธขเธฐเธเธธเธ เธงเธเธจเนเธเธณเธเธฑเธเธ—เธฃเน', pos:'เธเธฑเธเธงเธดเธเธฒเธเธฒเธฃเธชเธฒเธเธฒเธฃเธ“เธชเธธเธเธเธณเธเธฒเธเธเธฒเธฃ', fin:'เธซเธฑเธงเธซเธเนเธฒเน€เธเนเธฒเธซเธเนเธฒเธ—เธตเนเธเธฒเธฃเน€เธเธดเธ', code:'00342', tel:'0812345671'},
-    {cid:'3350100223344', name:'เธเธฒเธขเธญเธเธธเธเธฒ เธจเธฃเธตเธชเธธเธงเธฃเธฃเธ“',        pos:'เน€เธเนเธฒเธเธเธฑเธเธเธฒเธเธชเธฒเธเธฒเธฃเธ“เธชเธธเธเธเธณเธเธฒเธเธเธฒเธ', fin:'เน€เธเนเธฒเธซเธเนเธฒเธ—เธตเนเธเธฒเธฃเน€เธเธดเธ',      code:'03900', tel:'0812345672'},
-    {cid:'3350100334455', name:'เธเธฒเธเธชเธกเธซเธเธดเธ เธ—เธญเธเธกเธฒ',           pos:'เธเธขเธฒเธเธฒเธฅเธงเธดเธเธฒเธเธตเธเธเธณเธเธฒเธเธเธฒเธฃ',       fin:'เน€เธเนเธฒเธซเธเนเธฒเธ—เธตเนเธเธฑเธเธเธต',         code:'03900', tel:'0812345673'}
+    {cid:'3350100112233', name:'นางสาวปิยะนุช วงศ์คำจันทร์', pos:'นักวิชาการสาธารณสุขชำนาญการ', fin:'หัวหน้าเจ้าหน้าที่การเงิน', code:'00342', tel:'0812345671'},
+    {cid:'3350100223344', name:'นายอนุชา ศรีสุวรรณ',        pos:'เจ้าพนักงานสาธารณสุขชำนาญงาน', fin:'เจ้าหน้าที่การเงิน',      code:'03900', tel:'0812345672'},
+    {cid:'3350100334455', name:'นางสมหญิง ทองมา',           pos:'พยาบาลวิชาชีพชำนาญการ',       fin:'เจ้าหน้าที่บัญชี',         code:'03900', tel:'0812345673'}
   ];
   [2567,2568,2569].forEach((fy,fi)=>{
     demoDB.facilities.forEach(f=>{
@@ -663,13 +663,13 @@ const demoDB = { facilities: SEED_FAC.map(f=>({...f, user:'U'+f.code, pass:'P'+f
           const [g,c]=pick(INCOME_TREE);
           demoDB.txns.push({id:uid(),code:f.code,date:d(),fy,type:'income', group:g, category:c,
             account: DEP_SUBS.indexOf(c)>=0?'bankDep':(rnd()<.25?'cash':'bankOp'),
-            amount: Math.round((12000+rnd()*95000)/100)*100, ref:ref('เธเธ.'), note:'เธฃเธฑเธเนเธญเธเธเธงเธ”เธเธฃเธฐเธเธณเน€เธ”เธทเธญเธ'});
+            amount: Math.round((12000+rnd()*95000)/100)*100, ref:ref('บช.'), note:'รับโอนงวดประจำเดือน'});
         }
         for(let i=0;i<5;i++){
           const [g,c]=pick(EXPENSE_TREE);
           demoDB.txns.push({id:uid(),code:f.code,date:d(),fy,type:'expense', group:g, category:c,
-            account: (g==='เธเนเธฒเธเธฃเธธเธ เธฑเธ“เธ‘เน'||g==='เธเนเธฒเธ—เธตเนเธ”เธดเธเนเธฅเธฐเธชเธดเนเธเธเนเธญเธชเธฃเนเธฒเธ'||DEP_SUBS.indexOf(c)>=0)?'bankDep':(rnd()<.35?'cash':'bankOp'),
-            amount: Math.round((4000+rnd()*52000)/100)*100, ref:ref('เธเธ.'), note:'เน€เธเธดเธเธเนเธฒเธขเธ•เธฒเธกเนเธเธ'});
+            account: (g==='ค่าครุภัณฑ์'||g==='ค่าที่ดินและสิ่งก่อสร้าง'||DEP_SUBS.indexOf(c)>=0)?'bankDep':(rnd()<.35?'cash':'bankOp'),
+            amount: Math.round((4000+rnd()*52000)/100)*100, ref:ref('ชค.'), note:'เบิกจ่ายตามแผน'});
         }
       });
     });
@@ -705,7 +705,7 @@ function demoApi(action,p){
 }
 
 /* ============================================================
-   5. เธชเธ–เธฒเธเธฐเนเธญเธ
+   5. สถานะแอป
    ============================================================ */
 const S = {
   user:null, facilities:[], openings:[], txns:[], people:[],
@@ -755,18 +755,18 @@ function renderLedger(el, b, caption){
     <div class="cell">
       <div class="k"><span class="dot" style="background:${x.c}"></span>${x.k}</div>
       <div class="v num ${x.v<0?'neg':''}">${money(x.v)}</div>
-      <div class="m">เธเธฒเธ—</div>
+      <div class="m">บาท</div>
     </div>${i<2?'<div class="op">+</div>':''}`).join('')
     + `<div class="op">=</div>
     <div class="cell total">
-      <div class="k">เน€เธเธดเธเธเธณเธฃเธธเธเธเธเน€เธซเธฅเธทเธญ</div>
+      <div class="k">เงินบำรุงคงเหลือ</div>
       <div class="v num">${money(b.total)}</div>
-      <div class="m">${esc(caption||'เธเธฒเธ—')}</div>
+      <div class="m">${esc(caption||'บาท')}</div>
     </div>`;
 }
 
 /* ============================================================
-   6. เนเธ”เธเธเธญเธฃเนเธ”
+   6. แดชบอร์ด
    ============================================================ */
 function defaultYm(fy){
   const ms = fyMonths(fy), now = new Date();
@@ -783,16 +783,16 @@ function renderDashboard(){
   const code = S.facCode;
   const b = balance(code, S.fy, S.ym);
 
-  $('#dash-title').textContent = code==='ALL' ? 'เธชเธ–เธฒเธเธเธฒเธฃเธ“เนเธเธฒเธฃเน€เธเธดเธเธเธณเธฃเธธเธ เธญเธณเน€เธ เธญเธเนเธญเธงเธฑเธ' : facName(code);
-  $('#dash-sub').textContent = `เธเธตเธเธเธเธฃเธฐเธกเธฒเธ“ ${S.fy} (เธ•.เธ. ${S.fy-1} โ€“ เธ.เธข. ${S.fy}) ยท เธเนเธญเธกเธนเธฅเธชเธฐเธชเธกเธ–เธถเธเธชเธดเนเธ${mo.label}` +
-    (code==='ALL' ? ` ยท เธฃเธงเธก ${allFacs().length} เนเธซเนเธ` : '');
-  renderLedger($('#dash-ledger'), b, `เธ“ เธชเธดเนเธ${mo.label}`);
+  $('#dash-title').textContent = code==='ALL' ? 'สถานการณ์การเงินบำรุง อำเภอค้อวัง' : facName(code);
+  $('#dash-sub').textContent = `ปีงบประมาณ ${S.fy} (ต.ค. ${S.fy-1} – ก.ย. ${S.fy}) · ข้อมูลสะสมถึงสิ้น${mo.label}` +
+    (code==='ALL' ? ` · รวม ${allFacs().length} แห่ง` : '');
+  renderLedger($('#dash-ledger'), b, `ณ สิ้น${mo.label}`);
 
   const inRange = t => +t.fy===+S.fy && ymOf(t.date)<=S.ym && (code==='ALL' || t.code===code);
   const upto = S.txns.filter(inRange);
   const inc = upto.filter(t=>t.type==='income'), exp = upto.filter(t=>t.type==='expense');
-  $('#in-total').textContent = 'เธฃเธงเธก ' + money(inc.reduce((s,t)=>s+ +t.amount,0)) + ' เธเธฒเธ—';
-  $('#ex-total').textContent = 'เธฃเธงเธก ' + money(exp.reduce((s,t)=>s+ +t.amount,0)) + ' เธเธฒเธ—';
+  $('#in-total').textContent = 'รวม ' + money(inc.reduce((s,t)=>s+ +t.amount,0)) + ' บาท';
+  $('#ex-total').textContent = 'รวม ' + money(exp.reduce((s,t)=>s+ +t.amount,0)) + ' บาท';
   doughnut('c-income',  sumBy(inc, t=>keyOf(t,S.lvIn)), PIE_IN);
   doughnut('c-expense', sumBy(exp, t=>keyOf(t,S.lvEx)), PIE_EX);
 
@@ -823,14 +823,14 @@ function renderStatusTable(){
   });
   const t = k => rows.reduce((s,r)=>s+r[k],0);
   const tIn=t('inY'), tEx=t('exY');
-  const ieCell = v => v==null ? '<span class="ratio" style="color:var(--ink-3)">โ€”</span>'
+  const ieCell = v => v==null ? '<span class="ratio" style="color:var(--ink-3)">—</span>'
     : `<span class="ratio" style="color:${v>=1?'var(--sprout)':'var(--brick)'}">${v.toFixed(2)}</span>`;
 
   $('#t-status').innerHTML = `
     <thead><tr>
-      <th class="l">เธฃเธซเธฑเธช</th><th class="l">เธชเธ–เธฒเธเธเธฃเธดเธเธฒเธฃ</th>
-      <th>เธขเธญเธ”เธขเธเธกเธฒ เธ“ 30 เธ.เธข.</th><th>เธฃเธฒเธขเธฃเธฑเธเน€เธ”เธทเธญเธเธเธตเน</th><th>เธฃเธฒเธขเธฃเธฑเธเธชเธฐเธชเธก</th>
-      <th>เธฃเธฒเธขเธเนเธฒเธขเน€เธ”เธทเธญเธเธเธตเน</th><th>เธฃเธฒเธขเธเนเธฒเธขเธชเธฐเธชเธก</th><th>เน€เธเธดเธเธเธณเธฃเธธเธเธเธเน€เธซเธฅเธทเธญ</th>
+      <th class="l">รหัส</th><th class="l">สถานบริการ</th>
+      <th>ยอดยกมา ณ 30 ก.ย.</th><th>รายรับเดือนนี้</th><th>รายรับสะสม</th>
+      <th>รายจ่ายเดือนนี้</th><th>รายจ่ายสะสม</th><th>เงินบำรุงคงเหลือ</th>
       <th class="c">I/E</th>
     </tr></thead>
     <tbody>${rows.map(r=>`
@@ -846,7 +846,7 @@ function renderStatusTable(){
         <td class="c">${ieCell(r.ie)}</td>
       </tr>`).join('')}</tbody>
     <tfoot><tr>
-      <td class="l" colspan="2">เธฃเธงเธกเธ—เธธเธเธชเธ–เธฒเธเธเธฃเธดเธเธฒเธฃ (${rows.length})</td>
+      <td class="l" colspan="2">รวมทุกสถานบริการ (${rows.length})</td>
       <td class="num">${money(t('carry'))}</td><td class="num">${money(t('inM'))}</td><td class="num">${money(tIn)}</td>
       <td class="num">${money(t('exM'))}</td><td class="num">${money(tEx)}</td><td class="num">${money(t('bal'))}</td>
       <td class="c">${ieCell(tEx>0? tIn/tEx : null)}</td>
@@ -855,7 +855,7 @@ function renderStatusTable(){
 }
 
 /* ============================================================
-   7. เธซเธเนเธฒเธฃเธฒเธขเธชเธ–เธฒเธเธเธฃเธดเธเธฒเธฃ
+   7. หน้ารายสถานบริการ
    ============================================================ */
 function openFacility(code){
   S.fdCode = code; S.fdFy = S.fy; S.fdYm = S.ym;
@@ -864,27 +864,27 @@ function openFacility(code){
 function renderFacility(){
   const months = fyMonths(S.fdFy);
   if(!months.some(m=>m.key===S.fdYm)) S.fdYm = defaultYm(S.fdFy);
-  fill($('#fd-fy'), FYS.map(y=>({v:y,t:'เธเธตเธเธเธเธฃเธฐเธกเธฒเธ“ '+y})), S.fdFy);
+  fill($('#fd-fy'), FYS.map(y=>({v:y,t:'ปีงบประมาณ '+y})), S.fdFy);
   fill($('#fd-month'), months.map(m=>({v:m.key,t:m.label})), S.fdYm);
 
   const f = S.facilities.find(x=>x.code===S.fdCode)||{};
   const mo = months.find(m=>m.key===S.fdYm);
-  $('#fd-code').textContent = 'เธฃเธซเธฑเธชเธชเธ–เธฒเธเธเธฃเธดเธเธฒเธฃ ' + S.fdCode;
+  $('#fd-code').textContent = 'รหัสสถานบริการ ' + S.fdCode;
   $('#fd-name').textContent = f.name || S.fdCode;
-  $('#fd-sub').textContent  = (f.addr? f.addr+' ยท ' : '') + `เธเธตเธเธเธเธฃเธฐเธกเธฒเธ“ ${S.fdFy} ยท เธชเธฐเธชเธกเธ–เธถเธเธชเธดเนเธ${mo.label}`;
-  renderLedger($('#fd-ledger'), balance(S.fdCode,S.fdFy,S.fdYm), `เธ“ เธชเธดเนเธ${mo.label}`);
+  $('#fd-sub').textContent  = (f.addr? f.addr+' · ' : '') + `ปีงบประมาณ ${S.fdFy} · สะสมถึงสิ้น${mo.label}`;
+  renderLedger($('#fd-ledger'), balance(S.fdCode,S.fdFy,S.fdYm), `ณ สิ้น${mo.label}`);
 
   const upto = S.txns.filter(t=>t.code===S.fdCode && +t.fy===+S.fdFy && ymOf(t.date)<=S.fdYm);
   const inc = upto.filter(t=>t.type==='income'), exp = upto.filter(t=>t.type==='expense');
-  $('#fd-in-total').textContent = 'เธฃเธงเธก ' + money(inc.reduce((s,t)=>s+ +t.amount,0)) + ' เธเธฒเธ—';
-  $('#fd-ex-total').textContent = 'เธฃเธงเธก ' + money(exp.reduce((s,t)=>s+ +t.amount,0)) + ' เธเธฒเธ—';
+  $('#fd-in-total').textContent = 'รวม ' + money(inc.reduce((s,t)=>s+ +t.amount,0)) + ' บาท';
+  $('#fd-ex-total').textContent = 'รวม ' + money(exp.reduce((s,t)=>s+ +t.amount,0)) + ' บาท';
   doughnut('c-fd-income',  sumBy(inc, t=>keyOf(t,S.fdLvIn)), PIE_IN);
   doughnut('c-fd-expense', sumBy(exp, t=>keyOf(t,S.fdLvEx)), PIE_EX);
 
   draw('c-fd-monthly', {
     type:'bar',
     data:{ labels: months.map(m=>m.short), datasets:[{
-      label:'เน€เธเธดเธเธเธณเธฃเธธเธเธเธเน€เธซเธฅเธทเธญ', backgroundColor:'#14524a', borderRadius:3, maxBarThickness:34,
+      label:'เงินบำรุงคงเหลือ', backgroundColor:'#14524a', borderRadius:3, maxBarThickness:34,
       data: months.map(m=>balance(S.fdCode,S.fdFy,m.key).total) }]},
     options: barOpts(false), plugins:[valueLabels]
   });
@@ -892,19 +892,19 @@ function renderFacility(){
   const rows = S.txns.filter(t=>t.code===S.fdCode && +t.fy===+S.fdFy)
     .sort((a,b)=>b.date.localeCompare(a.date)).slice(0,20);
   $('#t-fd-txn').innerHTML = rows.length ? `
-    <thead><tr><th class="l">เธงเธฑเธเธ—เธตเน</th><th class="l">เธซเธกเธงเธ” / เธเธฃเธฐเน€เธ เธ—เธขเนเธญเธข</th><th class="l">เธญเนเธฒเธเธญเธดเธ</th><th class="l">เธเธฑเธเธเธต</th><th>เธฃเธฑเธ</th><th>เธเนเธฒเธข</th></tr></thead>
+    <thead><tr><th class="l">วันที่</th><th class="l">หมวด / ประเภทย่อย</th><th class="l">อ้างอิง</th><th class="l">บัญชี</th><th>รับ</th><th>จ่าย</th></tr></thead>
     <tbody>${rows.map(t=>`<tr>
       <td class="l code">${beDate(t.date)}</td>
       <td class="l"><span class="cat-g">${esc(grpOf(t))}</span><span class="cat-s">${esc(t.category)}</span>${t.note?`<span class="cat-n">${esc(t.note)}</span>`:''}</td>
-      <td class="l code">${esc(t.ref||'โ€”')}</td>
+      <td class="l code">${esc(t.ref||'—')}</td>
       <td class="l" style="font-size:13px">${accName(t.account)}</td>
       <td class="num" style="color:var(--sprout)">${t.type==='income'?money(t.amount):''}</td>
       <td class="num" style="color:var(--brick)">${t.type==='expense'?money(t.amount):''}</td>
-    </tr>`).join('')}</tbody>` : `<tbody><tr><td class="empty" colspan="6">เธขเธฑเธเนเธกเนเธกเธตเธฃเธฒเธขเธเธฒเธฃเนเธเธเธตเธเธเธเธฃเธฐเธกเธฒเธ“เธเธตเน</td></tr></tbody>`;
+    </tr>`).join('')}</tbody>` : `<tbody><tr><td class="empty" colspan="6">ยังไม่มีรายการในปีงบประมาณนี้</td></tr></tbody>`;
 }
 
 /* ============================================================
-   8. เธเธฃเธฒเธ
+   8. กราฟ
    ============================================================ */
 function doughnut(id, map, palette){
   const entries = Object.entries(map).filter(([,v])=>v>0).sort((a,b)=>b[1]-a[1]);
@@ -920,11 +920,11 @@ function doughnut(id, map, palette){
     options:{ responsive:true, maintainAspectRatio:false, cutout:'56%',
       plugins:{
         legend:{position:'right', labels:{boxWidth:10,boxHeight:10,padding:9,font:{family:'Sarabun',size:12}}},
-        tooltip:{ callbacks:{ label: c => ` ${c.label}: ${money(c.raw)} เธเธฒเธ— (${(c.raw/c.dataset.data.reduce((a,b)=>a+b,0)*100).toFixed(1)}%)` } }
+        tooltip:{ callbacks:{ label: c => ` ${c.label}: ${money(c.raw)} บาท (${(c.raw/c.dataset.data.reduce((a,b)=>a+b,0)*100).toFixed(1)}%)` } }
       }}
   });
 }
-/* เนเธชเธ”เธเธเธณเธเธงเธเน€เธเธดเธเธเธเนเธ—เนเธ เน€เธกเธทเนเธญเธกเธตเธเธธเธ”เธเนเธญเธกเธนเธฅเนเธกเนเธกเธฒเธ */
+/* แสดงจำนวนเงินบนแท่ง เมื่อมีชุดข้อมูลไม่มาก */
 const valueLabels = {
   id:'valueLabels',
   afterDatasetsDraw(chart){
@@ -946,14 +946,14 @@ function barOpts(legend=true){
   return { responsive:true, maintainAspectRatio:false,
     layout:{padding:{top:16}},
     plugins:{ legend:{display:legend, position:'bottom', labels:{boxWidth:10,boxHeight:10,padding:12,font:{family:'Sarabun',size:12}}},
-      tooltip:{ callbacks:{ label: c => ` ${c.dataset.label}: ${money(c.raw)} เธเธฒเธ—` } } },
+      tooltip:{ callbacks:{ label: c => ` ${c.dataset.label}: ${money(c.raw)} บาท` } } },
     scales:{ x:{grid:{display:false}, ticks:{font:{family:'IBM Plex Mono',size:11}}},
       y:{ grid:{color:'#e9eee8'}, border:{display:false},
         ticks:{ font:{family:'IBM Plex Mono',size:11}, callback:v=>money0(v) } } } };
 }
 
 /* ============================================================
-   9. เธเธฑเธเธ—เธถเธเธฃเธฒเธขเธฃเธฑเธ-เธฃเธฒเธขเธเนเธฒเธข
+   9. บันทึกรายรับ-รายจ่าย
    ============================================================ */
 function renderEntry(){
   const months = fyMonths(S.eFy);
@@ -964,15 +964,15 @@ function renderEntry(){
   const list = S.txns.filter(t=>t.code===S.eFac && +t.fy===+S.eFy &&
     (S.eScope==='year' || ymOf(t.date)===S.eYm)).sort((a,b)=>b.date.localeCompare(a.date));
   const inc = list.filter(t=>t.type==='income'), exp = list.filter(t=>t.type==='expense');
-  $('#i-count').textContent = `${inc.length} เธฃเธฒเธขเธเธฒเธฃ ยท เธฃเธงเธก ${money(inc.reduce((s,t)=>s+ +t.amount,0))} เธเธฒเธ—`;
-  $('#x-count').textContent = `${exp.length} เธฃเธฒเธขเธเธฒเธฃ ยท เธฃเธงเธก ${money(exp.reduce((s,t)=>s+ +t.amount,0))} เธเธฒเธ—`;
-  txnTable($('#t-income'), inc, 'เธขเธฑเธเนเธกเนเธกเธตเธฃเธฒเธขเธเธฒเธฃเธฃเธฑเธเนเธเธเนเธงเธเธ—เธตเนเน€เธฅเธทเธญเธ');
-  txnTable($('#t-expense'), exp, 'เธขเธฑเธเนเธกเนเธกเธตเธฃเธฒเธขเธเธฒเธฃเธเนเธฒเธขเนเธเธเนเธงเธเธ—เธตเนเน€เธฅเธทเธญเธ');
+  $('#i-count').textContent = `${inc.length} รายการ · รวม ${money(inc.reduce((s,t)=>s+ +t.amount,0))} บาท`;
+  $('#x-count').textContent = `${exp.length} รายการ · รวม ${money(exp.reduce((s,t)=>s+ +t.amount,0))} บาท`;
+  txnTable($('#t-income'), inc, 'ยังไม่มีรายการรับในช่วงที่เลือก');
+  txnTable($('#t-expense'), exp, 'ยังไม่มีรายการจ่ายในช่วงที่เลือก');
 
   const upto = S.eScope==='year' ? months[11].key : S.eYm;
   renderLedger($('#e-ledger'), balance(S.eFac, S.eFy, upto),
-    S.eScope==='year' ? `เธ“ เธชเธดเนเธเธเธตเธเธเธเธฃเธฐเธกเธฒเธ“ ${S.eFy}` : 'เธ“ เธชเธดเนเธ'+months.find(m=>m.key===S.eYm).label);
-  $('#e-sum-scope').textContent = `${facName(S.eFac)} ยท ` + (S.eScope==='year' ? `เธ—เธฑเนเธเธเธตเธเธเธเธฃเธฐเธกเธฒเธ“ ${S.eFy}` : months.find(m=>m.key===S.eYm).label);
+    S.eScope==='year' ? `ณ สิ้นปีงบประมาณ ${S.eFy}` : 'ณ สิ้น'+months.find(m=>m.key===S.eYm).label);
+  $('#e-sum-scope').textContent = `${facName(S.eFac)} · ` + (S.eScope==='year' ? `ทั้งปีงบประมาณ ${S.eFy}` : months.find(m=>m.key===S.eYm).label);
 
   const block = (l, type, color) => {
     const tree = treeOf(type), byGrp = sumBy(l, grpOf), bySub = sumBy(l, t=>t.category);
@@ -987,42 +987,42 @@ function renderEntry(){
   const diff = ti-tx;
   const ratio = tx>0 ? (ti/tx) : null;
   const ratioTxt = ratio==null
-    ? (ti>0 ? 'เธกเธตเธฃเธฒเธขเธฃเธฑเธเนเธ•เนเธขเธฑเธเนเธกเนเธกเธตเธฃเธฒเธขเธเนเธฒเธข' : 'โ€”')
-    : `${ratio.toFixed(2)} : 1  (เธฃเธฒเธขเธฃเธฑเธเธเธดเธ”เน€เธเนเธ ${(ratio*100).toFixed(1)}% เธเธญเธเธฃเธฒเธขเธเนเธฒเธข)`;
+    ? (ti>0 ? 'มีรายรับแต่ยังไม่มีรายจ่าย' : '—')
+    : `${ratio.toFixed(2)} : 1  (รายรับคิดเป็น ${(ratio*100).toFixed(1)}% ของรายจ่าย)`;
   $('#t-summary').innerHTML = `
-    <thead><tr><th class="l">เธซเธกเธงเธ”</th><th class="l">เธเธฃเธฐเน€เธ เธ—เธขเนเธญเธข</th><th>เธเธณเธเธงเธเน€เธเธดเธ</th></tr></thead>
+    <thead><tr><th class="l">หมวด</th><th class="l">ประเภทย่อย</th><th>จำนวนเงิน</th></tr></thead>
     <tbody>
-      ${inc.length? head('เธฃเธฒเธขเธฃเธฑเธ')+block(inc,'income','var(--sprout)') : ''}
-      ${exp.length? head('เธฃเธฒเธขเธเนเธฒเธข')+block(exp,'expense','var(--brick)') : ''}
-      ${!inc.length&&!exp.length?'<tr><td class="empty" colspan="3">เธขเธฑเธเนเธกเนเธกเธตเธเนเธญเธกเธนเธฅเนเธเธเนเธงเธเธ—เธตเนเน€เธฅเธทเธญเธ</td></tr>':''}</tbody>
+      ${inc.length? head('รายรับ')+block(inc,'income','var(--sprout)') : ''}
+      ${exp.length? head('รายจ่าย')+block(exp,'expense','var(--brick)') : ''}
+      ${!inc.length&&!exp.length?'<tr><td class="empty" colspan="3">ยังไม่มีข้อมูลในช่วงที่เลือก</td></tr>':''}</tbody>
     <tfoot>
-      <tr><td class="l" colspan="2">เธฃเธงเธกเธฃเธฒเธขเธฃเธฑเธ</td><td class="num">${money(ti)}</td></tr>
-      <tr><td class="l" colspan="2">เธฃเธงเธกเธฃเธฒเธขเธเนเธฒเธข</td><td class="num">${money(tx)}</td></tr>
-      <tr><td class="l" colspan="2">เธฃเธฒเธขเธฃเธฑเธเธชเธนเธเธเธงเนเธฒ/เธ•เนเธณเธเธงเนเธฒเธฃเธฒเธขเธเนเธฒเธข</td>
+      <tr><td class="l" colspan="2">รวมรายรับ</td><td class="num">${money(ti)}</td></tr>
+      <tr><td class="l" colspan="2">รวมรายจ่าย</td><td class="num">${money(tx)}</td></tr>
+      <tr><td class="l" colspan="2">รายรับสูงกว่า/ต่ำกว่ารายจ่าย</td>
           <td class="num ${diff<0?'neg':''}" style="color:${diff<0?'var(--brick)':'var(--sprout)'}">${money(diff)}</td></tr>
-      <tr><td class="l" colspan="2">เธชเธฑเธ”เธชเนเธงเธเธฃเธฒเธขเธฃเธฑเธเธ•เนเธญเธฃเธฒเธขเธเนเธฒเธข</td>
+      <tr><td class="l" colspan="2">สัดส่วนรายรับต่อรายจ่าย</td>
           <td class="ratio" style="color:${ratio!=null&&ratio<1?'var(--brick)':'var(--sprout)'}">${ratioTxt}</td></tr>
     </tfoot>`;
 }
 function txnTable(el, rows, emptyMsg){
   el.innerHTML = rows.length ? `
-    <thead><tr><th class="l">เธงเธฑเธเธ—เธตเน</th><th class="l">เธซเธกเธงเธ” / เธเธฃเธฐเน€เธ เธ—เธขเนเธญเธข</th><th class="l">เธญเนเธฒเธเธญเธดเธ</th><th class="l">เธเธฑเธเธเธต</th><th>เธเธณเธเธงเธเน€เธเธดเธ</th><th></th></tr></thead>
+    <thead><tr><th class="l">วันที่</th><th class="l">หมวด / ประเภทย่อย</th><th class="l">อ้างอิง</th><th class="l">บัญชี</th><th>จำนวนเงิน</th><th></th></tr></thead>
     <tbody>${rows.map(t=>`<tr>
       <td class="l code">${beDate(t.date)}</td>
       <td class="l"><span class="cat-g">${esc(grpOf(t))}</span><span class="cat-s">${esc(t.category)}</span>${t.note?`<span class="cat-n">${esc(t.note)}</span>`:''}</td>
-      <td class="l code">${esc(t.ref||'โ€”')}</td>
+      <td class="l code">${esc(t.ref||'—')}</td>
       <td class="l" style="font-size:13px">${accName(t.account)}</td>
       <td class="num" style="font-weight:600">${money(t.amount)}</td>
-      <td><button class="btn danger sm" data-del="${t.id}">เธฅเธ</button></td>
+      <td><button class="btn danger sm" data-del="${t.id}">ลบ</button></td>
     </tr>`).join('')}</tbody>` : `<tbody><tr><td class="empty" colspan="6">${emptyMsg}</td></tr></tbody>`;
   el.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>delTxn(b.dataset.del));
 }
 async function delTxn(id){
-  if(!confirm('เธฅเธเธฃเธฒเธขเธเธฒเธฃเธเธตเนเธญเธญเธเธเธฒเธเธเธตเธ•เธเธญเธเธชเธ–เธฒเธเธเธฃเธดเธเธฒเธฃ?')) return;
+  if(!confirm('ยืนยันการลบรายการนี้ออกจากชีตของสถานบริการ')) return;
   const t = S.txns.find(x=>x.id===id);
   await api('deleteTxn',{code:t.code,id});
   S.txns = S.txns.filter(x=>x.id!==id);
-  toast('เธฅเธเธฃเธฒเธขเธเธฒเธฃเนเธฅเนเธง'); renderEntry();
+  toast('ลบรายการแล้ว'); renderEntry();
 }
 function initCascade(prefix, type){
   const tree = treeOf(type), gsel = $('#'+prefix+'-grp'), csel = $('#'+prefix+'-cat');
@@ -1040,23 +1040,23 @@ async function addTxn(type){
   const date=$('#'+p+'-date').value, grp=$('#'+p+'-grp').value, cat=$('#'+p+'-cat').value;
   const acc=$('#'+p+'-acc').value, amt=parseFloat($('#'+p+'-amt').value);
   const ref=$('#'+p+'-ref').value.trim(), note=$('#'+p+'-note').value.trim();
-  if(!date) return toast('เน€เธฅเธทเธญเธเธงเธฑเธเธ—เธตเนเธเนเธญเธเธเธฑเธเธ—เธถเธ');
-  if(!cat) return toast('เน€เธฅเธทเธญเธเธเธฃเธฐเน€เธ เธ—เธขเนเธญเธขเธเนเธญเธเธเธฑเธเธ—เธถเธ');
-  if(!(amt>0)) return toast('เธเธฃเธญเธเธเธณเธเธงเธเน€เธเธดเธเนเธซเนเธกเธฒเธเธเธงเนเธฒ 0');
+  if(!date) return toast('เลือกวันที่ก่อนบันทึก');
+  if(!cat) return toast('เลือกประเภทย่อยก่อนบันทึก');
+  if(!(amt>0)) return toast('กรอกจำนวนเงินให้มากกว่า 0');
   const fy = fyOfDate(date);
-  if(fy !== +S.eFy && !confirm(`เธงเธฑเธเธ—เธตเน ${beDate(date)} เธญเธขเธนเนเนเธเธเธตเธเธเธเธฃเธฐเธกเธฒเธ“ ${fy} เนเธกเนเนเธเน ${S.eFy} เธ•เนเธญเธเธเธฒเธฃเธเธฑเธเธ—เธถเธเธ•เนเธญเธซเธฃเธทเธญเนเธกเน?`)) return;
+  if(fy !== +S.eFy && !confirm(`วันที่ ${beDate(date)} อยู่ในปีงบประมาณ ${fy} ไม่ใช่ ${S.eFy} ต้องการบันทึกต่อหรือไม่`)) return;
   const txn = {id:uid(), code:S.eFac, date, fy, type, group:grp, category:cat, account:acc, amount:amt, ref, note};
   await api('addTxn',{code:S.eFac, txn});
   S.txns.push(txn);
   $('#'+p+'-amt').value=''; $('#'+p+'-note').value=''; $('#'+p+'-ref').value='';
-  toast(type==='income'?'เธเธฑเธเธ—เธถเธเธฃเธฒเธขเธฃเธฑเธเนเธฅเนเธง':'เธเธฑเธเธ—เธถเธเธฃเธฒเธขเธเนเธฒเธขเนเธฅเนเธง');
+  toast(type==='income'?'บันทึกรายรับแล้ว':'บันทึกรายจ่ายแล้ว');
   renderEntry();
 }
 
 /* ============================================================
-   10. เธฃเธฒเธขเธเธฒเธเธเธฒเธฃเน€เธเธดเธ (407 / 404)
+   10. รายงานการเงิน (407 / 404)
    ============================================================ */
-/** เธงเธฑเธเธ—เธตเนเธ—เธตเนเธกเธตเธฃเธฒเธขเธเธฒเธฃเธฃเธฑเธเนเธฅเธฐ/เธซเธฃเธทเธญเธเนเธฒเธข เธเธญเธเธชเธ–เธฒเธเธเธฃเธดเธเธฒเธฃเนเธฅเธฐเธเธตเธเธเธ—เธตเนเน€เธฅเธทเธญเธ */
+/** วันที่ที่มีรายการรับและ/หรือจ่าย ของสถานบริการและปีงบที่เลือก */
 function activeDates(code, fy){
   const set = {};
   S.txns.forEach(t=>{ if(t.code===code && +t.fy===+fy) set[t.date]=1; });
@@ -1066,8 +1066,8 @@ function syncReportDates(){
   const ds = activeDates(S.rFac, S.rFy);
   const opts = ds.map(d=>({v:d, t:beDate(d)}));
   if(!ds.length){
-    fill($('#r-from'), [{v:'', t:'โ€” เนเธกเนเธกเธตเธฃเธฒเธขเธเธฒเธฃ โ€”'}]);
-    fill($('#r-to'),   [{v:'', t:'โ€” เนเธกเนเธกเธตเธฃเธฒเธขเธเธฒเธฃ โ€”'}]);
+    fill($('#r-from'), [{v:'', t:'— ไม่มีรายการ —'}]);
+    fill($('#r-to'),   [{v:'', t:'— ไม่มีรายการ —'}]);
     S.rFrom = S.rTo = null; return;
   }
   if(ds.indexOf(S.rFrom)<0) S.rFrom = ds[0];
@@ -1077,7 +1077,7 @@ function syncReportDates(){
   fill($('#r-to'),   opts, S.rTo);
 }
 
-/** เธขเธญเธ”เธเธเน€เธซเธฅเธทเธญเธฃเธงเธกเธ—เธธเธเธเธฑเธเธเธต เธเนเธญเธเธงเธฑเธเธ—เธตเนเธ—เธตเนเธเธณเธซเธเธ” */
+/** ยอดคงเหลือรวมทุกบัญชี ก่อนวันที่ที่กำหนด */
 function balanceBefore(code, fy, dateIso){
   const o = opening(code, fy);
   let bal = o.cash + o.bankOp + o.bankDep;
@@ -1088,9 +1088,9 @@ function balanceBefore(code, fy, dateIso){
   return bal;
 }
 
-/** เธชเธฃเนเธฒเธเธเนเธญเธกเธนเธฅเธ•เธฒเธฃเธฒเธเธฃเธฒเธขเธเธฒเธ เธเธทเธเน€เธเนเธ {cols, rows, totals} */
+/** สร้างข้อมูลตารางรายงาน คืนเป็น {cols, rows, totals} */
 function buildReport(){
-  const cols = ['เธ.เธจ.','เน€เธ”เธทเธญเธ','เธงเธฑเธเธ—เธตเน','เธ—เธตเนเน€เธญเธเธชเธฒเธฃ','เธฃเธฒเธขเธเธฒเธฃ','เธฃเธฒเธขเธฃเธฑเธ','เธฃเธฒเธขเธเนเธฒเธข','เธเธเน€เธซเธฅเธทเธญ'].concat(BUDGET_COLS.map(c=>c.t));
+  const cols = ['พ.ศ.','เดือน','วันที่','ที่เอกสาร','รายการ','รายรับ','รายจ่าย','คงเหลือ'].concat(BUDGET_COLS.map(c=>c.t));
   if(!S.rFrom || !S.rTo) return {cols, rows:[], totals:null, carry:0};
 
   const list = S.txns.filter(t=>t.code===S.rFac && +t.fy===+S.rFy && t.date>=S.rFrom && t.date<=S.rTo)
@@ -1110,7 +1110,7 @@ function buildReport(){
         inc, exp, bal:run}, budgetOf(t)));
     });
   } else {
-    // 407 โ€” เธฃเธงเธกเธขเธญเธ”เน€เธเนเธเธฃเธฒเธขเธงเธฑเธ
+    // 407 — รวมยอดเป็นรายวัน
     const byDate = {};
     list.forEach(t=>{ (byDate[t.date] = byDate[t.date] || []).push(t); });
     Object.keys(byDate).sort().forEach(d=>{
@@ -1123,9 +1123,9 @@ function buildReport(){
       day.forEach(t=>{ if(t.type!=='expense') return; const g=grpOf(t);
         const col = BUDGET_COLS.find(c=>c.g===g); if(col) bud[col.t] += (+t.amount||0); });
       const p = beParts(d);
-      const label = `เธฃเธฑเธ ${day.filter(t=>t.type==='income').length} เธฃเธฒเธขเธเธฒเธฃ ยท เธเนเธฒเธข ${day.filter(t=>t.type==='expense').length} เธฃเธฒเธขเธเธฒเธฃ`;
+      const label = `รับ ${day.filter(t=>t.type==='income').length} รายการ · จ่าย ${day.filter(t=>t.type==='expense').length} รายการ`;
       rows.push(Object.assign({be:p.be, month:p.month, day:p.day,
-        ref: refs.length? (refs[0] + (refs.length>1? ` เนเธฅเธฐเธญเธตเธ ${refs.length-1}`:'')) : '',
+        ref: refs.length? (refs[0] + (refs.length>1? ` และอีก ${refs.length-1}`:'')) : '',
         item: label, inc, exp, bal:run}, bud));
     });
   }
@@ -1136,7 +1136,7 @@ function buildReport(){
 }
 
 function renderReports(){
-  fill($('#r-fy'), FYS.map(y=>({v:y,t:'เธเธตเธเธเธเธฃเธฐเธกเธฒเธ“ '+y})), S.rFy);
+  fill($('#r-fy'), FYS.map(y=>({v:y,t:'ปีงบประมาณ '+y})), S.rFy);
   const facs = myFacs();
   if(!facs.some(f=>f.code===S.rFac)) S.rFac = facs[0]?.code;
   fill($('#r-fac'), facs.map(f=>({v:f.code,t:f.name})), S.rFac);
@@ -1145,40 +1145,40 @@ function renderReports(){
 
   const R = buildReport();
   const f = S.facilities.find(x=>x.code===S.rFac)||{};
-  $('#r-title').textContent = S.rRep==='407' ? 'เธฃเธฒเธขเธเธฒเธเน€เธเธดเธเธเธเน€เธซเธฅเธทเธญเธเธฃเธฐเธเธณเธงเธฑเธ' : 'เธ—เธฐเน€เธเธตเธขเธเธเธธเธกเน€เธเธดเธเธเธญเธเธเธเธเธฃเธฐเธกเธฒเธ“';
-  $('#r-sub1').textContent = `${f.name||''}  เธฃเธซเธฑเธช ${S.rFac||'โ€”'}` + (f.addr? `  ${f.addr}`:'');
+  $('#r-title').textContent = S.rRep==='407' ? 'รายงานเงินคงเหลือประจำวัน' : 'ทะเบียนคุมเงินนอกงบประมาณ';
+  $('#r-sub1').textContent = `${f.name||''}  รหัส ${S.rFac||'—'}` + (f.addr? `  ${f.addr}`:'');
   $('#r-sub2').textContent = S.rFrom
-    ? `เธเธตเธเธเธเธฃเธฐเธกเธฒเธ“ ${S.rFy} ยท เธ•เธฑเนเธเนเธ•เนเธงเธฑเธเธ—เธตเน ${beDate(S.rFrom)} เธ–เธถเธเธงเธฑเธเธ—เธตเน ${beDate(S.rTo)}  (เนเธเธ ${S.rRep})`
-    : `เธเธตเธเธเธเธฃเธฐเธกเธฒเธ“ ${S.rFy} ยท เธขเธฑเธเนเธกเนเธกเธตเธฃเธฒเธขเธเธฒเธฃเธเธฑเธเธ—เธถเธเนเธงเน`;
+    ? `ปีงบประมาณ ${S.rFy} · ตั้งแต่วันที่ ${beDate(S.rFrom)} ถึงวันที่ ${beDate(S.rTo)}  (แบบ ${S.rRep})`
+    : `ปีงบประมาณ ${S.rFy} · ยังไม่มีรายการบันทึกไว้`;
 
   const head = `<thead><tr>
-    <th class="c">เธ.เธจ.</th><th class="l">เน€เธ”เธทเธญเธ</th><th class="c">เธงเธฑเธเธ—เธตเน</th>
-    <th class="l">เธ—เธตเนเน€เธญเธเธชเธฒเธฃ</th><th class="l">เธฃเธฒเธขเธเธฒเธฃ</th>
-    <th>เธฃเธฒเธขเธฃเธฑเธ</th><th>เธฃเธฒเธขเธเนเธฒเธข</th><th>เธเธเน€เธซเธฅเธทเธญ</th>
+    <th class="c">พ.ศ.</th><th class="l">เดือน</th><th class="c">วันที่</th>
+    <th class="l">ที่เอกสาร</th><th class="l">รายการ</th>
+    <th>รายรับ</th><th>รายจ่าย</th><th>คงเหลือ</th>
     ${BUDGET_COLS.map(c=>`<th>${c.t}</th>`).join('')}
   </tr></thead>`;
 
   const carryRow = `<tr class="grow">
-    <td class="l" colspan="5">เธขเธญเธ”เธขเธเธกเธฒ เธ“ เธงเธฑเธเธ—เธตเน ${S.rFrom? beDate(S.rFrom):'โ€”'}</td>
+    <td class="l" colspan="5">ยอดยกมา ณ วันที่ ${S.rFrom? beDate(S.rFrom):'—'}</td>
     <td></td><td></td><td class="num">${money(R.carry)}</td>
     ${BUDGET_COLS.map(()=>'<td></td>').join('')}</tr>`;
 
   const body = R.rows.length ? R.rows.map(r=>`<tr>
       <td class="c code">${r.be}</td><td class="l">${r.month}</td><td class="c code">${r.day}</td>
-      <td class="l code">${esc(r.ref||'โ€”')}</td><td class="l">${esc(r.item)}</td>
+      <td class="l code">${esc(r.ref||'—')}</td><td class="l">${esc(r.item)}</td>
       <td class="num" style="color:var(--sprout)">${r.inc?money(r.inc):''}</td>
       <td class="num" style="color:var(--brick)">${r.exp?money(r.exp):''}</td>
       <td class="num" style="font-weight:600">${money(r.bal)}</td>
       ${BUDGET_COLS.map(c=>`<td class="num">${r[c.t]?money(r[c.t]):''}</td>`).join('')}
     </tr>`).join('')
-    : `<tr><td class="empty" colspan="${8+BUDGET_COLS.length}">เนเธกเนเธกเธตเธฃเธฒเธขเธเธฒเธฃเนเธเธเนเธงเธเธงเธฑเธเธ—เธตเนเธ—เธตเนเน€เธฅเธทเธญเธ</td></tr>`;
+    : `<tr><td class="empty" colspan="${8+BUDGET_COLS.length}">ไม่มีรายการในช่วงเวลาที่เลือก</td></tr>`;
 
   const foot = R.rows.length ? `<tfoot><tr>
-      <td class="l" colspan="5">เธฃเธงเธกเธ—เธฑเนเธเธชเธดเนเธ</td>
+      <td class="l" colspan="5">รวมทั้งสิ้น</td>
       <td class="num">${money(R.totals.inc)}</td>
       <td class="num">${money(R.totals.exp)}</td>
       <td class="num">${money(R.last)}</td>
-      ${BUDGET_COLS.map(c=>`<td class="num">${R.totals[c.t]?money(R.totals[c.t]):'โ€”'}</td>`).join('')}
+      ${BUDGET_COLS.map(c=>`<td class="num">${R.totals[c.t]?money(R.totals[c.t]):'—'}</td>`).join('')}
     </tr></tfoot>` : '';
 
   $('#t-report').innerHTML = head + `<tbody>${carryRow}${body}</tbody>` + foot;
@@ -1189,9 +1189,9 @@ function renderSignatures(){
   const staff = S.people.filter(p=>p.code===S.rFac);
   const pick = role => (staff.find(p=>p.fin===role)||{}).name || '';
   const slots = [
-    {role:'เน€เธเนเธฒเธซเธเนเธฒเธ—เธตเนเธเธฒเธฃเน€เธเธดเธ',            label:'เธเธนเนเธเธฑเธ”เธ—เธณ'},
-    {role:'เธซเธฑเธงเธซเธเนเธฒเน€เธเนเธฒเธซเธเนเธฒเธ—เธตเนเธเธฒเธฃเน€เธเธดเธ',      label:'เธเธนเนเธ•เธฃเธงเธเธชเธญเธ'},
-    {role:'เธเธนเนเธญเธณเธเธงเธขเธเธฒเธฃ/เธซเธฑเธงเธซเธเนเธฒเธซเธเนเธงเธขเธเธฃเธดเธเธฒเธฃ', label:'เธเธนเนเธญเธเธธเธกเธฑเธ•เธด'}
+    {role:'เจ้าหน้าที่การเงิน',            label:'ผู้จัดทำ'},
+    {role:'หัวหน้าเจ้าหน้าที่การเงิน',      label:'ผู้ตรวจสอบ'},
+    {role:'ผู้อำนวยการ/หัวหน้าหน่วยบริการ', label:'ผู้อนุมัติ'}
   ];
   $('#r-signs').innerHTML = slots.map(s=>`
     <div><div class="ln"></div>
@@ -1201,55 +1201,55 @@ function renderSignatures(){
 
 function reportCSV(){
   const R = buildReport();
-  if(!R.rows.length) return toast('เนเธกเนเธกเธตเธเนเธญเธกเธนเธฅเนเธซเนเธ”เธฒเธงเธเนเนเธซเธฅเธ”');
+  if(!R.rows.length) return toast('ไม่มีข้อมูลให้ดาวน์โหลด');
   const q = v => '"' + String(v==null?'':v).replace(/"/g,'""') + '"';
   const lines = [];
-  lines.push([S.rRep==='407'?'เธฃเธฒเธขเธเธฒเธเน€เธเธดเธเธเธเน€เธซเธฅเธทเธญเธเธฃเธฐเธเธณเธงเธฑเธ':'เธ—เธฐเน€เธเธตเธขเธเธเธธเธกเน€เธเธดเธเธเธญเธเธเธเธเธฃเธฐเธกเธฒเธ“'].map(q).join(','));
-  lines.push([facName(S.rFac), 'เธเธตเธเธเธเธฃเธฐเธกเธฒเธ“ '+S.rFy, beDate(S.rFrom)+' เธ–เธถเธ '+beDate(S.rTo)].map(q).join(','));
+  lines.push([S.rRep==='407'?'รายงานเงินคงเหลือประจำวัน':'ทะเบียนคุมเงินนอกงบประมาณ'].map(q).join(','));
+  lines.push([facName(S.rFac), 'ปีงบประมาณ '+S.rFy, beDate(S.rFrom)+' ถึง '+beDate(S.rTo)].map(q).join(','));
   lines.push(R.cols.map(q).join(','));
-  lines.push(['','','','','เธขเธญเธ”เธขเธเธกเธฒ','','',R.carry].concat(BUDGET_COLS.map(()=>'')).map(q).join(','));
+  lines.push(['','','','','ยอดยกมา','','',R.carry].concat(BUDGET_COLS.map(()=>'')).map(q).join(','));
   R.rows.forEach(r=>{
     lines.push([r.be,r.month,r.day,r.ref,r.item,r.inc||'',r.exp||'',r.bal]
       .concat(BUDGET_COLS.map(c=>r[c.t]||'')).map(q).join(','));
   });
-  lines.push(['','','','','เธฃเธงเธกเธ—เธฑเนเธเธชเธดเนเธ',R.totals.inc,R.totals.exp,R.last]
+  lines.push(['','','','','รวมทั้งสิ้น',R.totals.inc,R.totals.exp,R.last]
     .concat(BUDGET_COLS.map(c=>R.totals[c.t])).map(q).join(','));
   const blob = new Blob(['\uFEFF'+lines.join('\r\n')], {type:'text/csv;charset=utf-8'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = `${S.rRep}_${S.rFac}_${S.rFy}.csv`;
   a.click(); URL.revokeObjectURL(a.href);
-  toast('เธ”เธฒเธงเธเนเนเธซเธฅเธ”เนเธเธฅเน CSV เนเธฅเนเธง');
+  toast('ดาวน์โหลดไฟล์ CSV แล้ว');
 }
 
 /* ============================================================
-   11. เธ•เธฑเนเธเธเนเธฒเธฃเธฐเธเธ
+   11. ตั้งค่าระบบ
    ============================================================ */
 function renderSettings(){
   $('#set-sub').textContent = isAdmin()
-    ? 'เธชเธดเธ—เธเธดเนเธเธนเนเธ”เธนเนเธฅเธฃเธฐเธ”เธฑเธเธญเธณเน€เธ เธญ โ€” เธเธฑเธ”เธเธฒเธฃเนเธ”เนเธ—เธธเธเธชเธ–เธฒเธเธเธฃเธดเธเธฒเธฃ'
-    : `เธเธฑเธ”เธเธฒเธฃเธเนเธญเธกเธนเธฅเธเธญเธ ${facName(S.user.code)} เนเธ”เนเน€เธเธเธฒเธฐเนเธซเนเธเน€เธ”เธตเธขเธง`;
+    ? 'สิทธิ์ผู้ดูแลระดับอำเภอ — จัดการได้ทุกสถานบริการ'
+    : `จัดการข้อมูลได้เฉพาะของ ${facName(S.user.code)}`;
   renderFacilitiesTab();
   renderPeopleTab();
   renderOpeningTab();
 }
 
-/* ---- เธชเธ–เธฒเธเธเธฃเธดเธเธฒเธฃ ---- */
+/* ---- สถานบริการ ---- */
 function renderFacilitiesTab(){
   const list = isAdmin() ? S.facilities : S.facilities.filter(f=>f.code===S.user.code);
-  $('#fc-count').textContent = `${list.length} เนเธซเนเธ`;
+  $('#fc-count').textContent = `${list.length} แห่ง`;
   $('#t-facilities').innerHTML = `
-    <thead><tr><th class="l">เธฃเธซเธฑเธช</th><th class="l">เธเธทเนเธญเธชเธ–เธฒเธเธเธฃเธดเธเธฒเธฃ</th><th class="l">เธ—เธตเนเธญเธขเธนเน</th><th class="l">เธเธทเนเธญเธเธนเนเนเธเน</th><th class="l">เธฃเธซเธฑเธชเธเนเธฒเธ</th><th class="l">เธชเธดเธ—เธเธดเน</th><th class="l">เธเธฒเธฃเธเธฑเธ”เธเธฒเธฃ</th></tr></thead>
+    <thead><tr><th class="l">รหัส</th><th class="l">ชื่อสถานบริการ</th><th class="l">ที่อยู่</th><th class="l">ชื่อผู้ใช้</th><th class="l">รหัสผ่าน</th><th class="l">สิทธิ์</th><th class="l">การจัดการ</th></tr></thead>
     <tbody>${list.map(f=>`<tr>
       <td class="l code">${f.code}</td>
       <td class="l">${esc(f.name)}</td>
-      <td class="l" style="color:var(--ink-2);font-size:13.5px">${esc(f.addr||'โ€”')}</td>
+      <td class="l" style="color:var(--ink-2);font-size:13.5px">${esc(f.addr||'—')}</td>
       <td class="l code">${esc(f.user)}</td>
       <td class="l code">${esc(f.pass)}</td>
-      <td class="l">${f.role==='admin'?'<span class="tagline">เธ—เธธเธเธชเธ–เธฒเธเธเธฃเธดเธเธฒเธฃ</span>':'เน€เธเธเธฒเธฐเนเธซเนเธเธเธตเน'}</td>
+      <td class="l">${f.role==='admin'?'<span class="tagline">ทุกสถานบริการ</span>':'เฉพาะแห่งนี้'}</td>
       <td class="l">
-        <button class="btn ghost icon" title="เนเธเนเนเธ" data-edit="${f.code}">โ</button>
-        ${isAdmin()?`<button class="btn danger icon" title="เธฅเธ" data-rm="${f.code}">๐—‘</button>`:''}
+        <button class="btn ghost icon" title="แก้ไข" data-edit="${f.code}">✎</button>
+        ${isAdmin()?`<button class="btn danger icon" title="ลบ" data-rm="${f.code}">🗑</button>`:''}
       </td>
     </tr>`).join('')}</tbody>`;
   $$('#t-facilities [data-edit]').forEach(b=>b.onclick=()=>editFacility(b.dataset.edit));
@@ -1263,7 +1263,7 @@ function editFacility(code){
   $('#fc-code').value=f.code; $('#fc-code').readOnly=true;
   $('#fc-name').value=f.name; $('#fc-addr').value=f.addr||'';
   $('#fc-user').value=f.user; $('#fc-pass').value=f.pass; $('#fc-role').value=f.role||'user';
-  $('#fc-form-title').textContent='เนเธเนเนเธเธชเธ–เธฒเธเธเธฃเธดเธเธฒเธฃ '+code;
+  $('#fc-form-title').textContent='แก้ไขสถานบริการ '+code;
   $('#fc-cancel').classList.remove('hidden');
   window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -1272,15 +1272,15 @@ function resetFacilityForm(){
   ['#fc-code','#fc-name','#fc-addr','#fc-user','#fc-pass'].forEach(i=>$(i).value='');
   $('#fc-code').readOnly = !isAdmin();
   $('#fc-role').value='user';
-  $('#fc-form-title').textContent='เน€เธเธดเนเธกเธชเธ–เธฒเธเธเธฃเธดเธเธฒเธฃ';
+  $('#fc-form-title').textContent='เพิ่มสถานบริการ';
   $('#fc-cancel').classList.add('hidden');
 }
 async function saveFacility(){
   const code=$('#fc-code').value.trim(), name=$('#fc-name').value.trim();
-  if(!/^\d{5}$/.test(code)) return toast('เธฃเธซเธฑเธชเธชเธ–เธฒเธเธเธฃเธดเธเธฒเธฃเธ•เนเธญเธเน€เธเนเธเธ•เธฑเธงเน€เธฅเธ 5 เธซเธฅเธฑเธ');
-  if(!name) return toast('เธเธฃเธญเธเธเธทเนเธญเธชเธ–เธฒเธเธเธฃเธดเธเธฒเธฃ');
-  if(!isAdmin() && code!==S.user.code) return toast('เนเธเนเนเธเนเธ”เนเน€เธเธเธฒเธฐเธชเธ–เธฒเธเธเธฃเธดเธเธฒเธฃเธเธญเธเธ•เธเน€เธญเธ');
-  if(!S.editingCode && S.facilities.some(f=>f.code===code)) return toast('เธกเธตเธฃเธซเธฑเธชเธเธตเนเนเธเธฃเธฐเธเธเนเธฅเนเธง');
+  if(!/^\d{5}$/.test(code)) return toast('รหัสสถานบริการต้องเป็นตัวเลข 5 หลัก');
+  if(!name) return toast('กรอกชื่อสถานบริการ');
+  if(!isAdmin() && code!==S.user.code) return toast('แก้ไขได้เฉพาะสถานบริการของตนเอง');
+  if(!S.editingCode && S.facilities.some(f=>f.code===code)) return toast('มีรหัสสถานบริการนี้ในระบบแล้ว');
   const old = S.facilities.find(f=>f.code===code);
   const facility = {code, name, addr:$('#fc-addr').value.trim(),
     user:'U'+code, pass:$('#fc-pass').value.trim()||'P'+code,
@@ -1289,36 +1289,36 @@ async function saveFacility(){
   const i=S.facilities.findIndex(f=>f.code===code);
   if(i>=0) S.facilities[i]=facility; else S.facilities.push(facility);
   resetFacilityForm(); renderSettings(); refreshPickers();
-  toast('เธเธฑเธเธ—เธถเธเธชเธ–เธฒเธเธเธฃเธดเธเธฒเธฃเนเธฅเนเธง');
+  toast('บันทึกสถานบริการแล้ว');
 }
 async function removeFacility(code){
-  if(S.user && code===S.user.code) return toast('เธฅเธเธชเธ–เธฒเธเธเธฃเธดเธเธฒเธฃเธเธญเธเธเธนเนเนเธเนเธ—เธตเนเธเธณเธฅเธฑเธเน€เธเนเธฒเธฃเธฐเธเธเนเธกเนเนเธ”เน');
-  if(!confirm(`เธฅเธ ${facName(code)} เธญเธญเธเธเธฒเธเธฃเธฐเธเธ? เธเนเธญเธกเธนเธฅเนเธเธเธตเธ•เธเธญเธเธชเธ–เธฒเธเธเธฃเธดเธเธฒเธฃเธเธฐเธขเธฑเธเธญเธขเธนเน`)) return;
+  if(S.user && code===S.user.code) return toast('ลบสถานบริการของผู้ใช้ที่กำลังเข้าใช้งานอยู่ไม่ได้');
+  if(!confirm(`ลบ ${facName(code)} ออกจากระบบ ข้อมูลในชีตของสถานบริการจะยังคงอยู่`)) return;
   await api('deleteFacility',{code});
   S.facilities = S.facilities.filter(f=>f.code!==code);
-  renderSettings(); refreshPickers(); toast('เธฅเธเธชเธ–เธฒเธเธเธฃเธดเธเธฒเธฃเนเธฅเนเธง');
+  renderSettings(); refreshPickers(); toast('ลบสถานบริการแล้ว');
 }
 
-/* ---- เธเธธเธเธฅเธฒเธเธฃ ---- */
+/* ---- บุคลากร ---- */
 function renderPeopleTab(){
   const list = isAdmin() ? S.people : S.people.filter(p=>p.code===S.user.code);
-  $('#pp-count').textContent = `${list.length} เธเธ`;
+  $('#pp-count').textContent = `${list.length} คน`;
   $('#t-people').innerHTML = list.length ? `
-    <thead><tr><th class="l">เน€เธฅเธเธเธฃเธฐเธเธฒเธเธ</th><th class="l">เธเธทเนเธญ - เธชเธเธธเธฅ</th><th class="l">เธ•เธณเนเธซเธเนเธ</th>
-      <th class="l">เธ•เธณเนเธซเธเนเธเธเธฒเธฃเน€เธเธดเธ</th><th class="l">เธชเธ–เธฒเธเธเธฃเธดเธเธฒเธฃ</th><th class="l">เน€เธเธญเธฃเนเนเธ—เธฃเธจเธฑเธเธ—เน</th><th class="l">เธเธฒเธฃเธเธฑเธ”เธเธฒเธฃ</th></tr></thead>
+    <thead><tr><th class="l">เลขประจำตัวประชาชน</th><th class="l">ชื่อ-สกุล</th><th class="l">ตำแหน่ง</th>
+      <th class="l">ตำแหน่งการเงิน</th><th class="l">สถานบริการ</th><th class="l">เบอร์โทรศัพท์</th><th class="l">การจัดการ</th></tr></thead>
     <tbody>${list.map(p=>`<tr>
       <td class="l code">${esc(p.cid)}</td>
       <td class="l">${esc(p.name)}</td>
-      <td class="l" style="color:var(--ink-2)">${esc(p.pos||'โ€”')}</td>
-      <td class="l">${p.fin && p.fin!=='เนเธกเนเธฃเธฐเธเธธ' ? `<span class="tagline">${esc(p.fin)}</span>` : 'โ€”'}</td>
+      <td class="l" style="color:var(--ink-2)">${esc(p.pos||'—')}</td>
+      <td class="l">${p.fin && p.fin!=='ไม่ระบุ' ? `<span class="tagline">${esc(p.fin)}</span>` : '—'}</td>
       <td class="l">${esc(facName(p.code))}</td>
-      <td class="l code">${esc(p.tel||'โ€”')}</td>
+      <td class="l code">${esc(p.tel||'—')}</td>
       <td class="l">
-        <button class="btn ghost icon" title="เนเธเนเนเธ" data-ped="${esc(p.cid)}">โ</button>
-        <button class="btn danger icon" title="เธฅเธ" data-prm="${esc(p.cid)}">๐—‘</button>
+        <button class="btn ghost icon" title="แก้ไข" data-ped="${esc(p.cid)}">✎</button>
+        <button class="btn danger icon" title="ลบ" data-prm="${esc(p.cid)}">🗑</button>
       </td>
     </tr>`).join('')}</tbody>`
-    : `<tbody><tr><td class="empty" colspan="7">เธขเธฑเธเนเธกเนเธกเธตเธเนเธญเธกเธนเธฅเธเธธเธเธฅเธฒเธเธฃ เธเธ”เธเธธเนเธก โ€เน€เธเธดเนเธกเธเธธเธเธฅเธฒเธเธฃโ€ เน€เธเธทเนเธญเน€เธฃเธดเนเธกเธเธฑเธเธ—เธถเธ</td></tr></tbody>`;
+    : `<tbody><tr><td class="empty" colspan="7">ยังไม่มีข้อมูลบุคลากร กดปุ่ม “เพิ่มบุคลากร” เพื่อเริ่มบันทึก</td></tr></tbody>`;
   $$('#t-people [data-ped]').forEach(b=>b.onclick=()=>editPerson(b.dataset.ped));
   $$('#t-people [data-prm]').forEach(b=>b.onclick=()=>removePerson(b.dataset.prm));
 }
@@ -1332,7 +1332,7 @@ function resetPersonForm(){
   S.editingCid=null;
   ['#pp-cid','#pp-name','#pp-pos','#pp-tel'].forEach(i=>$(i).value='');
   $('#pp-cid').readOnly=false;
-  $('#pp-form-title').textContent='เน€เธเธดเนเธกเธเธธเธเธฅเธฒเธเธฃ';
+  $('#pp-form-title').textContent='เพิ่มบุคลากร';
   $('#pp-formcard').classList.add('hidden');
 }
 function editPerson(cid){
@@ -1341,53 +1341,53 @@ function editPerson(cid){
   S.editingCid = cid;
   $('#pp-cid').value=p.cid; $('#pp-cid').readOnly=true;
   $('#pp-name').value=p.name; $('#pp-pos').value=p.pos||'';
-  $('#pp-fin').value=p.fin||'เนเธกเนเธฃเธฐเธเธธ'; $('#pp-fac').value=p.code; $('#pp-tel').value=p.tel||'';
-  $('#pp-form-title').textContent='เนเธเนเนเธเธเนเธญเธกเธนเธฅเธเธธเธเธฅเธฒเธเธฃ';
+  $('#pp-fin').value=p.fin||'ไม่ระบุ'; $('#pp-fac').value=p.code; $('#pp-tel').value=p.tel||'';
+  $('#pp-form-title').textContent='แก้ไขข้อมูลบุคลากร';
   window.scrollTo({top:0,behavior:'smooth'});
 }
 async function savePerson(){
   const cid=$('#pp-cid').value.trim(), name=$('#pp-name').value.trim();
-  if(!/^\d{13}$/.test(cid)) return toast('เน€เธฅเธเธเธฃเธฐเธเธฒเธเธเธ•เนเธญเธเน€เธเนเธเธ•เธฑเธงเน€เธฅเธ 13 เธซเธฅเธฑเธ');
-  if(!name) return toast('เธเธฃเธญเธเธเธทเนเธญ - เธชเธเธธเธฅ');
-  if(!S.editingCid && S.people.some(p=>p.cid===cid)) return toast('เธกเธตเน€เธฅเธเธเธฃเธฐเธเธฒเธเธเธเธตเนเนเธเธฃเธฐเธเธเนเธฅเนเธง');
+  if(!/^\d{13}$/.test(cid)) return toast('เลขประจำตัวประชาชนต้องเป็นตัวเลข 13 หลัก');
+  if(!name) return toast('กรอกชื่อ-สกุล');
+  if(!S.editingCid && S.people.some(p=>p.cid===cid)) return toast('มีเลขประจำตัวประชาชนนี้ในระบบแล้ว');
   const person = {cid, name, pos:$('#pp-pos').value.trim(), fin:$('#pp-fin').value,
     code: isAdmin() ? $('#pp-fac').value : S.user.code, tel:$('#pp-tel').value.trim()};
   await api('savePerson',{person});
   const i=S.people.findIndex(p=>p.cid===cid);
   if(i>=0) S.people[i]=person; else S.people.push(person);
-  resetPersonForm(); renderPeopleTab(); toast('เธเธฑเธเธ—เธถเธเธเนเธญเธกเธนเธฅเธเธธเธเธฅเธฒเธเธฃเนเธฅเนเธง');
+  resetPersonForm(); renderPeopleTab(); toast('บันทึกข้อมูลบุคลากรแล้ว');
 }
 async function removePerson(cid){
   const p = S.people.find(x=>x.cid===cid);
-  if(!confirm(`เธฅเธ ${p?.name||cid} เธญเธญเธเธเธฒเธเธ—เธฐเน€เธเธตเธขเธเธเธธเธเธฅเธฒเธเธฃ?`)) return;
+  if(!confirm(`ลบ ${p?.name||cid} ออกจากทะเบียนบุคลากร`)) return;
   await api('deletePerson',{cid});
   S.people = S.people.filter(x=>x.cid!==cid);
-  renderPeopleTab(); toast('เธฅเธเธเนเธญเธกเธนเธฅเธเธธเธเธฅเธฒเธเธฃเนเธฅเนเธง');
+  renderPeopleTab(); toast('ลบข้อมูลบุคลากรแล้ว');
 }
 
-/* ---- เธขเธญเธ”เธขเธเธกเธฒ ---- */
+/* ---- ยอดยกมา ---- */
 function renderOpeningTab(){
   const facs = myFacs();
   if(!facs.some(f=>f.code===S.oFac)) S.oFac = facs[0]?.code;
-  fill($('#o-fy'), FYS.map(y=>({v:y,t:'เธเธตเธเธเธเธฃเธฐเธกเธฒเธ“ '+y})), S.oFy);
+  fill($('#o-fy'), FYS.map(y=>({v:y,t:'ปีงบประมาณ '+y})), S.oFy);
   fill($('#o-fac'), facs.map(f=>({v:f.code,t:f.name})), S.oFac);
 
   const o = S.openings.find(x=>x.code===S.oFac && +x.fy===+S.oFy);
   $('#o-cash').value = o? o.cash : '';
   $('#o-bank').value = o? o.bankOp : '';
   $('#o-dep').value  = o? o.bankDep : '';
-  $('#o-period').textContent = `เธขเธญเธ” เธ“ 30 เธเธฑเธเธขเธฒเธขเธ ${S.oFy-1} เธขเธเนเธเน€เธเนเธเธขเธญเธ”เธ•เธฑเนเธเธ•เนเธเธเธตเธเธเธเธฃเธฐเธกเธฒเธ“ ${S.oFy}`;
-  $('#o-fy-label').textContent = `เธเธตเธเธเธเธฃเธฐเธกเธฒเธ“ ${S.oFy}`;
+  $('#o-period').textContent = `ยอด ณ 30 กันยายน ${S.oFy-1} ยกไปเป็นยอดตั้งต้นปีงบประมาณ ${S.oFy}`;
+  $('#o-fy-label').textContent = `ปีงบประมาณ ${S.oFy}`;
   calcOpeningTotal();
 
   const rows = isAdmin() ? S.facilities : facs;
   $('#t-opening').innerHTML = `
-    <thead><tr><th class="l">เธฃเธซเธฑเธช</th><th class="l">เธชเธ–เธฒเธเธเธฃเธดเธเธฒเธฃ</th><th>เน€เธเธดเธเธชเธ”เนเธเธกเธทเธญ</th><th>เธเธเธฒเธเธฒเธฃ (เน€เธเธดเธเธเธณเธฃเธธเธ)</th><th>เธเธเธฒเธเธฒเธฃ (เธเนเธฒเน€เธชเธทเนเธญเธก)</th><th>เธฃเธงเธกเธขเธเธกเธฒ</th></tr></thead>
+    <thead><tr><th class="l">รหัส</th><th class="l">สถานบริการ</th><th>เงินสดในมือ</th><th>ธนาคาร (เงินบำรุง)</th><th>ธนาคาร (ค่าเสื่อม)</th><th>รวมยกมา</th></tr></thead>
     <tbody>${rows.map(f=>{ const x=opening(f.code,S.oFy); const tot=x.cash+x.bankOp+x.bankDep;
       return `<tr><td class="l code">${f.code}</td><td class="l">${esc(f.name)}</td>
         <td class="num">${money(x.cash)}</td><td class="num">${money(x.bankOp)}</td>
         <td class="num">${money(x.bankDep)}</td><td class="num" style="font-weight:600">${money(tot)}</td></tr>`;}).join('')}</tbody>
-    <tfoot><tr><td class="l" colspan="2">เธฃเธงเธก</td>
+    <tfoot><tr><td class="l" colspan="2">รวม</td>
       ${['cash','bankOp','bankDep'].map(k=>`<td class="num">${money(rows.reduce((s,f)=>s+opening(f.code,S.oFy)[k],0))}</td>`).join('')}
       <td class="num">${money(rows.reduce((s,f)=>{const x=opening(f.code,S.oFy);return s+x.cash+x.bankOp+x.bankDep;},0))}</td></tr></tfoot>`;
 }
@@ -1397,13 +1397,13 @@ function calcOpeningTotal(){
 }
 
 /* ============================================================
-   12. เน€เธกเธเธน / เธกเธธเธกเธกเธญเธ / เธชเธดเธ—เธเธดเน
+   12. เมนู / มุมมอง / สิทธิ์
    ============================================================ */
 const VIEWS = ['login','dashboard','facility','entry','reports','settings'];
 const NEEDS_AUTH = ['entry','reports','settings'];
 
 function showView(v){
-  if(NEEDS_AUTH.indexOf(v)>=0 && !S.user){ toast('เธเธฃเธธเธ“เธฒเน€เธเนเธฒเธชเธนเนเธฃเธฐเธเธเธเนเธญเธเนเธเนเน€เธกเธเธนเธเธตเน'); v='login'; }
+  if(NEEDS_AUTH.indexOf(v)>=0 && !S.user){ toast('กรุณาเข้าสู่ระบบก่อนใช้งานเมนูนี้'); v='login'; }
   S.view = v;
   VIEWS.forEach(x=>$('#v-'+x).classList.toggle('hidden', x!==v));
   $$('.rail nav button').forEach(b=>b.classList.toggle('on',
@@ -1421,14 +1421,14 @@ function applyAuth(){
   $$('[data-auth]').forEach(el=>el.classList.toggle('hidden', !on));
   $('#btn-login').classList.toggle('hidden', on);
   $('#btn-logout').classList.toggle('hidden', !on);
-  $('#me-name').textContent = on ? S.user.name : 'เธเธนเนเน€เธขเธตเนเธขเธกเธเธก';
+  $('#me-name').textContent = on ? S.user.name : 'ผู้เยี่ยมชม';
   $('#me-role').textContent = on
-    ? (isAdmin() ? 'เธเธนเนเธ”เธนเนเธฅเธฃเธฐเธ”เธฑเธเธญเธณเน€เธ เธญ' : 'เธฃเธซเธฑเธช '+S.user.code)
-    : 'เธ”เธนเธ เธฒเธเธฃเธงเธกเนเธ”เนเธญเธขเนเธฒเธเน€เธ”เธตเธขเธง';
+    ? (isAdmin() ? 'ผู้ดูแลระดับอำเภอ' : 'รหัส '+S.user.code)
+    : 'ดูภาพรวมได้เท่านั้น';
 }
 
 function refreshPickers(){
-  fill($('#f-fac'), [{v:'ALL',t:'เธ—เธธเธเธชเธ–เธฒเธเธเธฃเธดเธเธฒเธฃ (เธ เธฒเธเธฃเธงเธกเธญเธณเน€เธ เธญ)'}]
+  fill($('#f-fac'), [{v:'ALL',t:'ทุกสถานบริการ (ภาพรวมอำเภอ)'}]
     .concat(allFacs().map(f=>({v:f.code,t:f.name}))), S.facCode);
   const mine = myFacs();
   if(mine.length){
@@ -1438,24 +1438,24 @@ function refreshPickers(){
 }
 
 /* ============================================================
-   13. เน€เธเนเธฒเธชเธนเนเธฃเธฐเธเธ / เน€เธฃเธดเนเธกเธ•เนเธ
+   13. เข้าสู่ระบบ / เริ่มต้น
    ============================================================ */
 async function doLogin(){
   const u=$('#lg-u').value.trim(), p=$('#lg-p').value, msg=$('#lg-msg');
-  if(!u||!p){ msg.className='msg err'; msg.textContent='เธเธฃเธญเธเธเธทเนเธญเธเธนเนเนเธเนเนเธฅเธฐเธฃเธซเธฑเธชเธเนเธฒเธ'; return; }
-  $('#lg-btn').disabled=true; $('#lg-btn').textContent='เธเธณเธฅเธฑเธเธ•เธฃเธงเธเธชเธญเธโ€ฆ';
+  if(!u||!p){ msg.className='msg err'; msg.textContent='กรอกชื่อผู้ใช้และรหัสผ่าน'; return; }
+  $('#lg-btn').disabled=true; $('#lg-btn').textContent='กำลังตรวจสอบ…';
   try{
     const user = await api('login',{username:u,password:p});
-    if(!user){ msg.className='msg err'; msg.textContent='เธเธทเนเธญเธเธนเนเนเธเนเธซเธฃเธทเธญเธฃเธซเธฑเธชเธเนเธฒเธเนเธกเนเธ–เธนเธเธ•เนเธญเธ'; return; }
+    if(!user){ msg.className='msg err'; msg.textContent='ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง'; return; }
     S.user=user; msg.textContent=''; msg.className='';
     $('#lg-u').value=''; $('#lg-p').value='';
     S.eFac = S.oFac = S.rFac = isAdmin() ? S.facilities[0].code : user.code;
     applyAuth(); refreshPickers();
     initCascade('i','income'); initCascade('x','expense');
-    toast('เธขเธดเธเธ”เธตเธ•เนเธญเธเธฃเธฑเธ '+user.name);
+    toast('ยินดีต้อนรับ '+user.name);
     showView('dashboard');
-  }catch(err){ msg.className='msg err'; msg.textContent='เน€เธเธทเนเธญเธกเธ•เนเธญเนเธกเนเธชเธณเน€เธฃเนเธ: '+err.message; }
-  finally{ $('#lg-btn').disabled=false; $('#lg-btn').textContent='เน€เธเนเธฒเธชเธนเนเธฃเธฐเธเธ'; }
+  }catch(err){ msg.className='msg err'; msg.textContent='เชื่อมต่อไม่สำเร็จ: '+err.message; }
+  finally{ $('#lg-btn').disabled=false; $('#lg-btn').textContent='เข้าสู่ระบบ'; }
 }
 
 async function boot(){
@@ -1465,10 +1465,10 @@ async function boot(){
     S.facilities = d.facilities || []; S.openings = d.openings || [];
     S.txns = d.txns || []; S.people = d.people || [];
   }catch(err){
-    toast('เนเธซเธฅเธ”เธเนเธญเธกเธนเธฅเนเธกเนเธชเธณเน€เธฃเนเธ: '+err.message);
+    toast('โหลดข้อมูลไม่สำเร็จ: '+err.message);
     return;
   }
-  const fyOpts = FYS.map(y=>({v:y,t:'เธเธตเธเธเธเธฃเธฐเธกเธฒเธ“ '+y}));
+  const fyOpts = FYS.map(y=>({v:y,t:'ปีงบประมาณ '+y}));
   const nowFy = fyOfDate(new Date().toISOString().slice(0,10));
   S.fy = S.eFy = S.oFy = S.rFy = FYS.includes(nowFy) ? nowFy : 2569;
   fill($('#f-fy'), fyOpts, S.fy); fill($('#e-fy'), fyOpts, S.eFy);
@@ -1484,10 +1484,10 @@ async function boot(){
   showView('dashboard');
 }
 
-/* ---- เธเธนเธ event ---- */
+/* ---- ผูก event ---- */
 $$('.rail nav button').forEach(b=>b.onclick=()=>showView(b.dataset.view));
 $('#btn-login').onclick  = ()=>showView('login');
-$('#btn-logout').onclick = ()=>{ S.user=null; applyAuth(); refreshPickers(); showView('dashboard'); toast('เธญเธญเธเธเธฒเธเธฃเธฐเธเธเนเธฅเนเธง'); };
+$('#btn-logout').onclick = ()=>{ S.user=null; applyAuth(); refreshPickers(); showView('dashboard'); toast('ออกจากระบบแล้ว'); };
 $('#lg-btn').onclick = doLogin;
 $('#lg-p').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
 $('#lg-u').addEventListener('keydown', e=>{ if(e.key==='Enter') $('#lg-p').focus(); });
@@ -1550,7 +1550,7 @@ $('#o-save').onclick = async ()=>{
   await api('saveOpening', rec);
   const i = S.openings.findIndex(o=>o.code===rec.code && +o.fy===+rec.fy);
   if(i>=0) S.openings[i]=rec; else S.openings.push(rec);
-  toast('เธเธฑเธเธ—เธถเธเธขเธญเธ”เธขเธเธกเธฒเนเธฅเนเธง'); renderOpeningTab(); renderDashboard();
+  toast('บันทึกยอดยกมาแล้ว'); renderOpeningTab(); renderDashboard();
 };
 
 if(DEMO){ $('#lg-u').value='U00342'; $('#lg-p').value='P00342'; }
