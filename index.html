@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ระบบติดตามสถานะเงินบำรุง รพ.สต.</title>
+<title>ระบบการเงินบำรุง รพ.สต. — สสอ.ค้อวัง</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Sarabun:wght@400;500;600&display=swap" rel="stylesheet">
@@ -79,6 +79,8 @@ input[type=number],input.money{font-family:"IBM Plex Mono",monospace;text-align:
 .card>header{padding:14px 18px 0;display:flex;justify-content:space-between;align-items:baseline;gap:10px}
 .card>header h3{font-size:15.5px}
 .card>header .hint{font-size:11.5px;color:var(--ink-3);font-family:"IBM Plex Mono",monospace}
+.card>header .hgroup{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+select.mini{min-width:0;padding:4px 8px;font-size:12.5px;border-radius:6px}
 .card .body{padding:14px 18px 18px}
 .chartbox{position:relative;height:250px}
 .chartbox.tall{height:300px}
@@ -90,9 +92,14 @@ td{padding:10px;border-bottom:1px solid var(--line-2);text-align:right}
 td:first-child,td.l{text-align:left}
 tbody tr:hover{background:#f7faf7}
 tfoot td{border-top:1px solid var(--line);border-bottom:0;font-weight:600;background:#f7faf7}
+tr.grow td{font-weight:600;background:#f4f7f3}
+tr.sechead td{background:var(--pine);color:#fff;font-weight:600;font-size:13px;letter-spacing:.04em}
 .linkish{background:none;border:0;padding:0;color:var(--pine);font-weight:600;cursor:pointer;text-align:left;text-decoration:underline;text-underline-offset:3px;text-decoration-color:#a9cabf}
 .linkish:hover{color:var(--pine-2)}
 .code{font-family:"IBM Plex Mono",monospace;color:var(--ink-2);font-size:13px}
+.cat-g{display:block;font-size:11px;letter-spacing:.06em;color:var(--ink-3);font-family:"IBM Plex Mono",monospace}
+.cat-s{display:block;line-height:1.35;max-width:34ch}
+.cat-n{display:block;font-size:12.5px;color:var(--ink-3);margin-top:2px}
 .tagline{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:3px 9px;border-radius:99px;background:var(--pine-soft);color:var(--pine)}
 
 .btn{background:var(--pine);color:#fff;border:1px solid var(--pine);border-radius:8px;padding:9px 16px;cursor:pointer;font-weight:500}
@@ -156,7 +163,7 @@ tfoot td{border-top:1px solid var(--line);border-bottom:0;font-weight:600;backgr
 <div id="login" class="loginwrap">
   <div class="loginbox">
     <div class="mark">฿</div>
-    <h1>ระบบติดตามสถานะเงินบำรุง รพ.สต.</h1>
+    <h1>ระบบบริหารจัดการการเงินการคลัง</h1>
     <p>สำนักงานสาธารณสุขอำเภอค้อวัง</p>
     <div class="field"><label>ชื่อผู้ใช้</label><input id="lg-u" type="text" placeholder="U03900" autocomplete="username"></div>
     <div class="field"><label>รหัสผ่าน</label><input id="lg-p" type="password" placeholder="P03900" autocomplete="current-password"></div>
@@ -164,7 +171,8 @@ tfoot td{border-top:1px solid var(--line);border-bottom:0;font-weight:600;backgr
     <div id="lg-msg"></div>
     <div class="hintbox">
       ชื่อผู้ใช้คือ <code>U</code> + รหัสสถานบริการ 5 หลัก และรหัสผ่านคือ <code>P</code> + รหัสเดียวกัน<br>
-   </div>
+      ผู้ดูแลระบบระดับอำเภอ: <code>U00342 / P00342</code>
+    </div>
   </div>
 </div>
 
@@ -173,7 +181,7 @@ tfoot td{border-top:1px solid var(--line);border-bottom:0;font-weight:600;backgr
   <aside class="rail">
     <div class="brand">
       <div class="mark">฿</div>
-      <div><b>สถานะการณ์เงินบำรุง รพ.สต.</b><span>สำนักงานสาธารณสุขอำเภอค้อวัง</span></div>
+      <div><b>การเงินบำรุง รพ.สต.</b><span>สสอ.ค้อวัง</span></div>
     </div>
     <nav>
       <div class="grp">ภาพรวม</div>
@@ -181,8 +189,9 @@ tfoot td{border-top:1px solid var(--line);border-bottom:0;font-weight:600;backgr
       <div class="grp">งานประจำ</div>
       <button data-view="entry"><span class="ic">✎</span>บันทึกรายรับ-รายจ่าย</button>
       <div class="grp">ตั้งค่า</div>
-      <button data-view="opening"><span class="ic">▤</span>ตั้งค่ายอดยกมา</button>
       <button data-view="facilities"><span class="ic">⌂</span>ตั้งค่าสถานบริการ</button>
+      <button data-view="opening"><span class="ic">▤</span>ตั้งค่ายอดยกมา</button>
+      <button data-view="staff"><span class="ic">⌂</span>ตั้งค่าบุคลากร</button>
     </nav>
     <div class="foot">
       <b id="me-name">—</b>
@@ -215,11 +224,13 @@ tfoot td{border-top:1px solid var(--line);border-bottom:0;font-weight:600;backgr
 
       <div class="grid g2" style="margin-bottom:18px">
         <div class="card">
-          <header><h3>ประเภทรายรับ</h3><span class="hint" id="in-total">—</span></header>
+          <header><h3>ประเภทรายรับ</h3><div class="hgroup"><span class="hint" id="in-total">—</span>
+            <select class="mini" id="in-level"><option value="group">ตามหมวด</option><option value="sub">ตามประเภทย่อย</option></select></div></header>
           <div class="body"><div class="chartbox"><canvas id="c-income"></canvas></div></div>
         </div>
         <div class="card">
-          <header><h3>ประเภทรายจ่าย</h3><span class="hint" id="ex-total">—</span></header>
+          <header><h3>ประเภทรายจ่าย</h3><div class="hgroup"><span class="hint" id="ex-total">—</span>
+            <select class="mini" id="ex-level"><option value="group">ตามหมวด</option><option value="sub">ตามประเภทย่อย</option></select></div></header>
           <div class="body"><div class="chartbox"><canvas id="c-expense"></canvas></div></div>
         </div>
       </div>
@@ -251,9 +262,11 @@ tfoot td{border-top:1px solid var(--line);border-bottom:0;font-weight:600;backgr
       </div>
       <div class="ledger" id="fd-ledger"></div>
       <div class="grid g2" style="margin-bottom:18px">
-        <div class="card"><header><h3>ประเภทรายรับ</h3><span class="hint" id="fd-in-total">—</span></header>
+        <div class="card"><header><h3>ประเภทรายรับ</h3><div class="hgroup"><span class="hint" id="fd-in-total">—</span>
+          <select class="mini" id="fd-in-level"><option value="group">ตามหมวด</option><option value="sub">ตามประเภทย่อย</option></select></div></header>
           <div class="body"><div class="chartbox"><canvas id="c-fd-income"></canvas></div></div></div>
-        <div class="card"><header><h3>ประเภทรายจ่าย</h3><span class="hint" id="fd-ex-total">—</span></header>
+        <div class="card"><header><h3>ประเภทรายจ่าย</h3><div class="hgroup"><span class="hint" id="fd-ex-total">—</span>
+          <select class="mini" id="fd-ex-level"><option value="group">ตามหมวด</option><option value="sub">ตามประเภทย่อย</option></select></div></header>
           <div class="body"><div class="chartbox"><canvas id="c-fd-expense"></canvas></div></div></div>
       </div>
       <div class="card" style="margin-bottom:18px">
@@ -295,10 +308,12 @@ tfoot td{border-top:1px solid var(--line);border-bottom:0;font-weight:600;backgr
           <div class="body">
             <div class="formgrid">
               <div class="field"><label>วันที่</label><input type="date" id="i-date"></div>
-              <div class="field"><label>ประเภทรายรับ</label><select id="i-cat"></select></div>
+              <div class="field"><label>หมวดรายรับ</label><select id="i-grp"></select></div>
+              <div class="field"><label>ประเภทย่อย</label><select id="i-cat"></select></div>
               <div class="field"><label>บัญชีที่รับเข้า</label><select id="i-acc"></select></div>
               <div class="field"><label>จำนวนเงิน (บาท)</label><input type="number" id="i-amt" class="money" step="0.01" min="0" placeholder="0.00"></div>
-              <div class="field wide"><label>รายละเอียด</label><input type="text" id="i-note" placeholder="เช่น รับโอนงบ PP จาก CUP งวดที่ 1"></div>
+              <div class="field"><label>อ้างอิง (เลขที่ใบเสร็จ/เช็ค)</label><input type="text" id="i-ref" placeholder="เช่น บช.6812-004"></div>
+              <div class="field wide"><label>รายละเอียด</label><input type="text" id="i-note" placeholder="เช่น รับโอน Fixcost UC งวดที่ 1"></div>
             </div>
             <div style="margin-top:14px"><button class="btn" id="i-save">บันทึกรายรับ</button></div>
           </div>
@@ -313,9 +328,11 @@ tfoot td{border-top:1px solid var(--line);border-bottom:0;font-weight:600;backgr
           <div class="body">
             <div class="formgrid">
               <div class="field"><label>วันที่</label><input type="date" id="x-date"></div>
-              <div class="field"><label>ประเภทรายจ่าย</label><select id="x-cat"></select></div>
+              <div class="field"><label>หมวดรายจ่าย</label><select id="x-grp"></select></div>
+              <div class="field"><label>ประเภทย่อย</label><select id="x-cat"></select></div>
               <div class="field"><label>บัญชีที่จ่ายออก</label><select id="x-acc"></select></div>
               <div class="field"><label>จำนวนเงิน (บาท)</label><input type="number" id="x-amt" class="money" step="0.01" min="0" placeholder="0.00"></div>
+              <div class="field"><label>อ้างอิง (เลขที่ใบเสร็จ/เช็ค)</label><input type="text" id="x-ref" placeholder="เช่น ชค.6812-017"></div>
               <div class="field wide"><label>รายละเอียด</label><input type="text" id="x-note" placeholder="เช่น ค่าไฟฟ้าประจำเดือน"></div>
             </div>
             <div style="margin-top:14px"><button class="btn" id="x-save">บันทึกรายจ่าย</button></div>
@@ -417,8 +434,53 @@ const ACCOUNTS = [
   {k:'bankDep', name:'เงินฝากธนาคาร (ค่าเสื่อม)',     color:'#4f6f8a'}
 ];
 
-const CAT_IN = ['เงินงบประมาณ (งบดำเนินงาน)','งบเหมาจ่ายรายหัว (OP/PP) จาก CUP','งบส่งเสริมป้องกันโรค (PP)','งบบริการผู้ป่วยนอก (OP)','ค่าบริการทางการแพทย์ (ค่าเสื่อม)','เงินอุดหนุนจาก อปท.','รายได้ค่ารักษาพยาบาล','เงินบริจาค','ดอกเบี้ยเงินฝาก','รายรับอื่น'];
-const CAT_EX = ['ค่าตอบแทน','ค่าใช้สอย','ค่าวัสดุสำนักงาน','ค่าวัสดุการแพทย์','ค่าวัสดุเชื้อเพลิงและหล่อลื่น','ค่าสาธารณูปโภค','ค่าจ้างเหมาบริการ','ค่าครุภัณฑ์','ค่าที่ดินและสิ่งก่อสร้าง','รายจ่ายอื่น'];
+/* ผังหมวดรายรับ — หมวด → ประเภทย่อย */
+const INCOME_TREE = {
+  'รายรับค่ารักษาพยาบาล': [
+    'รายได้ค่ารักษาเบิกต้นสังกัด','รายได้ค่ารักษาชำระเงิน','รายได้ค่ารักษา พรบ.รถ',
+    'รายได้ค่ารักษาเบิกจ่ายตรง อปท.','รายได้ค่ารักษาประกันสังคม'],
+  'รายได้ UC': [
+    'รายได้ Fixcost UC','รายได้ Fee Schedule','รายได้ชดเชยค่าบริการแพทย์แผนไทย',
+    'รายได้รับโอน รพ.สต./สสอ.','เงินกองทุนหลักประกันสุขภาพตำบล','รายได้บริหารจัดการ (5 บาท/ประชากร)'],
+  'รายได้อื่น': [
+    'เงินบริจาค','ดอกเบี้ยเงินฝากธนาคาร','ภาษีหัก ณ ที่จ่าย','รายได้งบค่าเสื่อม',
+    'รายได้อื่นๆ (ไม่รวมเงินสนับสนุน อปท.)']
+};
+
+/* ผังหมวดรายจ่าย — หมวด → ประเภทย่อย */
+const EXPENSE_TREE = {
+  'ค่าใช้จ่ายบุคลากร': [
+    'ค่าจ้างลูกจ้างกลุ่มวิชาชีพ (พบ., ทันตฯ, นวก., จพ.สธ.)','ค่าจ้างลูกจ้างเหมาบริการ','ค่าจ้างลูกจ้าง พกส.'],
+  'ค่าตอบแทน': [
+    'ค่าตอบแทนการปฏิบัติงานรักษาพยาบาลนอกเวลาราชการและวันหยุดราชการ (OT)',
+    'ค่าตอบแทนการปฏิบัติงานจุดตรวจช่วงเทศกาล',
+    'ค่าตอบแทนในการปฏิบัติงานเชิงรุก หรือเวชปฏิบัติชุมชน (ฉ.11 งบประมาณ)',
+    'ค่าตอบแทน ฉ.11 (เงินบำรุง)',
+    'ค่าใช้จ่ายในการเดินทางไปราชการ หรือฝึกอบรมภายในจังหวัด'],
+  'ค่าใช้สอย': [
+    'เงินสมทบประกันสังคมส่วนของนายจ้าง','ค่าใช้จ่ายในการเดินทางไปราชการ','ค่าซ่อมแซมยานพาหนะ',
+    'ค่าซ่อมแซมครุภัณฑ์ทางการแพทย์','ค่าซ่อมแซมครุภัณฑ์','ค่าซ่อมแซมสิ่งก่อสร้าง',
+    'ค่าจ้างเหมาบริการอื่นๆ (จ้างงาน)'],
+  'ค่าวัสดุ': [
+    'วัสดุน้ำมันเชื้อเพลิง','วัสดุงานบ้านงานครัว','วัสดุคอมพิวเตอร์','วัสดุสำนักงาน',
+    'วัสดุวิทยาศาสตร์และการแพทย์','วัสดุการเกษตร'],
+  'ค่าครุภัณฑ์': [
+    'ครุภัณฑ์สำนักงาน','ครุภัณฑ์ยานพาหนะและขนส่ง','ครุภัณฑ์คอมพิวเตอร์','ครุภัณฑ์งานบ้านงานครัว',
+    'ครุภัณฑ์โฆษณาและเผยแพร่','ครุภัณฑ์ไฟฟ้าและวิทยุ','ครุภัณฑ์วิทยาศาสตร์และการแพทย์','ครุภัณฑ์การเกษตร'],
+  'ค่าสาธารณูปโภค': ['ค่าน้ำประปา','ค่าไฟฟ้า','ค่าโทรศัพท์/ค่าอินเตอร์เน็ต'],
+  'ค่าที่ดินและสิ่งก่อสร้าง': ['ค่าที่ดิน','ค่าก่อสร้าง'],
+  'ค่าใช้จ่ายอื่นๆ': [
+    'ค่าใช้จ่ายโครงการ CUP/กองทุน UC ตำบล','นำส่งภาษีหัก ณ ที่จ่าย','รายจ่ายงบค่าเสื่อม',
+    'รายจ่ายโอนคืน รพ.สต./สสอ.','ค่าใช้จ่ายอื่นๆ']
+};
+
+const treeOf = type => type==='income' ? INCOME_TREE : EXPENSE_TREE;
+const groupOfSub = (type, sub) => {
+  const t = treeOf(type);
+  return Object.keys(t).find(g => t[g].indexOf(sub) >= 0) || 'ไม่ระบุหมวด';
+};
+/* ประเภทย่อยที่ผูกกับบัญชีเงินฝากค่าเสื่อมโดยธรรมชาติ */
+const DEP_SUBS = ['รายได้งบค่าเสื่อม','รายจ่ายงบค่าเสื่อม'];
 
 const PIE_IN = ['#14524a','#1c6f63','#3f8f7a','#5faa8c','#84c2a4','#a8d6bd','#c9e6d6','#7a9e6b','#4f8a53','#2f6b3f'];
 const PIE_EX = ['#9e4433','#b4593f','#c47456','#cf8f6e','#a8791f','#c19a45','#8a5b3f','#6f4436','#d6a889','#7c3c46'];
@@ -433,6 +495,7 @@ const money = n => (Number(n)||0).toLocaleString('th-TH',{minimumFractionDigits:
 const short = n => { n=Number(n)||0; const a=Math.abs(n);
   if(a>=1e6) return (n/1e6).toFixed(1)+' ล.'; if(a>=1e3) return (n/1e3).toFixed(0)+' พ.'; return n.toFixed(0); };
 const uid = () => 'T'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 function fyOfDate(iso){ const [y,m]=iso.split('-').map(Number); return (m>=10 ? y+1 : y) + 543; }
 function ymOf(iso){ return iso.slice(0,7); }
@@ -465,8 +528,8 @@ async function api(action, payload={}){
 
 /* ---- ข้อมูลตัวอย่างสำหรับทดลองใช้เมื่อยังไม่ผูก Google Sheets ---- */
 const SEED_FAC = [
-  {code:'03900', name:'รพ.สต.บ้านเหล่าน้อย',  addr:'ต.ค้อวัง อ.ค้อวัง จ.ยโสธร',  role:'user'},
-  {code:'03901', name:'รพ.สต.บ้านโพนเมือง',   addr:'ต.ฟ้าห่วน อ.ค้อวัง จ.ยโสธร',   role:'user'},
+  {code:'03900', name:'รพ.สต.บ้านเหล่าน้อย',  addr:'ต.ฟ้าห่วน อ.ค้อวัง จ.ยโสธร',  role:'user'},
+  {code:'03901', name:'รพ.สต.บ้านโพนเมือง',   addr:'ต.ค้อวัง อ.ค้อวัง จ.ยโสธร',   role:'user'},
   {code:'03903', name:'รพ.สต.บ้านตูม',        addr:'ต.กุดน้ำใส อ.ค้อวัง จ.ยโสธร', role:'user'},
   {code:'03904', name:'รพ.สต.บ้านศิริพัฒนา',  addr:'ต.น้ำอ้อม อ.ค้อวัง จ.ยโสธร',  role:'user'},
   {code:'03905', name:'รพ.สต.บ้านน้ำอ้อม',    addr:'ต.น้ำอ้อม อ.ค้อวัง จ.ยโสธร',  role:'user'},
@@ -484,17 +547,20 @@ const demoDB = { facilities: SEED_FAC.map(f=>({...f, user:'U'+f.code, pass:'P'+f
       fyMonths(fy).forEach((mo,mi)=>{
         if(fy===2569 && mi>9) return;
         const d = k => `${mo.key}-${String(3+Math.floor(rnd()*22)).padStart(2,'0')}`;
-        for(let i=0;i<3;i++){
-          const cat=CAT_IN[Math.floor(rnd()*6)];
-          demoDB.txns.push({id:uid(),code:f.code,date:d(),fy,type:'income',
-            category:cat, account: cat.includes('ค่าเสื่อม')?'bankDep':(rnd()<.25?'cash':'bankOp'),
-            amount: Math.round((12000+rnd()*95000)/100)*100, note:'รับโอนงวดประจำเดือน'});
-        }
+        const pick = tree => { const gs=Object.keys(tree), g=gs[Math.floor(rnd()*gs.length)];
+          return [g, tree[g][Math.floor(rnd()*tree[g].length)]]; };
+        const ref = pre => pre+String(1000+Math.floor(rnd()*8999));
         for(let i=0;i<4;i++){
-          const cat=CAT_EX[Math.floor(rnd()*CAT_EX.length)];
-          demoDB.txns.push({id:uid(),code:f.code,date:d(),fy,type:'expense',
-            category:cat, account: cat==='ค่าครุภัณฑ์'||cat==='ค่าที่ดินและสิ่งก่อสร้าง'?'bankDep':(rnd()<.35?'cash':'bankOp'),
-            amount: Math.round((4000+rnd()*52000)/100)*100, note:'เบิกจ่ายตามแผน'});
+          const [g,c]=pick(INCOME_TREE);
+          demoDB.txns.push({id:uid(),code:f.code,date:d(),fy,type:'income', group:g, category:c,
+            account: DEP_SUBS.indexOf(c)>=0?'bankDep':(rnd()<.25?'cash':'bankOp'),
+            amount: Math.round((12000+rnd()*95000)/100)*100, ref:ref('บช.'), note:'รับโอนงวดประจำเดือน'});
+        }
+        for(let i=0;i<5;i++){
+          const [g,c]=pick(EXPENSE_TREE);
+          demoDB.txns.push({id:uid(),code:f.code,date:d(),fy,type:'expense', group:g, category:c,
+            account: (g==='ค่าครุภัณฑ์'||g==='ค่าที่ดินและสิ่งก่อสร้าง'||DEP_SUBS.indexOf(c)>=0)?'bankDep':(rnd()<.35?'cash':'bankOp'),
+            amount: Math.round((4000+rnd()*52000)/100)*100, ref:ref('ชค.'), note:'เบิกจ่ายตามแผน'});
         }
       });
     });
@@ -529,8 +595,8 @@ function demoApi(action,p){
    ============================================================ */
 const S = {
   user:null, facilities:[], openings:[], txns:[],
-  fy:2569, facCode:'ALL', ym:null,
-  fdCode:null, fdFy:2569, fdYm:null,
+  fy:2569, facCode:'ALL', ym:null, lvIn:'group', lvEx:'group',
+  fdCode:null, fdFy:2569, fdYm:null, fdLvIn:'group', fdLvEx:'group',
   eFy:2569, eFac:null, eScope:'month', eYm:null, eTab:'income',
   oFy:2569, oFac:null, editingCode:null
 };
@@ -559,7 +625,10 @@ function balance(code, fy, uptoYm){
   });
   return {cash,bankOp,bankDep,total:cash+bankOp+bankDep};
 }
-function sumBy(list, key){ const m={}; list.forEach(t=>{ m[t[key]] = (m[t[key]]||0) + (+t.amount||0); }); return m; }
+function sumBy(list, keyFn){ const m={}; list.forEach(t=>{ const k=keyFn(t); m[k]=(m[k]||0)+(+t.amount||0); }); return m; }
+/** คีย์สำหรับกราฟ: 'group' = หมวด, 'sub' = ประเภทย่อย (รองรับข้อมูลเก่าที่ยังไม่มีหมวด) */
+const grpOf = t => t.group || groupOfSub(t.type, t.category);
+const keyOf = (t, level) => level==='sub' ? t.category : grpOf(t);
 
 /* ============================================================
    6. แถบยอดคงเหลือ (ledger strip)
@@ -604,8 +673,8 @@ function renderDashboard(){
   const inc = upto.filter(t=>t.type==='income'), exp = upto.filter(t=>t.type==='expense');
   $('#in-total').textContent = 'รวม ' + money(inc.reduce((s,t)=>s+ +t.amount,0)) + ' บาท';
   $('#ex-total').textContent = 'รวม ' + money(exp.reduce((s,t)=>s+ +t.amount,0)) + ' บาท';
-  doughnut('c-income', sumBy(inc,'category'), PIE_IN);
-  doughnut('c-expense', sumBy(exp,'category'), PIE_EX);
+  doughnut('c-income',  sumBy(inc, t=>keyOf(t,S.lvIn)), PIE_IN);
+  doughnut('c-expense', sumBy(exp, t=>keyOf(t,S.lvEx)), PIE_EX);
 
   // กราฟแท่งรายเดือน แยกสถานบริการ
   const facs = code==='ALL' ? visibleFacilities() : visibleFacilities().filter(f=>f.code===code);
@@ -692,8 +761,8 @@ function renderFacility(){
   const inc = upto.filter(t=>t.type==='income'), exp = upto.filter(t=>t.type==='expense');
   $('#fd-in-total').textContent = 'รวม ' + money(inc.reduce((s,t)=>s+ +t.amount,0)) + ' บาท';
   $('#fd-ex-total').textContent = 'รวม ' + money(exp.reduce((s,t)=>s+ +t.amount,0)) + ' บาท';
-  doughnut('c-fd-income', sumBy(inc,'category'), PIE_IN);
-  doughnut('c-fd-expense', sumBy(exp,'category'), PIE_EX);
+  doughnut('c-fd-income',  sumBy(inc, t=>keyOf(t,S.fdLvIn)), PIE_IN);
+  doughnut('c-fd-expense', sumBy(exp, t=>keyOf(t,S.fdLvEx)), PIE_EX);
 
   draw('c-fd-monthly', {
     type:'bar',
@@ -706,11 +775,11 @@ function renderFacility(){
   const rows = S.txns.filter(t=>t.code===S.fdCode && +t.fy===+S.fdFy)
     .sort((a,b)=>b.date.localeCompare(a.date)).slice(0,20);
   $('#t-fd-txn').innerHTML = rows.length ? `
-    <thead><tr><th class="l">วันที่</th><th class="l">ประเภท</th><th class="l">รายการ</th><th class="l">บัญชี</th><th>รับ</th><th>จ่าย</th></tr></thead>
+    <thead><tr><th class="l">วันที่</th><th class="l">หมวด / ประเภทย่อย</th><th class="l">อ้างอิง</th><th class="l">บัญชี</th><th>รับ</th><th>จ่าย</th></tr></thead>
     <tbody>${rows.map(t=>`<tr>
       <td class="l code">${beDate(t.date)}</td>
-      <td class="l">${t.category}</td>
-      <td class="l" style="color:var(--ink-2)">${t.note||'—'}</td>
+      <td class="l"><span class="cat-g">${grpOf(t)}</span><span class="cat-s">${t.category}</span>${t.note?`<span class="cat-n">${esc(t.note)}</span>`:''}</td>
+      <td class="l code">${esc(t.ref||'—')}</td>
       <td class="l" style="font-size:13px">${accName(t.account)}</td>
       <td class="num" style="color:var(--sprout)">${t.type==='income'?money(t.amount):''}</td>
       <td class="num" style="color:var(--brick)">${t.type==='expense'?money(t.amount):''}</td>
@@ -773,13 +842,21 @@ function renderEntry(){
     S.eScope==='year' ? `ณ สิ้นปีงบประมาณ ${S.eFy}` : 'ณ สิ้น'+months.find(m=>m.key===S.eYm).label);
   $('#e-sum-scope').textContent = `${facName(S.eFac)} · ` + (S.eScope==='year' ? `ทั้งปีงบประมาณ ${S.eFy}` : months.find(m=>m.key===S.eYm).label);
 
-  const mIn=sumBy(inc,'category'), mEx=sumBy(exp,'category');
-  const line = (label,map,color)=> Object.entries(map).sort((a,b)=>b[1]-a[1])
-    .map(([k,v])=>`<tr><td class="l">${label}</td><td class="l">${k}</td><td class="num" style="color:${color}">${money(v)}</td></tr>`).join('');
+  const block = (list, type, color) => {
+    const tree = treeOf(type), byGrp = sumBy(list, grpOf), bySub = sumBy(list, t=>t.category);
+    return Object.keys(tree).filter(g=>byGrp[g]).map(g=>`
+      <tr class="grow"><td class="l" colspan="2">${g}</td><td class="num">${money(byGrp[g])}</td></tr>
+      ${tree[g].filter(s=>bySub[s]).map(s=>`
+        <tr><td class="l"></td><td class="l" style="color:var(--ink-2)">${s}</td>
+            <td class="num" style="color:${color}">${money(bySub[s])}</td></tr>`).join('')}`).join('');
+  };
   const ti=inc.reduce((s,t)=>s+ +t.amount,0), tx=exp.reduce((s,t)=>s+ +t.amount,0);
+  const head = txt => `<tr class="sechead"><td class="l" colspan="3">${txt}</td></tr>`;
   $('#t-summary').innerHTML = `
-    <thead><tr><th class="l">หมวด</th><th class="l">ประเภท</th><th>จำนวนเงิน</th></tr></thead>
-    <tbody>${line('รายรับ',mIn,'var(--sprout)')}${line('รายจ่าย',mEx,'var(--brick)')}
+    <thead><tr><th class="l">หมวด</th><th class="l">ประเภทย่อย</th><th>จำนวนเงิน</th></tr></thead>
+    <tbody>
+      ${inc.length? head('รายรับ')+block(inc,'income','var(--sprout)') : ''}
+      ${exp.length? head('รายจ่าย')+block(exp,'expense','var(--brick)') : ''}
       ${!inc.length&&!exp.length?'<tr><td class="empty" colspan="3">ยังไม่มีข้อมูลในช่วงที่เลือก</td></tr>':''}</tbody>
     <tfoot>
       <tr><td class="l" colspan="2">รวมรายรับ</td><td class="num">${money(ti)}</td></tr>
@@ -789,11 +866,11 @@ function renderEntry(){
 }
 function txnTable(el, rows, emptyMsg){
   el.innerHTML = rows.length ? `
-    <thead><tr><th class="l">วันที่</th><th class="l">ประเภท</th><th class="l">รายละเอียด</th><th class="l">บัญชี</th><th>จำนวนเงิน</th><th></th></tr></thead>
+    <thead><tr><th class="l">วันที่</th><th class="l">หมวด / ประเภทย่อย</th><th class="l">อ้างอิง</th><th class="l">บัญชี</th><th>จำนวนเงิน</th><th></th></tr></thead>
     <tbody>${rows.map(t=>`<tr>
       <td class="l code">${beDate(t.date)}</td>
-      <td class="l">${t.category}</td>
-      <td class="l" style="color:var(--ink-2)">${t.note||'—'}</td>
+      <td class="l"><span class="cat-g">${grpOf(t)}</span><span class="cat-s">${t.category}</span>${t.note?`<span class="cat-n">${esc(t.note)}</span>`:''}</td>
+      <td class="l code">${esc(t.ref||'—')}</td>
       <td class="l" style="font-size:13px">${accName(t.account)}</td>
       <td class="num" style="font-weight:600">${money(t.amount)}</td>
       <td><button class="btn danger sm" data-del="${t.id}">ลบ</button></td>
@@ -807,18 +884,37 @@ async function delTxn(id){
   S.txns = S.txns.filter(x=>x.id!==id);
   toast('ลบรายการแล้ว'); renderEntry();
 }
+/** ผูกดรอปดาวน์หมวด → ประเภทย่อย ให้เปลี่ยนตามกัน */
+function initCascade(prefix, type){
+  const tree = treeOf(type), gsel = $('#'+prefix+'-grp'), csel = $('#'+prefix+'-cat');
+  fill(gsel, Object.keys(tree).map(g=>({v:g,t:g})));
+  const sync = ()=>{
+    fill(csel, (tree[gsel.value]||[]).map(s=>({v:s,t:s})));
+    suggestAccount(prefix);
+  };
+  gsel.onchange = sync;
+  csel.onchange = ()=>suggestAccount(prefix);
+  sync();
+}
+/** รายการงบค่าเสื่อมให้เลือกบัญชีเงินฝากค่าเสื่อมให้อัตโนมัติ (เปลี่ยนเองได้) */
+function suggestAccount(prefix){
+  if(DEP_SUBS.indexOf($('#'+prefix+'-cat').value) >= 0) $('#'+prefix+'-acc').value = 'bankDep';
+}
+
 async function addTxn(type){
   const p = type==='income' ? 'i' : 'x';
-  const date=$('#'+p+'-date').value, cat=$('#'+p+'-cat').value, acc=$('#'+p+'-acc').value;
-  const amt=parseFloat($('#'+p+'-amt').value), note=$('#'+p+'-note').value.trim();
+  const date=$('#'+p+'-date').value, grp=$('#'+p+'-grp').value, cat=$('#'+p+'-cat').value;
+  const acc=$('#'+p+'-acc').value, amt=parseFloat($('#'+p+'-amt').value);
+  const ref=$('#'+p+'-ref').value.trim(), note=$('#'+p+'-note').value.trim();
   if(!date) return toast('เลือกวันที่ก่อนบันทึก');
+  if(!cat) return toast('เลือกประเภทย่อยก่อนบันทึก');
   if(!(amt>0)) return toast('กรอกจำนวนเงินให้มากกว่า 0');
   const fy = fyOfDate(date);
   if(fy !== +S.eFy && !confirm(`วันที่ ${beDate(date)} อยู่ในปีงบประมาณ ${fy} ไม่ใช่ ${S.eFy} ต้องการบันทึกต่อหรือไม่?`)) return;
-  const txn = {id:uid(), code:S.eFac, date, fy, type, category:cat, account:acc, amount:amt, note};
+  const txn = {id:uid(), code:S.eFac, date, fy, type, group:grp, category:cat, account:acc, amount:amt, ref, note};
   await api('addTxn',{code:S.eFac, txn});
   S.txns.push(txn);
-  $('#'+p+'-amt').value=''; $('#'+p+'-note').value='';
+  $('#'+p+'-amt').value=''; $('#'+p+'-note').value=''; $('#'+p+'-ref').value='';
   toast(type==='income'?'บันทึกรายรับแล้ว':'บันทึกรายจ่ายแล้ว');
   renderEntry();
 }
@@ -971,10 +1067,10 @@ async function start(){
   S.facCode = S.user.role==='admin' ? 'ALL' : S.user.code;
   refreshFacilityPickers();
 
-  fill($('#i-cat'), CAT_IN.map(c=>({v:c,t:c})));
-  fill($('#x-cat'), CAT_EX.map(c=>({v:c,t:c})));
   fill($('#i-acc'), ACCOUNTS.map(a=>({v:a.k,t:a.name})));
   fill($('#x-acc'), ACCOUNTS.map(a=>({v:a.k,t:a.name})));
+  initCascade('i','income');
+  initCascade('x','expense');
   const today = new Date().toISOString().slice(0,10);
   $('#i-date').value = today; $('#x-date').value = today;
 
@@ -991,8 +1087,13 @@ $('#f-fy').onchange = e=>{ S.fy=+e.target.value; S.ym=defaultYm(S.fy);
 $('#f-fac').onchange = e=>{ S.facCode=e.target.value; renderDashboard(); };
 $('#f-month').onchange = e=>{ S.ym=e.target.value; renderDashboard(); };
 
+$('#in-level').onchange = e=>{ S.lvIn=e.target.value; renderDashboard(); };
+$('#ex-level').onchange = e=>{ S.lvEx=e.target.value; renderDashboard(); };
+
 $('#fd-fy').onchange = e=>{ S.fdFy=+e.target.value; S.fdYm=defaultYm(S.fdFy); renderFacility(); };
 $('#fd-month').onchange = e=>{ S.fdYm=e.target.value; renderFacility(); };
+$('#fd-in-level').onchange = e=>{ S.fdLvIn=e.target.value; renderFacility(); };
+$('#fd-ex-level').onchange = e=>{ S.fdLvEx=e.target.value; renderFacility(); };
 
 $$('.tabs [data-tab]').forEach(b=>b.onclick=()=>{
   S.eTab=b.dataset.tab;
@@ -1033,4 +1134,3 @@ if(DEMO){
 </script>
 </body>
 </html>
-
