@@ -130,6 +130,12 @@ tr.sechead td{background:var(--pine);color:#fff;font-weight:600;font-size:13px;l
 .signrow{display:flex;flex-wrap:wrap;gap:30px;justify-content:space-around;padding:34px 10px 10px;font-size:13.5px;color:var(--ink-2);text-align:center}
 .signrow div{min-width:190px}
 .signrow .ln{border-bottom:1px dotted var(--ink-3);height:26px;margin-bottom:6px}
+.pageband{margin:18px 0 6px;padding:7px 12px;background:var(--pine-soft);color:var(--pine);border-radius:7px;font-family:"IBM Plex Sans Thai",sans-serif;font-weight:600;font-size:13.5px}
+#t-report .pageband:first-child{margin-top:4px}
+tr.mtot td{background:#f1f5ef;font-weight:600;border-top:1px solid var(--line)}
+tr.mtot2 td{background:#e7efe6;font-weight:600;color:var(--pine)}
+table.report407 td{vertical-align:top}
+table.report407 .grow td{background:#f4f7f3}
 
 .formgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}
 .formgrid .wide{grid-column:1/-1}
@@ -245,7 +251,7 @@ table.wide th,table.wide td{padding:7px 8px}
 
       <div class="ledger" id="dash-ledger"></div>
 
-      <div class="card" style="margin-bottom:18px">
+      <div class="card" id="card-cash" style="margin-bottom:18px">
         <header><h3>สถานการณ์เงินบำรุงรายสถานบริการ</h3><span class="hint" id="cash-hint">—</span></header>
         <div class="body tablewrap"><table id="t-cash"></table></div>
       </div>
@@ -263,12 +269,17 @@ table.wide th,table.wide td{padding:7px 8px}
         </div>
       </div>
 
+      <div class="card hidden" id="card-ie" style="margin-bottom:18px">
+        <header><h3>เปรียบเทียบรายรับ-รายจ่ายรายเดือน</h3><span class="hint">จำนวนเงิน (บาท) แยกรายเดือน</span></header>
+        <div class="body"><div class="chartbox tall"><canvas id="c-ie"></canvas></div></div>
+      </div>
+
       <div class="card" style="margin-bottom:18px">
-        <header><h3>เงินบำรุงคงเหลือรายเดือน</h3><span class="hint">จำนวนเงิน (บาท) ณ สิ้นเดือน · แยกรายสถานบริการ</span></header>
+        <header><h3 id="monthly-title">เงินบำรุงคงเหลือรายเดือน</h3><span class="hint" id="monthly-hint">—</span></header>
         <div class="body"><div class="chartbox tall"><canvas id="c-monthly"></canvas></div></div>
       </div>
 
-      <div class="card">
+      <div class="card" id="card-status">
         <header><h3>สถานะเงินบำรุงรายสถานบริการ</h3><span class="hint">คลิกชื่อสถานบริการเพื่อดูรายละเอียด</span></header>
         <div class="body tablewrap"><table id="t-status"></table></div>
       </div>
@@ -300,6 +311,12 @@ table.wide th,table.wide td{padding:7px 8px}
       <div class="card" style="margin-bottom:18px">
         <header><h3>เงินบำรุงคงเหลือรายเดือน</h3><span class="hint">จำนวนเงิน (บาท) ณ สิ้นเดือน</span></header>
         <div class="body"><div class="chartbox tall"><canvas id="c-fd-monthly"></canvas></div></div>
+      </div>
+      <div class="card" style="margin-bottom:18px">
+        <header><h3>ข้อมูลการเงินรายเดือน</h3>
+          <div class="hgroup"><span class="hint" id="fd-mt-hint">—</span>
+          <select class="mini" id="fd-mt-fy"></select></div></header>
+        <div class="body tablewrap"><table id="t-fd-monthly"></table></div>
       </div>
       <div class="card">
         <header><h3>รายการล่าสุด</h3><span class="hint">20 รายการล่าสุดในปีงบประมาณนี้</span></header>
@@ -388,11 +405,11 @@ table.wide th,table.wide td{padding:7px 8px}
       <div class="repchoice">
         <button class="repbtn on" data-rep="407">
           <span class="no">แบบ 407</span><b>รายงานเงินคงเหลือประจำวัน</b>
-          <small>สรุปยอดรับ-จ่ายและเงินคงเหลือ รวมยอดเป็นรายวัน</small>
+          <small>เลือกวันเดียว · แสดงเงินสด หลักฐานแทนตัวเงิน และบัญชีธนาคาร พร้อมช่องลงนาม ส่งออก Word ได้</small>
         </button>
         <button class="repbtn" data-rep="404">
           <span class="no">แบบ 404</span><b>ทะเบียนคุมเงินนอกงบประมาณ</b>
-          <small>แสดงทุกรายการเรียงตามวันที่ พร้อมยอดคงเหลือสะสม</small>
+          <small>เลือกช่วงไม่เกิน 1 เดือน · แบ่ง 2 หน้า (รับ-จ่าย / หมวดงบ) ส่งออก Excel ได้</small>
         </button>
       </div>
 
@@ -444,6 +461,9 @@ table.wide th,table.wide td{padding:7px 8px}
               <div class="field"><label>ชื่อผู้ใช้</label><input type="text" id="fc-user" class="num" readonly style="background:var(--line-2)"></div>
               <div class="field"><label>รหัสผ่าน</label><input type="text" id="fc-pass" class="num"></div>
               <div class="field"><label>สิทธิ์ใช้งาน</label><select id="fc-role"><option value="user">เฉพาะสถานบริการนี้</option><option value="admin">ดูและแก้ไขได้ทุกแห่ง</option></select></div>
+              <div class="field"><label>ธนาคาร</label><input type="text" id="fc-bank" placeholder="เช่น ธ.ก.ส. สาขาค้อวัง"></div>
+              <div class="field"><label>เลขที่บัญชี (เงินบำรุง)</label><input type="text" id="fc-acc1" class="num" placeholder="020-x-xxxxx-x"></div>
+              <div class="field"><label>เลขที่บัญชี (ค่าเสื่อม)</label><input type="text" id="fc-acc2" class="num" placeholder="020-x-xxxxx-x"></div>
             </div>
             <div style="margin-top:14px;display:flex;gap:10px">
               <button class="btn" id="fc-save">บันทึกสถานบริการ</button>
@@ -516,8 +536,8 @@ table.wide th,table.wide td{padding:7px 8px}
    1. ตั้งค่าการเชื่อมต่อ — แก้ 2 บรรทัดนี้ก่อน deploy
    ============================================================ */
 const CONFIG = {
-  API_URL: 'https://script.google.com/macros/s/AKfycbwcO_26juqPyh3E8DnaTBFNGtqiUX_4FycsOFvNGri_VAZUmb0jNhV7a4kaGSbcNLM63w/exec',                 // วาง Web app URL ของ Google Apps Script ที่นี่
-  API_KEY: 'kwv-XwNseMgWuDSbSUZEEn7_1Ds9zu8Qgfck'    // ต้องตรงกับ API_KEY ใน Code.gs
+  API_URL: '',                 // วาง Web app URL ของ Google Apps Script ที่นี่
+  API_KEY: 'CHANGE-ME-1234'    // ต้องตรงกับ API_KEY ใน Code.gs
 };
 
 /* ============================================================
@@ -591,7 +611,7 @@ const BUDGET_COLS = [
   {t:'รายจ่ายอื่น ๆ',         g:'ค่าใช้จ่ายอื่น ๆ'}
 ];
 
-const FIN_ROLES = ['ไม่ระบุ','ผู้อำนวยการ/หัวหน้าหน่วยบริการ','หัวหน้าเจ้าหน้าที่การเงิน',
+const FIN_ROLES = ['ไม่ระบุ','หัวหน้าหน่วยงานย่อย (ผอ.รพ.สต./สสอ.)','หัวหน้าเจ้าหน้าที่การเงิน',
   'เจ้าหน้าที่การเงิน','เจ้าหน้าที่บัญชี','เจ้าหน้าที่พัสดุ','กรรมการเก็บรักษาเงิน'];
 
 const PIE_IN = ['#14524a','#1c6f63','#3f8f7a','#5faa8c','#84c2a4','#a8d6bd','#c9e6d6','#7a9e6b','#4f8a53','#2f6b3f'];
@@ -639,12 +659,12 @@ async function api(action, payload={}){
 }
 
 const SEED_FAC = [
-  {code:'03900', name:'รพ.สต.บ้านเหล่าน้อย',  addr:'ต.ฟ้าห่วน อ.ค้อวัง จ.ยโสธร',  role:'user'},
-  {code:'03901', name:'รพ.สต.บ้านโพนเมือง',   addr:'ต.ค้อวัง อ.ค้อวัง จ.ยโสธร',   role:'user'},
-  {code:'03903', name:'รพ.สต.บ้านตูม',        addr:'ต.กุดน้ำใส อ.ค้อวัง จ.ยโสธร', role:'user'},
-  {code:'03904', name:'รพ.สต.บ้านศิริพัฒนา',  addr:'ต.น้ำอ้อม อ.ค้อวัง จ.ยโสธร',  role:'user'},
-  {code:'03905', name:'รพ.สต.บ้านน้ำอ้อม',    addr:'ต.น้ำอ้อม อ.ค้อวัง จ.ยโสธร',  role:'user'},
-  {code:'00342', name:'สสอ.ค้อวัง',           addr:'ต.ค้อวัง อ.ค้อวัง จ.ยโสธร',   role:'admin'}
+  {code:'03900', name:'รพ.สต.บ้านเหล่าน้อย',  addr:'ต.ฟ้าห่วน อ.ค้อวัง จ.ยโสธร',  role:'user',  bank:'ธ.ก.ส. สาขาค้อวัง', acc1:'020-1-11101-1', acc2:'020-2-11101-2'},
+  {code:'03901', name:'รพ.สต.บ้านโพนเมือง',   addr:'ต.ค้อวัง อ.ค้อวัง จ.ยโสธร',   role:'user',  bank:'ธ.ก.ส. สาขาค้อวัง', acc1:'020-1-11102-1', acc2:'020-2-11102-2'},
+  {code:'03903', name:'รพ.สต.บ้านตูม',        addr:'ต.กุดน้ำใส อ.ค้อวัง จ.ยโสธร', role:'user',  bank:'ธ.ก.ส. สาขาค้อวัง', acc1:'020-1-11103-1', acc2:'020-2-11103-2'},
+  {code:'03904', name:'รพ.สต.บ้านศิริพัฒนา',  addr:'ต.น้ำอ้อม อ.ค้อวัง จ.ยโสธร',  role:'user',  bank:'ธ.ก.ส. สาขาค้อวัง', acc1:'020-1-11104-1', acc2:'020-2-11104-2'},
+  {code:'03905', name:'รพ.สต.บ้านน้ำอ้อม',    addr:'ต.น้ำอ้อม อ.ค้อวัง จ.ยโสธร',  role:'user',  bank:'ธ.ก.ส. สาขาค้อวัง', acc1:'020-1-11105-1', acc2:'020-2-11105-2'},
+  {code:'00342', name:'สสอ.ค้อวัง',           addr:'ต.ค้อวัง อ.ค้อวัง จ.ยโสธร',   role:'admin', bank:'ธ.ก.ส. สาขาค้อวัง', acc1:'020-1-10342-1', acc2:'020-2-10342-2'}
 ];
 const demoDB = { facilities: SEED_FAC.map(f=>({...f, user:'U'+f.code, pass:'P'+f.code})), openings: [], txns: [], people: [] };
 
@@ -652,9 +672,12 @@ const demoDB = { facilities: SEED_FAC.map(f=>({...f, user:'U'+f.code, pass:'P'+f
   let s=7; const rnd=()=>{ s=(s*1103515245+12345)&0x7fffffff; return s/0x7fffffff; };
   const base={'03900':820000,'03901':640000,'03903':510000,'03904':430000,'03905':370000,'00342':950000};
   demoDB.people = [
-    {cid:'3350100112233', name:'นางสาวปิยะนุช วงศ์คำจันทร์', pos:'นักวิชาการสาธารณสุขชำนาญการ', fin:'หัวหน้าเจ้าหน้าที่การเงิน', code:'00342', tel:'0812345671'},
-    {cid:'3350100223344', name:'นายอนุชา ศรีสุวรรณ',        pos:'เจ้าพนักงานสาธารณสุขชำนาญงาน', fin:'เจ้าหน้าที่การเงิน',      code:'03900', tel:'0812345672'},
-    {cid:'3350100334455', name:'นางสมหญิง ทองมา',           pos:'พยาบาลวิชาชีพชำนาญการ',       fin:'เจ้าหน้าที่บัญชี',         code:'03900', tel:'0812345673'}
+    {cid:'3350100112233', name:'นายวิรัตน์ พงษ์สุวรรณ',   pos:'สาธารณสุขอำเภอค้อวัง',           fin:'หัวหน้าหน่วยงานย่อย (ผอ.รพ.สต./สสอ.)', code:'00342', tel:'0812345671'},
+    {cid:'3350100119988', name:'นายสมพงษ์ ดีเลิศ',        pos:'ผู้อำนวยการโรงพยาบาลส่งเสริมสุขภาพตำบล', fin:'หัวหน้าหน่วยงานย่อย (ผอ.รพ.สต./สสอ.)', code:'03900', tel:'0812345670'},
+    {cid:'3350100223344', name:'นายอนุชา ศรีสุวรรณ',      pos:'เจ้าพนักงานสาธารณสุขชำนาญงาน',   fin:'เจ้าหน้าที่การเงิน',      code:'03900', tel:'0812345672'},
+    {cid:'3350100334455', name:'นางสมหญิง ทองมา',         pos:'พยาบาลวิชาชีพชำนาญการ',         fin:'หัวหน้าเจ้าหน้าที่การเงิน', code:'03900', tel:'0812345673'},
+    {cid:'3350100445566', name:'นางสาวรัตนา ผาสุก',       pos:'นักวิชาการสาธารณสุขปฏิบัติการ', fin:'กรรมการเก็บรักษาเงิน',    code:'03900', tel:'0812345674'},
+    {cid:'3350100556677', name:'นายเกรียงศักดิ์ มั่นคง',   pos:'เจ้าพนักงานสาธารณสุขชำนาญงาน',   fin:'กรรมการเก็บรักษาเงิน',    code:'03900', tel:'0812345675'}
   ];
   [2567,2568,2569].forEach((fy,fi)=>{
     demoDB.facilities.forEach(f=>{
@@ -717,7 +740,7 @@ function demoApi(action,p){
 const S = {
   user:null, facilities:[], openings:[], txns:[], people:[],
   fy:2569, facCode:'ALL', ym:null, lvIn:'group', lvEx:'group',
-  fdCode:null, fdFy:2569, fdYm:null, fdLvIn:'group', fdLvEx:'group',
+  fdCode:null, fdFy:2569, fdYm:null, fdLvIn:'group', fdLvEx:'group', fdMtFy:2569,
   eFy:2569, eFac:null, eScope:'month', eYm:null, eTab:'income',
   rRep:'407', rFy:2569, rFac:null, rFrom:null, rTo:null,
   oFy:2569, oFac:null, editingCode:null, editingCid:null, sTab:'fac',
@@ -787,15 +810,30 @@ function renderDashboard(){
   const months = fyMonths(S.fy);
   if(!months.some(m=>m.key===S.ym)) S.ym = defaultYm(S.fy);
   const mo = months.find(m=>m.key===S.ym);
-  const code = S.facCode;
-  const b = balance(code, S.fy, S.ym);
 
-  $('#dash-title').textContent = code==='ALL' ? 'สถานการณ์การเงินบำรุง อำเภอค้อวัง' : facName(code);
-  $('#dash-sub').textContent = `ปีงบประมาณ ${S.fy} (ต.ค. ${S.fy-1} – ก.ย. ${S.fy}) · ข้อมูลสะสมถึงสิ้น${mo.label}` +
-    (code==='ALL' ? ` · รวม ${allFacs().length} แห่ง` : '');
+  // ล็อกอินแล้ว = ดูเฉพาะสถานบริการของตนเอง (ยกเว้น admin ยังเลือกได้)
+  const single = !!S.user && !isAdmin();
+  if(single) S.facCode = S.user.code;
+  const code = S.facCode;
+  const overview = code==='ALL';
+
+  // ซ่อนดรอปดาวน์สถานบริการเมื่อเป็นผู้ใช้สถานบริการเดียว
+  $('#f-fac').closest('.field').classList.toggle('hidden', single);
+  // กราฟเปรียบเทียบรายรับ-รายจ่าย แสดงเฉพาะตอนล็อกอิน
+  $('#card-ie').classList.toggle('hidden', !S.user);
+  // ตารางภาพรวมสองตาราง แสดงเฉพาะโหมดภาพรวมทั้งอำเภอ
+  $('#card-cash').classList.toggle('hidden', !overview);
+  $('#card-status').classList.toggle('hidden', !overview);
+
+  const b = balance(code, S.fy, S.ym);
+  const f = overview ? null : S.facilities.find(x=>x.code===code);
+  $('#dash-title').textContent = overview ? 'สถานการณ์การเงินบำรุง อำเภอค้อวัง' : f.name;
+  $('#dash-sub').textContent = (overview ? '' : (f.addr? f.addr+' · ':'') + 'รหัส '+code+' · ')
+    + `ปีงบประมาณ ${S.fy} (ต.ค. ${S.fy-1} – ก.ย. ${S.fy}) · สะสมถึงสิ้น${mo.label}`
+    + (overview ? ` · รวม ${allFacs().length} แห่ง` : '');
   renderLedger($('#dash-ledger'), b, `ณ สิ้น${mo.label}`);
 
-  const inRange = t => +t.fy===+S.fy && ymOf(t.date)<=S.ym && (code==='ALL' || t.code===code);
+  const inRange = t => +t.fy===+S.fy && ymOf(t.date)<=S.ym && (overview || t.code===code);
   const upto = S.txns.filter(inRange);
   const inc = upto.filter(t=>t.type==='income'), exp = upto.filter(t=>t.type==='expense');
   $('#in-total').textContent = 'รวม ' + money(inc.reduce((s,t)=>s+ +t.amount,0)) + ' บาท';
@@ -803,19 +841,49 @@ function renderDashboard(){
   doughnut('c-income',  sumBy(inc, t=>keyOf(t,S.lvIn)), PIE_IN);
   doughnut('c-expense', sumBy(exp, t=>keyOf(t,S.lvEx)), PIE_EX);
 
-  const facs = code==='ALL' ? allFacs() : allFacs().filter(f=>f.code===code);
-  draw('c-monthly', {
-    type:'bar',
-    data:{ labels: months.map(m=>m.short),
-      datasets: facs.map((f,i)=>({
-        label:f.name, backgroundColor:FAC_COLORS[i%FAC_COLORS.length], borderRadius:3, maxBarThickness:26,
-        data: months.map(m=> balance(f.code, S.fy, m.key).total)
-      }))},
-    options: barOpts(true), plugins:[valueLabels]
-  });
+  // กราฟเปรียบเทียบรายรับ-รายจ่ายรายเดือน (เฉพาะเดือนถึงที่เลือก)
+  if(S.user){
+    const codes = overview ? allFacs().map(x=>x.code) : [code];
+    const inM = months.map(m=> S.txns.filter(t=>codes.indexOf(t.code)>=0 && +t.fy===+S.fy && ymOf(t.date)===m.key && t.type==='income').reduce((s,t)=>s+ +t.amount,0));
+    const exM = months.map(m=> S.txns.filter(t=>codes.indexOf(t.code)>=0 && +t.fy===+S.fy && ymOf(t.date)===m.key && t.type==='expense').reduce((s,t)=>s+ +t.amount,0));
+    draw('c-ie', {
+      type:'bar',
+      data:{ labels: months.map(m=>m.short), datasets:[
+        {label:'รายรับ',  backgroundColor:'#4f8a53', borderRadius:3, maxBarThickness:22, data:inM},
+        {label:'รายจ่าย', backgroundColor:'#9e4433', borderRadius:3, maxBarThickness:22, data:exM}
+      ]},
+      options: barOpts(true)
+    });
+  }
 
-  renderCashTable();
-  renderStatusTable();
+  // กราฟเงินบำรุงคงเหลือรายเดือน
+  if(overview){
+    // แนวนอน = ชื่อสถานบริการ, แนวตั้ง = คงเหลือ ณ เดือนที่เลือก
+    $('#monthly-title').textContent = 'เงินบำรุงคงเหลือรายสถานบริการ';
+    $('#monthly-hint').textContent = `จำนวนเงินคงเหลือ ณ สิ้น${mo.label}`;
+    const facs = allFacs();
+    draw('c-monthly', {
+      type:'bar',
+      data:{ labels: facs.map(x=>x.name), datasets:[{
+        label:'เงินบำรุงคงเหลือ',
+        backgroundColor: facs.map((_,i)=>FAC_COLORS[i%FAC_COLORS.length]),
+        borderRadius:3, maxBarThickness:64,
+        data: facs.map(x=>balance(x.code,S.fy,S.ym).total) }]},
+      options: barOpts(false), plugins:[valueLabels]
+    });
+  } else {
+    $('#monthly-title').textContent = 'เงินบำรุงคงเหลือรายเดือน';
+    $('#monthly-hint').textContent = 'จำนวนเงิน (บาท) ณ สิ้นเดือน';
+    draw('c-monthly', {
+      type:'bar',
+      data:{ labels: months.map(m=>m.short), datasets:[{
+        label:'เงินบำรุงคงเหลือ', backgroundColor:'#14524a', borderRadius:3, maxBarThickness:44,
+        data: months.map(m=>balance(code,S.fy,m.key).total) }]},
+      options: barOpts(false), plugins:[valueLabels]
+    });
+  }
+
+  if(overview){ renderCashTable(); renderStatusTable(); }
 }
 
 /** ตารางสถานการณ์เงินบำรุง: เงินสดในมือ · เงินฝากธนาคารรวม · เงินบำรุงคงเหลือ */
@@ -898,7 +966,7 @@ function renderStatusTable(){
    7. หน้ารายสถานบริการ
    ============================================================ */
 function openFacility(code){
-  S.fdCode = code; S.fdFy = S.fy; S.fdYm = S.ym;
+  S.fdCode = code; S.fdFy = S.fy; S.fdYm = S.ym; S.fdMtFy = S.fy;
   showView('facility');
 }
 function renderFacility(){
@@ -941,6 +1009,46 @@ function renderFacility(){
       <td class="num" style="color:var(--sprout)">${t.type==='income'?money(t.amount):''}</td>
       <td class="num" style="color:var(--brick)">${t.type==='expense'?money(t.amount):''}</td>
     </tr>`).join('')}</tbody>` : `<tbody><tr><td class="empty" colspan="6">ยังไม่มีรายการในปีงบประมาณนี้</td></tr></tbody>`;
+
+  renderFacilityMonthly();
+}
+
+/** ตารางข้อมูลการเงินรายเดือนของสถานบริการ (เลือกปีงบแยกได้) */
+function renderFacilityMonthly(){
+  if(!FYS.includes(+S.fdMtFy)) S.fdMtFy = S.fdFy;
+  fill($('#fd-mt-fy'), FYS.map(y=>({v:y,t:'ปีงบประมาณ '+y})), S.fdMtFy);
+  $('#fd-mt-hint').textContent = `${facName(S.fdCode)} · ปีงบประมาณ ${S.fdMtFy}`;
+  const months = fyMonths(S.fdMtFy);
+  let inAcc=0, exAcc=0;
+  const body = months.map(m=>{
+    const list = S.txns.filter(t=>t.code===S.fdCode && +t.fy===+S.fdMtFy && ymOf(t.date)===m.key);
+    const inM = list.filter(t=>t.type==='income').reduce((s,t)=>s+ +t.amount,0);
+    const exM = list.filter(t=>t.type==='expense').reduce((s,t)=>s+ +t.amount,0);
+    inAcc += inM; exAcc += exM;
+    const bal = balance(S.fdCode, S.fdMtFy, m.key).total;
+    const empty = inM===0 && exM===0;
+    return `<tr${empty?' style="color:var(--ink-3)"':''}>
+      <td class="l">${m.label}</td>
+      <td class="num" style="color:${inM?'var(--sprout)':'inherit'}">${money(inM)}</td>
+      <td class="num">${money(inAcc)}</td>
+      <td class="num" style="color:${exM?'var(--brick)':'inherit'}">${money(exM)}</td>
+      <td class="num">${money(exAcc)}</td>
+      <td class="num ${bal<0?'neg':''}" style="font-weight:600">${money(bal)}</td>
+    </tr>`;
+  }).join('');
+  const op = opening(S.fdCode, S.fdMtFy);
+  const carry = op.cash+op.bankOp+op.bankDep;
+  $('#t-fd-monthly').innerHTML = `
+    <thead><tr><th class="l">เดือน</th><th>รายรับเดือนนี้</th><th>รายรับสะสม</th>
+      <th>รายจ่ายเดือนนี้</th><th>รายจ่ายสะสม</th><th>เงินบำรุงคงเหลือ</th></tr></thead>
+    <tbody>
+      <tr class="grow"><td class="l">ยอดยกมา ณ 30 ก.ย. ${S.fdMtFy-1}</td>
+        <td></td><td></td><td></td><td></td><td class="num">${money(carry)}</td></tr>
+      ${body}</tbody>
+    <tfoot><tr><td class="l">รวมทั้งปีงบประมาณ</td>
+      <td class="num">${money(inAcc)}</td><td class="num">${money(inAcc)}</td>
+      <td class="num">${money(exAcc)}</td><td class="num">${money(exAcc)}</td>
+      <td class="num">${money(carry+inAcc-exAcc)}</td></tr></tfoot>`;
 }
 
 /* ============================================================
@@ -1102,21 +1210,6 @@ function activeDates(code, fy){
   S.txns.forEach(t=>{ if(t.code===code && +t.fy===+fy) set[t.date]=1; });
   return Object.keys(set).sort();
 }
-function syncReportDates(){
-  const ds = activeDates(S.rFac, S.rFy);
-  const opts = ds.map(d=>({v:d, t:beDate(d)}));
-  if(!ds.length){
-    fill($('#r-from'), [{v:'', t:'— ไม่มีรายการ —'}]);
-    fill($('#r-to'),   [{v:'', t:'— ไม่มีรายการ —'}]);
-    S.rFrom = S.rTo = null; return;
-  }
-  if(ds.indexOf(S.rFrom)<0) S.rFrom = ds[0];
-  if(ds.indexOf(S.rTo)<0)   S.rTo   = ds[ds.length-1];
-  if(S.rFrom > S.rTo) S.rTo = S.rFrom;
-  fill($('#r-from'), opts, S.rFrom);
-  fill($('#r-to'),   opts, S.rTo);
-}
-
 /** ยอดคงเหลือรวมทุกบัญชี ก่อนวันที่ที่กำหนด */
 function balanceBefore(code, fy, dateIso){
   const o = opening(code, fy);
@@ -1127,52 +1220,88 @@ function balanceBefore(code, fy, dateIso){
   });
   return bal;
 }
+/** ยอดคงเหลือแยกบัญชี ณ สิ้นวัน dateIso (รวมรายการของวันนั้น) */
+function balanceOnDate(code, fy, dateIso){
+  const o = opening(code, fy);
+  let cash=o.cash, bankOp=o.bankOp, bankDep=o.bankDep;
+  S.txns.forEach(t=>{
+    if(t.code!==code || +t.fy!==+fy || t.date > dateIso) return;
+    const s=(t.type==='income'?1:-1), a=+t.amount||0;
+    if(t.account==='cash') cash+=s*a; else if(t.account==='bankOp') bankOp+=s*a; else bankDep+=s*a;
+  });
+  return {cash,bankOp,bankDep,total:cash+bankOp+bankDep};
+}
 
-/** สร้างข้อมูลตารางรายงาน คืนเป็น {cols, rows, totals} */
-function buildReport(){
-  const cols = ['พ.ศ.','เดือน','วันที่','ที่เอกสาร','รายการ','รายรับ','รายจ่าย','คงเหลือ'].concat(BUDGET_COLS.map(c=>c.t));
-  if(!S.rFrom || !S.rTo) return {cols, rows:[], totals:null, carry:0};
+/* ---------- ผู้ลงนาม (ดึงจากทะเบียนบุคลากร) ---------- */
+const ROLE_HEAD = 'หัวหน้าหน่วยงานย่อย (ผอ.รพ.สต./สสอ.)';
+const ROLE_FIN  = 'เจ้าหน้าที่การเงิน';
+const ROLE_CHIEF_FIN = 'หัวหน้าเจ้าหน้าที่การเงิน';
+const ROLE_KEEP = 'กรรมการเก็บรักษาเงิน';
+function staffOf(code){ return S.people.filter(p=>p.code===code); }
+function personByRole(code, role){ return staffOf(code).find(p=>p.fin===role) || null; }
+function committee(code){ return staffOf(code).filter(p=>p.fin===ROLE_KEEP); }
+
+/* ---------- แปลงจำนวนเงินเป็นข้อความภาษาไทย ---------- */
+function bahtText(n){
+  n = Math.round((Number(n)||0)*100)/100;
+  if(n===0) return 'ศูนย์บาทถ้วน';
+  const neg = n<0; n=Math.abs(n);
+  const baht = Math.floor(n), satang = Math.round((n-baht)*100);
+  const num = ['','หนึ่ง','สอง','สาม','สี่','ห้า','หก','เจ็ด','แปด','เก้า'];
+  const pos = ['','สิบ','ร้อย','พัน','หมื่น','แสน','ล้าน'];
+  function conv(s){
+    s = String(s); let out='';
+    const L=s.length;
+    for(let i=0;i<L;i++){
+      const d=+s[i], p=(L-1-i)%6, blockPos=(L-1-i);
+      if(d===0){ if(blockPos===6 && s.length>6) out+='ล้าน'; continue; }
+      if(p===0 && d===1 && L>1 && i===L-1) out+='เอ็ด';
+      else if(p===1 && d===2) out+='ยี่';
+      else if(p===1 && d===1) out+='';
+      else out+=num[d];
+      out+=pos[p];
+      if(blockPos===6) out+='ล้าน';
+    }
+    return out;
+  }
+  let txt = baht>0 ? conv(baht) + 'บาท' : '';
+  txt += satang ? conv(satang)+'สตางค์' : 'บาทถ้วน';
+  if(baht>0 && !satang) txt = conv(baht) + 'บาทถ้วน';
+  return (neg?'ลบ':'') + txt;
+}
+
+/* ---------- สร้างข้อมูล 404 (ทะเบียนคุมเงินนอกงบประมาณ) ---------- */
+function build404(){
+  const cols = ['พ.ศ.','เดือน','วันที่','ที่เอกสาร','รายการ','รายรับ','รายจ่าย','คงเหลือ'];
+  if(!S.rFrom || !S.rTo) return {cols, rows:[], carry:0, last:0, sumIn:0, sumEx:0, budget:null};
 
   const list = S.txns.filter(t=>t.code===S.rFac && +t.fy===+S.rFy && t.date>=S.rFrom && t.date<=S.rTo)
     .sort((a,b)=> a.date.localeCompare(b.date) || (a.type===b.type?0:(a.type==='income'?-1:1)));
   const carry = balanceBefore(S.rFac, S.rFy, S.rFrom);
-  let run = carry;
-  const rows = [];
-  const budgetOf = t => { const g = grpOf(t); const o={}; BUDGET_COLS.forEach(c=>o[c.t]= (t.type==='expense' && c.g===g) ? (+t.amount||0) : 0); return o; };
 
-  if(S.rRep==='404'){
-    list.forEach(t=>{
-      const inc = t.type==='income' ? (+t.amount||0) : 0;
-      const exp = t.type==='expense' ? (+t.amount||0) : 0;
-      run += inc - exp;
-      const p = beParts(t.date);
-      rows.push(Object.assign({be:p.be, month:p.month, day:p.day, ref:t.ref||'', item:t.note||t.category,
-        inc, exp, bal:run}, budgetOf(t)));
-    });
-  } else {
-    // 407 — รวมยอดเป็นรายวัน
-    const byDate = {};
-    list.forEach(t=>{ (byDate[t.date] = byDate[t.date] || []).push(t); });
-    Object.keys(byDate).sort().forEach(d=>{
-      const day = byDate[d];
-      const inc = day.filter(t=>t.type==='income').reduce((s,t)=>s+ +t.amount,0);
-      const exp = day.filter(t=>t.type==='expense').reduce((s,t)=>s+ +t.amount,0);
-      run += inc - exp;
-      const refs = day.map(t=>t.ref).filter(Boolean);
-      const bud = {}; BUDGET_COLS.forEach(c=>bud[c.t]=0);
-      day.forEach(t=>{ if(t.type!=='expense') return; const g=grpOf(t);
-        const col = BUDGET_COLS.find(c=>c.g===g); if(col) bud[col.t] += (+t.amount||0); });
-      const p = beParts(d);
-      const label = `รับ ${day.filter(t=>t.type==='income').length} รายการ · จ่าย ${day.filter(t=>t.type==='expense').length} รายการ`;
-      rows.push(Object.assign({be:p.be, month:p.month, day:p.day,
-        ref: refs.length? (refs[0] + (refs.length>1? ` และอีก ${refs.length-1}`:'')) : '',
-        item: label, inc, exp, bal:run}, bud));
-    });
-  }
-  const totals = {inc:0, exp:0};
-  BUDGET_COLS.forEach(c=>totals[c.t]=0);
-  rows.forEach(r=>{ totals.inc+=r.inc; totals.exp+=r.exp; BUDGET_COLS.forEach(c=>totals[c.t]+=r[c.t]); });
-  return {cols, rows, totals, carry, last: rows.length? rows[rows.length-1].bal : carry};
+  // ยอดสะสมตั้งแต่ต้นปีงบ (1 ต.ค.) ถึงก่อน rFrom — ใช้เป็นฐาน "รวมสะสม"
+  const accBase = {inc:0, exp:0};
+  const budgetAcc = {}; BUDGET_COLS.forEach(c=>budgetAcc[c.t]=0);
+  S.txns.forEach(t=>{
+    if(t.code!==S.rFac || +t.fy!==+S.rFy || t.date>=S.rFrom) return;
+    if(t.type==='income') accBase.inc+=+t.amount||0;
+    else { accBase.exp+=+t.amount||0; const col=BUDGET_COLS.find(c=>c.g===grpOf(t)); if(col) budgetAcc[col.t]+=+t.amount||0; }
+  });
+
+  let run = carry, sumIn=0, sumEx=0;
+  const rows = [];
+  const monthKeys = {};
+  list.forEach(t=>{
+    const inc = t.type==='income' ? (+t.amount||0) : 0;
+    const exp = t.type==='expense' ? (+t.amount||0) : 0;
+    run += inc - exp; sumIn+=inc; sumEx+=exp;
+    const p = beParts(t.date), ym = ymOf(t.date);
+    const bud = {}; BUDGET_COLS.forEach(c=>bud[c.t]=0);
+    if(exp){ const col=BUDGET_COLS.find(c=>c.g===grpOf(t)); if(col) bud[col.t]=exp; }
+    rows.push({be:p.be, month:p.month, day:p.day, ym, ref:t.ref||'', item:t.note||t.category,
+      inc, exp, bal:run, bud});
+  });
+  return {cols, rows, carry, last:run, sumIn, sumEx, accBase, budgetAcc};
 }
 
 function renderReports(){
@@ -1183,83 +1312,407 @@ function renderReports(){
   syncReportDates();
   $$('.repbtn').forEach(b=>b.classList.toggle('on', b.dataset.rep===S.rRep));
 
-  const R = buildReport();
+  if(S.rRep==='407') render407();
+  else render404();
+}
+
+/* ทำ dropdown ช่วงวันที่ให้เหมาะกับแต่ละแบบ
+   407 = เลือกวันเดียว (วันที่มีรายการ)
+   404 = เลือกช่วง ไม่เกิน 1 เดือน */
+function syncReportDates(){
+  const ds = activeDates(S.rFac, S.rFy);
+  const wrapFrom = $('#r-from').closest('.field');
+  const wrapTo   = $('#r-to').closest('.field');
+
+  if(S.rRep==='407'){
+    wrapFrom.querySelector('label').textContent = 'วันที่รายงาน';
+    wrapTo.classList.add('hidden');
+    if(!ds.length){ fill($('#r-from'), [{v:'',t:'— ไม่มีรายการ —'}]); S.rFrom=S.rTo=null; return; }
+    if(ds.indexOf(S.rFrom)<0) S.rFrom = ds[ds.length-1];
+    S.rTo = S.rFrom;
+    fill($('#r-from'), ds.map(d=>({v:d,t:beDate(d)})), S.rFrom);
+  } else {
+    wrapFrom.querySelector('label').textContent = 'ตั้งแต่วันที่';
+    wrapTo.classList.remove('hidden');
+    if(!ds.length){
+      fill($('#r-from'), [{v:'',t:'— ไม่มีรายการ —'}]);
+      fill($('#r-to'),   [{v:'',t:'— ไม่มีรายการ —'}]); S.rFrom=S.rTo=null; return;
+    }
+    if(ds.indexOf(S.rFrom)<0) S.rFrom = ds[0];
+    if(ds.indexOf(S.rTo)<0)   S.rTo   = ds[ds.length-1];
+    if(S.rFrom > S.rTo) S.rTo = S.rFrom;
+    // จำกัดไม่เกิน 1 เดือนปฏิทินจาก rFrom
+    const cap = capOneMonth(S.rFrom);
+    if(S.rTo > cap){ const le=ds.filter(d=>d<=cap); S.rTo = le[le.length-1] || S.rFrom; }
+    fill($('#r-from'), ds.map(d=>({v:d,t:beDate(d)})), S.rFrom);
+    fill($('#r-to'),   ds.filter(d=>d>=S.rFrom && d<=capOneMonth(S.rFrom)).map(d=>({v:d,t:beDate(d)})), S.rTo);
+  }
+}
+function capOneMonth(iso){
+  const [y,m,d]=iso.split('-').map(Number);
+  const ny = m===12? y+1 : y, nm = m===12? 1 : m+1;
+  const last = new Date(ny, nm, 0).getDate();
+  return `${ny}-${String(nm).padStart(2,'0')}-${String(Math.min(d,last)).padStart(2,'0')}`;
+}
+
+/* ============================================================
+   แบบ 407 — รายงานเงินคงเหลือประจำวัน (รูปแบบราชการ A4)
+   ============================================================ */
+function report407Model(){
+  const code=S.rFac, fy=S.rFy, date=S.rFrom;
+  const f = S.facilities.find(x=>x.code===code)||{};
+  const day = S.txns.filter(t=>t.code===code && +t.fy===+fy && t.date===date);
+  const income = day.filter(t=>t.type==='income');
+  const expense = day.filter(t=>t.type==='expense');
+  const bal = balanceOnDate(code, fy, date);
+
+  // จำนวนสัญญายืมเงินในวันนั้น (นับจากรายจ่ายที่อ้างถึงสัญญายืม)
+  const loanTxns = day.filter(t=>/ยืม|สัญญายืม/.test(t.category+' '+(t.note||'')));
+  const loanAmt = loanTxns.reduce((s,t)=>s+ +t.amount,0);
+
+  // แถวรายการเงินและหลักฐานแทนตัวเงิน
+  const items = [
+    {name:'เงินสดในมือ',                         qty:'',              unit:'',     amount:bal.cash},
+    {name:'เช็ค',                                qty:'',              unit:'ฉบับ',  amount:0},
+    {name:'ธนาณัติ',                             qty:'',              unit:'ฉบับ',  amount:0},
+    {name:'ใบสำคัญรองจ่าย',                       qty:'',              unit:'ฉบับ',  amount:0},
+    {name:'สัญญารับรองการยืมเงิน',                 qty:loanTxns.length? String(loanTxns.length):'', unit:'ฉบับ', amount:loanAmt},
+    {name:'ใบเบิกเงินเพื่อจ่ายในราชการ',            qty:'',              unit:'ฉบับ',  amount:0}
+  ];
+  // สมุดคู่ฝากธนาคาร — เงินบำรุง + ค่าเสื่อม
+  const books = [];
+  if(f.acc1 || bal.bankOp) books.push({name:`สมุดคู่ฝากธนาคาร (เงินบำรุง)`, sub:`${f.bank||''} เลขที่ ${f.acc1||'-'}`, amount:bal.bankOp});
+  if(f.acc2 || bal.bankDep) books.push({name:`สมุดคู่ฝากธนาคาร (ค่าเสื่อม)`, sub:`${f.bank||''} เลขที่ ${f.acc2||'-'}`, amount:bal.bankDep});
+  const bookQty = books.length;
+
+  const total = bal.cash + loanAmt + bal.bankOp + bal.bankDep; // ต้อง = bal.total
+  return {code, fy, date, f, income, expense, bal, items, books, bookQty, total,
+    sumIn: income.reduce((s,t)=>s+ +t.amount,0), sumEx: expense.reduce((s,t)=>s+ +t.amount,0)};
+}
+
+function render407(){
+  $('#r-csv').textContent = 'ส่งออก Word';
+  const M = report407Model();
+  const f = M.f;
+  $('#r-title').textContent = 'รายงานเงินคงเหลือประจำวัน';
+  $('#r-sub1').textContent = `${f.name||''}  รหัส ${M.code||'—'}`;
+  $('#r-sub2').textContent = M.date ? `ประจำวันที่ ${beDate(M.date)}` : 'ยังไม่มีรายการบันทึกไว้';
+
+  if(!M.date){ $('#t-report').outerHTML = `<table id="t-report" class="wide"><tbody><tr><td class="empty">ยังไม่มีรายการในปีงบประมาณนี้</td></tr></tbody></table>`; $('#r-signs').innerHTML=''; return; }
+
+  // หมายเหตุ: รายรับ/รายจ่ายของวัน
+  const noteLines = [];
+  if(M.income.length){ noteLines.push('<b>รายรับ</b>');
+    M.income.forEach(t=>noteLines.push(`${esc(t.note||t.category)} — ${money(t.amount)}`));
+    noteLines.push(`<i>รวมรายรับ ${money(M.sumIn)}</i>`); }
+  if(M.expense.length){ noteLines.push('<b>รายจ่าย</b>');
+    M.expense.forEach(t=>noteLines.push(`${esc(t.note||t.category)} — ${money(t.amount)}`));
+    noteLines.push(`<i>รวมรายจ่าย ${money(M.sumEx)}</i>`); }
+  const noteHtml = noteLines.length ? noteLines.join('<br>') : '—';
+
+  const itemRows = M.items.map(it=>`<tr>
+      <td class="l">${it.name}</td>
+      <td class="c">${it.qty}</td><td class="c">${it.unit}</td>
+      <td class="num">${it.amount?money(it.amount):''}</td></tr>`).join('');
+  const bookRows = M.books.map(bk=>`<tr>
+      <td class="l">${bk.name}<span class="cat-n">${esc(bk.sub)}</span></td>
+      <td class="c">1</td><td class="c">เล่ม</td>
+      <td class="num">${money(bk.amount)}</td></tr>`).join('');
+
+  $('#t-report').outerHTML = `<table id="t-report" class="report407">
+    <thead><tr>
+      <th class="l" style="width:32%">รายการ</th><th class="c">จำนวน</th><th class="c">หน่วย</th>
+      <th style="width:16%">จำนวนเงิน</th><th class="l" style="width:34%">หมายเหตุ</th>
+    </tr></thead>
+    <tbody>
+      ${itemRows}${bookRows}
+      <tr class="grow"><td class="l" colspan="3">รวมทั้งสิ้น</td>
+        <td class="num">${money(M.total)}</td></tr>
+    </tbody></table>`;
+  // วางคอลัมน์หมายเหตุเป็นเซลล์เดียวคลุมทุกแถว
+  build407NoteColumn(noteHtml, M.items.length + M.books.length + 1);
+
+  render407Signatures(M);
+}
+
+/** วางคอลัมน์หมายเหตุให้เป็นเซลล์เดียวคลุมทุกแถว */
+function build407NoteColumn(noteHtml, rowCount){
+  const tb = $('#t-report tbody');
+  const firstRow = tb.querySelector('tr');
+  const td = document.createElement('td');
+  td.className='l'; td.style.verticalAlign='top'; td.rowSpan=rowCount; td.innerHTML=noteHtml;
+  firstRow.appendChild(td);
+}
+
+function render407Signatures(M){
+  const head = personByRole(M.code, ROLE_HEAD);
+  const fin  = personByRole(M.code, ROLE_FIN) || personByRole(M.code, ROLE_CHIEF_FIN);
+  const comm = committee(M.code);
+  const nm = p => p ? `(${p.name})` : '(...................................)';
+  const po = p => p ? p.pos : '.......................................';
+
+  let html = `<div style="flex:1 1 100%;text-align:left;padding:6px 4px 0">
+    <div>จำนวนเงิน (ตัวอักษร) <b>${bahtText(M.total)}</b></div>
+    <div style="margin-top:22px;text-align:center;max-width:340px;margin-left:auto;margin-right:auto">
+      <div class="ln"></div>${nm(head)}<br>${po(head)}<br>
+      <span style="color:var(--ink-3);font-size:12.5px">หัวหน้าหน่วยงานย่อย</span></div>
+    <div style="margin-top:20px">คณะกรรมการเก็บรักษาเงิน ได้ตรวจนับเงินและหลักฐานแทนตัวเงินถูกต้อง ตามรายการข้างต้นแล้ว จึงได้รับฝากเก็บรักษาไว้ในลักษณะหีบห่อ</div>
+  </div>`;
+
+  html += `<div style="flex:1 1 100%;display:flex;flex-wrap:wrap;gap:20px;justify-content:space-around;padding-top:10px">`;
+  const commList = comm.length ? comm : [null,null];
+  commList.forEach(p=>{
+    html += `<div style="min-width:190px;text-align:center">
+      <div class="ln"></div>${nm(p)}<br>${po(p)}<br>กรรมการ</div>`;
+  });
+  html += `</div>`;
+
+  html += `<div style="flex:1 1 100%;margin-top:14px">ข้าพเจ้า ผู้ได้รับมอบหมายได้รับเงินและเอกสารแทนตัวเงินตามรายละเอียดข้างต้นนี้ไปแล้ว</div>
+    <div style="flex:1 1 100%;display:flex;flex-wrap:wrap;gap:20px;justify-content:space-between;padding-top:24px">
+      <div style="min-width:230px;text-align:center">
+        <div>ลงชื่อ ${nm(fin)} ผู้รับเงิน</div>
+        <div style="color:var(--ink-3);font-size:12.5px;margin-top:3px">${po(fin)}</div></div>
+      <div style="min-width:230px;text-align:center">
+        <div>ลงชื่อ ${nm(head)} หัวหน้าหน่วยงานย่อยผู้มอบหมาย</div>
+        <div style="color:var(--ink-3);font-size:12.5px;margin-top:3px">${po(head)}</div></div>
+    </div>`;
+  $('#r-signs').innerHTML = html;
+}
+
+/* ============================================================
+   แบบ 404 — ทะเบียนคุมเงินนอกงบประมาณ (2 หน้า)
+   ============================================================ */
+function render404(){
+  $('#r-csv').textContent = 'ส่งออก Excel';
+  const R = build404();
   const f = S.facilities.find(x=>x.code===S.rFac)||{};
-  $('#r-title').textContent = S.rRep==='407' ? 'รายงานเงินคงเหลือประจำวัน' : 'ทะเบียนคุมเงินนอกงบประมาณ';
+  $('#r-title').textContent = 'ทะเบียนคุมเงินนอกงบประมาณ';
   $('#r-sub1').textContent = `${f.name||''}  รหัส ${S.rFac||'—'}` + (f.addr? `  ${f.addr}`:'');
   $('#r-sub2').textContent = S.rFrom
-    ? `ปีงบประมาณ ${S.rFy} · ตั้งแต่วันที่ ${beDate(S.rFrom)} ถึงวันที่ ${beDate(S.rTo)}  (แบบ ${S.rRep})`
+    ? `ปีงบประมาณ ${S.rFy} · ตั้งแต่วันที่ ${beDate(S.rFrom)} ถึงวันที่ ${beDate(S.rTo)}  (แบบ 404)`
     : `ปีงบประมาณ ${S.rFy} · ยังไม่มีรายการบันทึกไว้`;
 
-  const head = `<thead><tr>
-    <th class="c">พ.ศ.</th><th class="l">เดือน</th><th class="c">วันที่</th>
-    <th class="l">ที่เอกสาร</th><th class="l">รายการ</th>
-    <th>รายรับ</th><th>รายจ่าย</th><th>คงเหลือ</th>
-    ${BUDGET_COLS.map(c=>`<th>${c.t}</th>`).join('')}
-  </tr></thead>`;
+  if(!R.rows.length){
+    $('#t-report').innerHTML = `<tbody><tr><td class="empty" colspan="8">ไม่มีรายการในช่วงเวลาที่เลือก</td></tr></tbody>`;
+    $('#r-signs').innerHTML=''; return;
+  }
 
-  const carryRow = `<tr class="grow">
-    <td class="l" colspan="5">ยอดยกมา ณ วันที่ ${S.rFrom? beDate(S.rFrom):'—'}</td>
-    <td></td><td></td><td class="num">${money(R.carry)}</td>
-    ${BUDGET_COLS.map(()=>'<td></td>').join('')}</tr>`;
+  // แบ่งตามเดือน เพื่อแทรกแถวสรุปท้ายเดือน
+  const byMonth = {};
+  R.rows.forEach(r=>{ (byMonth[r.ym]=byMonth[r.ym]||[]).push(r); });
+  const monthKeys = Object.keys(byMonth).sort();
 
-  const body = R.rows.length ? R.rows.map(r=>`<tr>
-      <td class="c code">${r.be}</td><td class="l">${r.month}</td><td class="c code">${r.day}</td>
-      <td class="l code">${esc(r.ref||'—')}</td><td class="l">${esc(r.item)}</td>
-      <td class="num" style="color:var(--sprout)">${r.inc?money(r.inc):''}</td>
-      <td class="num" style="color:var(--brick)">${r.exp?money(r.exp):''}</td>
-      <td class="num" style="font-weight:600">${money(r.bal)}</td>
-      ${BUDGET_COLS.map(c=>`<td class="num">${r[c.t]?money(r[c.t]):''}</td>`).join('')}
-    </tr>`).join('')
-    : `<tr><td class="empty" colspan="${8+BUDGET_COLS.length}">ไม่มีรายการในช่วงเวลาที่เลือก</td></tr>`;
-
-  const foot = R.rows.length ? `<tfoot><tr>
-      <td class="l" colspan="5">รวมทั้งสิ้น</td>
-      <td class="num">${money(R.totals.inc)}</td>
-      <td class="num">${money(R.totals.exp)}</td>
-      <td class="num">${money(R.last)}</td>
-      ${BUDGET_COLS.map(c=>`<td class="num">${R.totals[c.t]?money(R.totals[c.t]):'—'}</td>`).join('')}
-    </tr></tfoot>` : '';
-
-  $('#t-report').innerHTML = head + `<tbody>${carryRow}${body}</tbody>` + foot;
-  renderSignatures();
-}
-
-function renderSignatures(){
-  const staff = S.people.filter(p=>p.code===S.rFac);
-  const pick = role => (staff.find(p=>p.fin===role)||{}).name || '';
-  const slots = [
-    {role:'เจ้าหน้าที่การเงิน',            label:'ผู้จัดทำ'},
-    {role:'หัวหน้าเจ้าหน้าที่การเงิน',      label:'ผู้ตรวจสอบ'},
-    {role:'ผู้อำนวยการ/หัวหน้าหน่วยบริการ', label:'ผู้อนุมัติ'}
-  ];
-  $('#r-signs').innerHTML = slots.map(s=>`
-    <div><div class="ln"></div>
-      (${esc(pick(s.role) || '.....................................')})<br>
-      ${s.label}<br><span style="color:var(--ink-3);font-size:12.5px">${s.role}</span></div>`).join('');
-}
-
-function reportCSV(){
-  const R = buildReport();
-  if(!R.rows.length) return toast('ไม่มีข้อมูลให้ดาวน์โหลด');
-  const q = v => '"' + String(v==null?'':v).replace(/"/g,'""') + '"';
-  const lines = [];
-  lines.push([S.rRep==='407'?'รายงานเงินคงเหลือประจำวัน':'ทะเบียนคุมเงินนอกงบประมาณ'].map(q).join(','));
-  lines.push([facName(S.rFac), 'ปีงบประมาณ '+S.rFy, beDate(S.rFrom)+' ถึง '+beDate(S.rTo)].map(q).join(','));
-  lines.push(R.cols.map(q).join(','));
-  lines.push(['','','','','ยอดยกมา','','',R.carry].concat(BUDGET_COLS.map(()=>'')).map(q).join(','));
-  R.rows.forEach(r=>{
-    lines.push([r.be,r.month,r.day,r.ref,r.item,r.inc||'',r.exp||'',r.bal]
-      .concat(BUDGET_COLS.map(c=>r[c.t]||'')).map(q).join(','));
+  // ----- หน้าที่ 1 -----
+  let run = R.carry;
+  let accIn = R.accBase.inc, accEx = R.accBase.exp;
+  let body1 = `<tr class="grow"><td class="l" colspan="7">ยอดยกมา ณ วันที่ ${beDate(S.rFrom)}</td><td class="num">${money(R.carry)}</td></tr>`;
+  monthKeys.forEach(mk=>{
+    const rs = byMonth[mk];
+    let mIn=0, mEx=0;
+    rs.forEach(r=>{ run+=r.inc-r.exp; mIn+=r.inc; mEx+=r.exp;
+      body1 += `<tr>
+        <td class="c code">${r.be}</td><td class="l">${r.month}</td><td class="c code">${r.day}</td>
+        <td class="l code">${esc(r.ref||'—')}</td><td class="l">${esc(r.item)}</td>
+        <td class="num" style="color:var(--sprout)">${r.inc?money(r.inc):''}</td>
+        <td class="num" style="color:var(--brick)">${r.exp?money(r.exp):''}</td>
+        <td class="num" style="font-weight:600">${money(r.bal)}</td></tr>`;
+    });
+    accIn+=mIn; accEx+=mEx;
+    body1 += `<tr class="mtot"><td class="l" colspan="5">รายรับ-รายจ่ายเดือน${rs[0].month}</td>
+        <td class="num">${money(mIn)}</td><td class="num">${money(mEx)}</td><td class="num">${money(run)}</td></tr>`;
+    body1 += `<tr class="mtot2"><td class="l" colspan="5">ยอดสะสมตั้งแต่ต้นปีงบประมาณ</td>
+        <td class="num">${money(accIn)}</td><td class="num">${money(accEx)}</td><td class="num">${money(run)}</td></tr>`;
   });
-  lines.push(['','','','','รวมทั้งสิ้น',R.totals.inc,R.totals.exp,R.last]
-    .concat(BUDGET_COLS.map(c=>R.totals[c.t])).map(q).join(','));
-  const blob = new Blob(['\uFEFF'+lines.join('\r\n')], {type:'text/csv;charset=utf-8'});
+
+  const page1 = `
+    <div class="pageband">หน้าที่ 1 — รายรับ / รายจ่าย / คงเหลือ</div>
+    <table class="wide">
+      <thead><tr>
+        <th class="c">พ.ศ.</th><th class="l">เดือน</th><th class="c">วันที่</th>
+        <th class="l">ที่เอกสาร</th><th class="l">รายการ</th>
+        <th>รายรับ</th><th>รายจ่าย</th><th>คงเหลือ</th>
+      </tr></thead>
+      <tbody>${body1}</tbody>
+    </table>`;
+
+  // ----- หน้าที่ 2 -----
+  const bAcc = {}; BUDGET_COLS.forEach(c=>bAcc[c.t]=R.budgetAcc[c.t]);
+  let body2 = '';
+  monthKeys.forEach(mk=>{
+    const rs = byMonth[mk];
+    const mSum = {}; BUDGET_COLS.forEach(c=>mSum[c.t]=0);
+    rs.forEach(r=>{
+      BUDGET_COLS.forEach(c=>mSum[c.t]+=r.bud[c.t]);
+      body2 += `<tr>
+        <td class="c code">${r.be}</td><td class="l">${r.month}</td><td class="c code">${r.day}</td>
+        <td class="l">${esc(r.item)}</td>
+        ${BUDGET_COLS.map(c=>`<td class="num">${r.bud[c.t]?money(r.bud[c.t]):''}</td>`).join('')}</tr>`;
+    });
+    BUDGET_COLS.forEach(c=>bAcc[c.t]+=mSum[c.t]);
+    body2 += `<tr class="mtot"><td class="l" colspan="4">รวมในเดือน${rs[0].month}</td>
+        ${BUDGET_COLS.map(c=>`<td class="num">${mSum[c.t]?money(mSum[c.t]):'—'}</td>`).join('')}</tr>`;
+    body2 += `<tr class="mtot2"><td class="l" colspan="4">รวมสะสมจากเดือนตุลาคม</td>
+        ${BUDGET_COLS.map(c=>`<td class="num">${bAcc[c.t]?money(bAcc[c.t]):'—'}</td>`).join('')}</tr>`;
+  });
+  const page2 = `
+    <div class="pageband">หน้าที่ 2 — จำแนกรายจ่ายตามหมวดงบประมาณ</div>
+    <table class="wide">
+      <thead><tr>
+        <th class="c">พ.ศ.</th><th class="l">เดือน</th><th class="c">วันที่</th><th class="l">รายการ</th>
+        ${BUDGET_COLS.map(c=>`<th>${c.t}</th>`).join('')}
+      </tr></thead>
+      <tbody>${body2}</tbody>
+    </table>`;
+
+  $('#t-report').outerHTML = `<div id="t-report">${page1}${page2}</div>`;
+  $('#r-signs').innerHTML = '';
+}
+
+/* ============================================================
+   ส่งออกไฟล์
+   ============================================================ */
+function reportExport(){
+  if(S.rRep==='407') export407Word();
+  else export404Excel();
+}
+
+/* 407 → ไฟล์ Word (.doc) A4 แนวตั้ง แก้ไขได้ */
+function export407Word(){
+  const M = report407Model();
+  if(!M.date) return toast('ไม่มีข้อมูลให้ส่งออก');
+  const f = M.f;
+  const head = personByRole(M.code, ROLE_HEAD);
+  const fin  = personByRole(M.code, ROLE_FIN) || personByRole(M.code, ROLE_CHIEF_FIN);
+  const comm = committee(M.code);
+  const nm = p => p ? `(${esc(p.name)})` : '(...................................)';
+  const po = p => p ? esc(p.pos) : '.......................................';
+
+  const noteParts = [];
+  if(M.income.length){ noteParts.push('<b>รายรับ</b><br>');
+    M.income.forEach(t=>noteParts.push(`${esc(t.note||t.category)} — ${money(t.amount)}<br>`));
+    noteParts.push(`<i>รวมรายรับ ${money(M.sumIn)}</i><br>`); }
+  if(M.expense.length){ noteParts.push('<b>รายจ่าย</b><br>');
+    M.expense.forEach(t=>noteParts.push(`${esc(t.note||t.category)} — ${money(t.amount)}<br>`));
+    noteParts.push(`<i>รวมรายจ่าย ${money(M.sumEx)}</i>`); }
+  const note = noteParts.join('') || '—';
+
+  const rowsHtml = M.items.map(it=>`<tr>
+      <td>${it.name}</td><td style="text-align:center">${it.qty}</td>
+      <td style="text-align:center">${it.unit}</td>
+      <td style="text-align:right">${it.amount?money(it.amount):''}</td></tr>`).join('')
+    + M.books.map(bk=>`<tr>
+      <td>${bk.name}<br><span style="font-size:12px;color:#555">${esc(bk.sub)}</span></td>
+      <td style="text-align:center">1</td><td style="text-align:center">เล่ม</td>
+      <td style="text-align:right">${money(bk.amount)}</td></tr>`).join('');
+
+  const commHtml = (comm.length?comm:[null,null]).map(p=>`
+    <td style="text-align:center;padding-top:26px">
+      ..............................................<br>${nm(p)}<br>${po(p)}<br>กรรมการ</td>`).join('');
+
+  const html = `<!DOCTYPE html><html xmlns:o="urn:schemas-microsoft-com:office:office"
+    xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8">
+    <title>แบบ 407</title>
+    <!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View></w:WordDocument></xml><![endif]-->
+    <style>
+      @page{size:A4 portrait;margin:2cm}
+      body{font-family:"TH Sarabun New","Sarabun",sans-serif;font-size:16px;line-height:1.4}
+      .r{text-align:right}.c{text-align:center}
+      table{width:100%;border-collapse:collapse;margin-top:10px}
+      th,td{border:1px solid #000;padding:5px 7px;vertical-align:top}
+      th{background:#eee}
+      .noborder td{border:0}
+    </style></head><body>
+    <div class="r">แบบ 407</div>
+    <div class="c" style="font-size:19px;font-weight:bold">รายงานเงินคงเหลือประจำวัน</div>
+    <div style="margin-top:10px">ส่วนราชการ ${esc(f.name||'')} ${esc(f.addr||'')}</div>
+    <div style="margin-top:4px">ประจำวันที่ ${M.date? (beParts(M.date).day+' เดือน'+beParts(M.date).month+' พ.ศ. '+beParts(M.date).be):''}</div>
+    <table>
+      <thead><tr><th style="width:34%">รายการ</th><th class="c" style="width:10%">จำนวน</th>
+        <th class="c" style="width:10%">หน่วย</th><th style="width:16%">จำนวนเงิน</th><th style="width:30%">หมายเหตุ</th></tr></thead>
+      <tbody>
+        <tr><td colspan="4" style="border-bottom:0"></td><td rowspan="${M.items.length+M.books.length+1}" style="vertical-align:top">${note}</td></tr>
+        ${rowsHtml.replace(/<tr>/g,'<tr>').replace(/<\/tr>/g, m=>m)}
+        <tr><td colspan="3" style="font-weight:bold">รวมทั้งสิ้น</td><td class="r" style="font-weight:bold">${money(M.total)}</td></tr>
+      </tbody>
+    </table>
+    <p>จำนวนเงิน (ตัวอักษร) <b>${bahtText(M.total)}</b></p>
+    <table class="noborder"><tr><td class="c" style="padding-top:20px">
+      ..............................................<br>${nm(head)}<br>${po(head)}<br>หัวหน้าหน่วยงานย่อย</td></tr></table>
+    <p>คณะกรรมการเก็บรักษาเงิน ได้ตรวจนับเงินและหลักฐานแทนตัวเงินถูกต้อง ตามรายการข้างต้นแล้ว จึงได้รับฝากเก็บรักษาไว้ในลักษณะหีบห่อ</p>
+    <table class="noborder"><tr>${commHtml}</tr></table>
+    <p style="margin-top:16px">ข้าพเจ้า ผู้ได้รับมอบหมายได้รับเงินและเอกสารแทนตัวเงินตามรายละเอียดข้างต้นนี้ไปแล้ว</p>
+    <table class="noborder"><tr>
+      <td class="c" style="padding-top:20px">ลงชื่อ ..................................... ผู้รับเงิน<br>${nm(fin)}<br>${po(fin)}</td>
+      <td class="c" style="padding-top:20px">ลงชื่อ ..................................... หัวหน้าหน่วยงานย่อยผู้มอบหมาย<br>${nm(head)}<br>${po(head)}</td>
+    </tr></table>
+    </body></html>`;
+
+  downloadBlob(html, `407_${M.code}_${M.date}.doc`, 'application/msword');
+  toast('ส่งออกไฟล์ Word แล้ว');
+}
+
+/* 404 → ไฟล์ Excel (.xls) 2 ชีตในไฟล์เดียว (HTML-based workbook) */
+function export404Excel(){
+  const R = build404();
+  if(!R.rows.length) return toast('ไม่มีข้อมูลให้ส่งออก');
+  const byMonth = {}; R.rows.forEach(r=>{ (byMonth[r.ym]=byMonth[r.ym]||[]).push(r); });
+  const monthKeys = Object.keys(byMonth).sort();
+  const nf = 'mso-number-format:\'#,##0.00\'';
+
+  // ชีต 1
+  let run=R.carry, accIn=R.accBase.inc, accEx=R.accBase.exp;
+  let s1 = `<tr><td colspan="7">ยอดยกมา ณ วันที่ ${beDate(S.rFrom)}</td><td style="${nf}">${R.carry}</td></tr>`;
+  monthKeys.forEach(mk=>{
+    const rs=byMonth[mk]; let mIn=0,mEx=0;
+    rs.forEach(r=>{ run+=r.inc-r.exp; mIn+=r.inc; mEx+=r.exp;
+      s1+=`<tr><td>${r.be}</td><td>${r.month}</td><td>${r.day}</td><td>${esc(r.ref)}</td><td>${esc(r.item)}</td>
+        <td style="${nf}">${r.inc||''}</td><td style="${nf}">${r.exp||''}</td><td style="${nf}">${r.bal}</td></tr>`; });
+    accIn+=mIn; accEx+=mEx;
+    s1+=`<tr><td colspan="5">รายรับ-รายจ่ายเดือน${rs[0].month}</td><td style="${nf}">${mIn}</td><td style="${nf}">${mEx}</td><td style="${nf}">${run}</td></tr>`;
+    s1+=`<tr><td colspan="5">ยอดสะสมตั้งแต่ต้นปีงบประมาณ</td><td style="${nf}">${accIn}</td><td style="${nf}">${accEx}</td><td style="${nf}">${run}</td></tr>`;
+  });
+
+  // ชีต 2
+  const bAcc={}; BUDGET_COLS.forEach(c=>bAcc[c.t]=R.budgetAcc[c.t]);
+  let s2='';
+  monthKeys.forEach(mk=>{
+    const rs=byMonth[mk]; const mSum={}; BUDGET_COLS.forEach(c=>mSum[c.t]=0);
+    rs.forEach(r=>{ BUDGET_COLS.forEach(c=>mSum[c.t]+=r.bud[c.t]);
+      s2+=`<tr><td>${r.be}</td><td>${r.month}</td><td>${r.day}</td><td>${esc(r.item)}</td>
+        ${BUDGET_COLS.map(c=>`<td style="${nf}">${r.bud[c.t]||''}</td>`).join('')}</tr>`; });
+    BUDGET_COLS.forEach(c=>bAcc[c.t]+=mSum[c.t]);
+    s2+=`<tr><td colspan="4">รวมในเดือน${rs[0].month}</td>${BUDGET_COLS.map(c=>`<td style="${nf}">${mSum[c.t]||''}</td>`).join('')}</tr>`;
+    s2+=`<tr><td colspan="4">รวมสะสมจากเดือนตุลาคม</td>${BUDGET_COLS.map(c=>`<td style="${nf}">${bAcc[c.t]||''}</td>`).join('')}</tr>`;
+  });
+
+  const sheet = (name, head, body) => `
+    <table border="1"><thead><tr>${head.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${body}</tbody></table>`;
+  const head1 = ['พ.ศ.','เดือน','วันที่','ที่เอกสาร','รายการ','รายรับ','รายจ่าย','คงเหลือ'];
+  const head2 = ['พ.ศ.','เดือน','วันที่','รายการ'].concat(BUDGET_COLS.map(c=>c.t));
+
+  const xml = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel"
+    xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8">
+    <!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets>
+      <x:ExcelWorksheet><x:Name>หน้า1 รับ-จ่าย</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet>
+      <x:ExcelWorksheet><x:Name>หน้า2 หมวดงบ</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet>
+    </x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->
+    <style>td,th{font-family:"TH Sarabun New",sans-serif}</style></head><body>
+    <h3>ทะเบียนคุมเงินนอกงบประมาณ (แบบ 404) — ${esc(facName(S.rFac))} ปีงบประมาณ ${S.rFy}</h3>
+    <p>ตั้งแต่ ${beDate(S.rFrom)} ถึง ${beDate(S.rTo)}</p>
+    ${sheet('หน้า1', head1, s1)}
+    <br style="page-break-before:always">
+    ${sheet('หน้า2', head2, s2)}
+    </body></html>`;
+
+  downloadBlob(xml, `404_${S.rFac}_${S.rFy}.xls`, 'application/vnd.ms-excel');
+  toast('ส่งออกไฟล์ Excel แล้ว');
+}
+
+function downloadBlob(content, filename, mime){
+  const blob = new Blob(['\uFEFF'+content], {type:mime+';charset=utf-8'});
   const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `${S.rRep}_${S.rFac}_${S.rFy}.csv`;
+  a.href = URL.createObjectURL(blob); a.download = filename;
   a.click(); URL.revokeObjectURL(a.href);
-  toast('ดาวน์โหลดไฟล์ CSV แล้ว');
 }
 
 /* ============================================================
@@ -1303,13 +1756,14 @@ function editFacility(code){
   $('#fc-code').value=f.code; $('#fc-code').readOnly=true;
   $('#fc-name').value=f.name; $('#fc-addr').value=f.addr||'';
   $('#fc-user').value=f.user; $('#fc-pass').value=f.pass; $('#fc-role').value=f.role||'user';
+  $('#fc-bank').value=f.bank||''; $('#fc-acc1').value=f.acc1||''; $('#fc-acc2').value=f.acc2||'';
   $('#fc-form-title').textContent='แก้ไขสถานบริการ '+code;
   $('#fc-cancel').classList.remove('hidden');
   window.scrollTo({top:0,behavior:'smooth'});
 }
 function resetFacilityForm(){
   S.editingCode=null;
-  ['#fc-code','#fc-name','#fc-addr','#fc-user','#fc-pass'].forEach(i=>$(i).value='');
+  ['#fc-code','#fc-name','#fc-addr','#fc-user','#fc-pass','#fc-bank','#fc-acc1','#fc-acc2'].forEach(i=>$(i).value='');
   $('#fc-code').readOnly = !isAdmin();
   $('#fc-role').value='user';
   $('#fc-form-title').textContent='เพิ่มสถานบริการ';
@@ -1324,7 +1778,8 @@ async function saveFacility(){
   const old = S.facilities.find(f=>f.code===code);
   const facility = {code, name, addr:$('#fc-addr').value.trim(),
     user:'U'+code, pass:$('#fc-pass').value.trim()||'P'+code,
-    role: isAdmin() ? $('#fc-role').value : (old?.role || 'user')};
+    role: isAdmin() ? $('#fc-role').value : (old?.role || 'user'),
+    bank:$('#fc-bank').value.trim(), acc1:$('#fc-acc1').value.trim(), acc2:$('#fc-acc2').value.trim()};
   await api('saveFacility',{facility});
   const i=S.facilities.findIndex(f=>f.code===code);
   if(i>=0) S.facilities[i]=facility; else S.facilities.push(facility);
@@ -1527,7 +1982,7 @@ async function boot(){
 /* ---- ผูก event ---- */
 $$('.rail nav button').forEach(b=>b.onclick=()=>showView(b.dataset.view));
 $('#btn-login').onclick  = ()=>showView('login');
-$('#btn-logout').onclick = ()=>{ S.user=null; applyAuth(); refreshPickers(); showView('dashboard'); toast('ออกจากระบบแล้ว'); };
+$('#btn-logout').onclick = ()=>{ S.user=null; S.facCode='ALL'; applyAuth(); refreshPickers(); showView('dashboard'); toast('ออกจากระบบแล้ว'); };
 $('#lg-btn').onclick = doLogin;
 $('#lg-p').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
 $('#lg-u').addEventListener('keydown', e=>{ if(e.key==='Enter') $('#lg-p').focus(); });
@@ -1540,8 +1995,9 @@ $('#f-month').onchange = e=>{ S.ym=e.target.value; renderDashboard(); };
 $('#in-level').onchange = e=>{ S.lvIn=e.target.value; renderDashboard(); };
 $('#ex-level').onchange = e=>{ S.lvEx=e.target.value; renderDashboard(); };
 
-$('#fd-fy').onchange = e=>{ S.fdFy=+e.target.value; S.fdYm=defaultYm(S.fdFy); renderFacility(); };
+$('#fd-fy').onchange = e=>{ S.fdFy=+e.target.value; S.fdYm=defaultYm(S.fdFy); S.fdMtFy=S.fdFy; renderFacility(); };
 $('#fd-month').onchange = e=>{ S.fdYm=e.target.value; renderFacility(); };
+$('#fd-mt-fy').onchange = e=>{ S.fdMtFy=+e.target.value; renderFacilityMonthly(); };
 $('#fd-in-level').onchange = e=>{ S.fdLvIn=e.target.value; renderFacility(); };
 $('#fd-ex-level').onchange = e=>{ S.fdLvEx=e.target.value; renderFacility(); };
 
@@ -1557,13 +2013,13 @@ $('#e-month').onchange = e=>{ S.eYm=e.target.value; renderEntry(); };
 $('#i-save').onclick = ()=>addTxn('income');
 $('#x-save').onclick = ()=>addTxn('expense');
 
-$$('.repbtn').forEach(b=>b.onclick=()=>{ S.rRep=b.dataset.rep; renderReports(); });
+$$('.repbtn').forEach(b=>b.onclick=()=>{ S.rRep=b.dataset.rep; S.rFrom=S.rTo=null; renderReports(); });
 $('#r-fy').onchange  = e=>{ S.rFy=+e.target.value; S.rFrom=S.rTo=null; renderReports(); };
 $('#r-fac').onchange = e=>{ S.rFac=e.target.value; S.rFrom=S.rTo=null; renderReports(); };
-$('#r-from').onchange= e=>{ S.rFrom=e.target.value; if(S.rTo<S.rFrom) S.rTo=S.rFrom; renderReports(); };
+$('#r-from').onchange= e=>{ S.rFrom=e.target.value; if(S.rRep==='407'){S.rTo=S.rFrom;} else if(S.rTo<S.rFrom){S.rTo=S.rFrom;} renderReports(); };
 $('#r-to').onchange  = e=>{ S.rTo=e.target.value; if(S.rTo<S.rFrom) S.rFrom=S.rTo; renderReports(); };
 $('#r-print').onclick = ()=>window.print();
-$('#r-csv').onclick = reportCSV;
+$('#r-csv').onclick = reportExport;
 
 $$('.tabs [data-stab]').forEach(b=>b.onclick=()=>{
   S.sTab=b.dataset.stab;
