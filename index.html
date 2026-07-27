@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ระบบบริหารจัดการการเงินการคลัง</title>
+<title>ระบบการเงินบำรุง รพ.สต. — สสอ.ค้อวัง</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Sarabun:wght@400;500;600&display=swap" rel="stylesheet">
@@ -87,6 +87,8 @@ td:first-child,td.l{text-align:left}
 tbody tr:hover{background:#f7faf7}
 tfoot td{border-top:1px solid var(--line);border-bottom:0;font-weight:600;background:#f7faf7}
 tr.grow td{font-weight:600;background:#f4f7f3}
+tr.rowsel td{background:var(--pine-soft)}
+tr.rowsel td:first-child{box-shadow:inset 3px 0 0 var(--pine)}
 tr.sechead td{background:var(--pine);color:#fff;font-weight:600;font-size:13px;letter-spacing:.04em}
 .linkish{background:none;border:0;padding:0;color:var(--pine);font-weight:600;cursor:pointer;text-align:left;text-decoration:underline;text-underline-offset:3px;text-decoration-color:#a9cabf}
 .linkish:hover{color:var(--pine-2)}
@@ -183,7 +185,7 @@ table.wide th,table.wide td{padding:7px 8px}
   <aside class="rail">
     <div class="brand">
       <div class="mark">฿</div>
-      <div><b>สถานการณ์เงินบำรุง รพ.สต.</b><span>สสอ.ค้อวัง</span></div>
+      <div><b>การเงินบำรุง รพ.สต.</b><span>สสอ.ค้อวัง</span></div>
     </div>
     <nav>
       <div class="grp">ภาพรวม</div>
@@ -242,6 +244,11 @@ table.wide th,table.wide td{padding:7px 8px}
       </div>
 
       <div class="ledger" id="dash-ledger"></div>
+
+      <div class="card" style="margin-bottom:18px">
+        <header><h3>สถานการณ์เงินบำรุงรายสถานบริการ</h3><span class="hint" id="cash-hint">—</span></header>
+        <div class="body tablewrap"><table id="t-cash"></table></div>
+      </div>
 
       <div class="grid g2" style="margin-bottom:18px">
         <div class="card">
@@ -509,8 +516,8 @@ table.wide th,table.wide td{padding:7px 8px}
    1. ตั้งค่าการเชื่อมต่อ — แก้ 2 บรรทัดนี้ก่อน deploy
    ============================================================ */
 const CONFIG = {
- API_URL: 'https://script.google.com/macros/s/AKfycbwcO_26juqPyh3E8DnaTBFNGtqiUX_4FycsOFvNGri_VAZUmb0jNhV7a4kaGSbcNLM63w/exec',                 // วาง Web app URL ของ Google Apps Script ที่นี่
-  API_KEY: 'kwv-XwNseMgWuDSbSUZEEn7_1Ds9zu8Qgfck'    // ต้องตรงกับ API_KEY ใน Code.gs
+  API_URL: '',                 // วาง Web app URL ของ Google Apps Script ที่นี่
+  API_KEY: 'CHANGE-ME-1234'    // ต้องตรงกับ API_KEY ใน Code.gs
 };
 
 /* ============================================================
@@ -560,7 +567,7 @@ const EXPENSE_TREE = {
   'ค่าสาธารณูปโภค': ['ค่าน้ำประปา','ค่าไฟฟ้า','ค่าโทรศัพท์/ค่าอินเทอร์เน็ต'],
   'ค่าที่ดินและสิ่งก่อสร้าง': ['ค่าที่ดิน','ค่าก่อสร้าง'],
   'ค่าใช้จ่ายอื่น ๆ': [
-    'ค่าใช้จ่ายโครงการ CUP/กองทุน UC ตำบล','นำส่งภาษีหัก ณ ที่จ่าย','รายจ่ายงบค่าเสื่อม',
+    'ค่าใช้จ่ายโครงการ CUP/กองทุน UC ตำบล','ภาษีหัก ณ ที่จ่าย','รายจ่ายงบค่าเสื่อม',
     'รายจ่ายโอนคืน รพ.สต./สสอ.','ค่าใช้จ่ายอื่น ๆ']
 };
 
@@ -807,7 +814,40 @@ function renderDashboard(){
     options: barOpts(true), plugins:[valueLabels]
   });
 
+  renderCashTable();
   renderStatusTable();
+}
+
+/** ตารางสถานการณ์เงินบำรุง: เงินสดในมือ · เงินฝากธนาคารรวม · เงินบำรุงคงเหลือ */
+function renderCashTable(){
+  const mo = fyMonths(S.fy).find(m=>m.key===S.ym);
+  $('#cash-hint').textContent = `ยอด ณ สิ้น${mo.label}`;
+  const rows = allFacs().map(f=>{
+    const b = balance(f.code, S.fy, S.ym);
+    return {f, cash:b.cash, bank:b.bankOp+b.bankDep, bankOp:b.bankOp, bankDep:b.bankDep, total:b.total};
+  });
+  const sum = k => rows.reduce((s,r)=>s+r[k],0);
+  $('#t-cash').innerHTML = `
+    <thead><tr>
+      <th class="l">รหัสสถานบริการ</th><th class="l">ชื่อสถานบริการ</th>
+      <th>เงินสดในมือ (บาท)</th><th>เงินฝากธนาคาร (บาท)</th><th>เงินบำรุงคงเหลือ (บาท)</th>
+    </tr></thead>
+    <tbody>${rows.map(r=>`
+      <tr${S.facCode===r.f.code?' class="rowsel"':''}>
+        <td class="l code">${r.f.code}</td>
+        <td class="l"><button class="linkish" data-cfac="${r.f.code}">${esc(r.f.name)}</button></td>
+        <td class="num ${r.cash<0?'neg':''}">${money(r.cash)}</td>
+        <td class="num ${r.bank<0?'neg':''}">${money(r.bank)}
+          <span class="cat-n">เงินบำรุง ${money(r.bankOp)} · ค่าเสื่อม ${money(r.bankDep)}</span></td>
+        <td class="num ${r.total<0?'neg':''}" style="font-weight:600">${money(r.total)}</td>
+      </tr>`).join('')}</tbody>
+    <tfoot><tr>
+      <td class="l" colspan="2">รวมทั้งอำเภอ (${rows.length} แห่ง)</td>
+      <td class="num">${money(sum('cash'))}</td>
+      <td class="num">${money(sum('bank'))}</td>
+      <td class="num">${money(sum('total'))}</td>
+    </tr></tfoot>`;
+  $$('#t-cash [data-cfac]').forEach(b=>b.onclick=()=>openFacility(b.dataset.cfac));
 }
 
 function renderStatusTable(){
