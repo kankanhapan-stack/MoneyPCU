@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ระบบการเงินบำรุง รพ.สต. — สสอ.ค้อวัง</title>
+<title>MoneyPCUManagement</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Sarabun:wght@400;500;600&display=swap" rel="stylesheet">
@@ -152,6 +152,11 @@ table.report407 .grow td{background:#f4f7f3}
 .hintbox code{font-family:"IBM Plex Mono",monospace;color:var(--pine)}
 
 #toast{position:fixed;right:20px;bottom:20px;z-index:60;display:flex;flex-direction:column;gap:8px}
+.modal-wrap{position:fixed;inset:0;z-index:70;background:rgba(20,35,31,.4);display:grid;place-items:center;padding:20px}
+.modal{background:var(--surface);border-radius:14px;box-shadow:var(--shadow);width:100%;max-width:640px;max-height:90vh;overflow:auto}
+.modal>header{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--line)}
+.modal>header h3{font-size:17px}
+.modal-body{padding:18px 20px}
 #toast div{background:var(--ink);color:#eaf1ee;padding:11px 16px;border-radius:9px;font-size:13.5px;box-shadow:var(--shadow);animation:pop .25s ease}
 @keyframes pop{from{opacity:0;transform:translateY(6px)}}
 .banner{background:#fdf6e6;border:1px solid #ecd9a8;color:#6b551d;padding:10px 14px;border-radius:9px;font-size:13px;margin-bottom:18px}
@@ -319,8 +324,10 @@ table.wide th,table.wide td{padding:7px 8px}
         <div class="body tablewrap"><table id="t-fd-monthly"></table></div>
       </div>
       <div class="card">
-        <header><h3>รายการล่าสุด</h3><span class="hint">20 รายการล่าสุดในปีงบประมาณนี้</span></header>
+        <header><h3>รายการล่าสุด</h3>
+          <div class="hgroup"><span class="hint" id="fd-txn-hint">—</span></div></header>
         <div class="body tablewrap"><table id="t-fd-txn"></table></div>
+        <div class="body" style="padding-top:0;display:flex;justify-content:space-between;align-items:center" id="fd-pager"></div>
       </div>
     </section>
 
@@ -356,6 +363,12 @@ table.wide th,table.wide td{padding:7px 8px}
               <div class="field"><label>หมวดรายรับ</label><select id="i-grp"></select></div>
               <div class="field"><label>ประเภทย่อย</label><select id="i-cat"></select></div>
               <div class="field"><label>บัญชีที่รับเข้า</label><select id="i-acc"></select></div>
+              <div class="field hidden" id="i-loan-src-wrap"><label>นำเงินออกจากบัญชี</label>
+                <select id="i-loan-src">
+                  <option value="bankOp">เงินฝากธนาคาร (เงินบำรุง)</option>
+                  <option value="cash">เงินสดในมือ</option>
+                  <option value="bankDep">เงินฝากธนาคาร (ค่าเสื่อม)</option>
+                </select></div>
               <div class="field"><label>จำนวนเงิน (บาท)</label><input type="number" id="i-amt" class="money" step="0.01" min="0" placeholder="0.00"></div>
               <div class="field"><label>อ้างอิง (เลขที่ใบเสร็จ/เลขที่เช็ค)</label><input type="text" id="i-ref" placeholder="เช่น บช.6812-004"></div>
               <div class="field wide"><label>รายละเอียด</label><input type="text" id="i-note" placeholder="เช่น รับโอน Fixcost UC งวดที่ 1"></div>
@@ -445,6 +458,7 @@ table.wide th,table.wide td{padding:7px 8px}
 
       <div class="tabs">
         <button data-stab="fac" class="on">สถานบริการ</button>
+        <button data-stab="bank">บัญชีธนาคาร</button>
         <button data-stab="ppl">บุคลากร</button>
         <button data-stab="fin">ตั้งค่าการเงิน</button>
       </div>
@@ -461,9 +475,6 @@ table.wide th,table.wide td{padding:7px 8px}
               <div class="field"><label>ชื่อผู้ใช้</label><input type="text" id="fc-user" class="num" readonly style="background:var(--line-2)"></div>
               <div class="field"><label>รหัสผ่าน</label><input type="text" id="fc-pass" class="num"></div>
               <div class="field"><label>สิทธิ์ใช้งาน</label><select id="fc-role"><option value="user">เฉพาะสถานบริการนี้</option><option value="admin">ดูและแก้ไขได้ทุกแห่ง</option></select></div>
-              <div class="field"><label>ธนาคาร</label><input type="text" id="fc-bank" placeholder="เช่น ธ.ก.ส. สาขาค้อวัง"></div>
-              <div class="field"><label>เลขที่บัญชี (เงินบำรุง)</label><input type="text" id="fc-acc1" class="num" placeholder="020-x-xxxxx-x"></div>
-              <div class="field"><label>เลขที่บัญชี (ค่าเสื่อม)</label><input type="text" id="fc-acc2" class="num" placeholder="020-x-xxxxx-x"></div>
             </div>
             <div style="margin-top:14px;display:flex;gap:10px">
               <button class="btn" id="fc-save">บันทึกสถานบริการ</button>
@@ -473,6 +484,34 @@ table.wide th,table.wide td{padding:7px 8px}
         </div>
         <div class="card"><header><h3>รายชื่อสถานบริการ</h3><span class="hint" id="fc-count">—</span></header>
           <div class="body tablewrap"><table id="t-facilities"></table></div></div>
+      </div>
+
+      <!-- ---- บัญชีธนาคาร ---- -->
+      <div id="stab-bank" class="hidden">
+        <div class="card hidden" id="bk-formcard" style="margin-bottom:18px">
+          <header><h3 id="bk-form-title">เพิ่มบัญชีธนาคาร</h3><span class="hint">ใช้ในรายงานเงินคงเหลือประจำวัน (แบบ 407)</span></header>
+          <div class="body">
+            <div class="formgrid">
+              <div class="field"><label>สถานบริการ</label><select id="bk-fac"></select></div>
+              <div class="field"><label>ชื่อธนาคาร</label><select id="bk-bank"></select></div>
+              <div class="field"><label>ประเภทบัญชี</label><select id="bk-type">
+                <option value="ออมทรัพย์">ออมทรัพย์</option><option value="กระแสรายวัน">กระแสรายวัน</option><option value="ฝากประจำ">ฝากประจำ</option></select></div>
+              <div class="field"><label>ประเภทกองทุน</label><select id="bk-fund">
+                <option value="bankOp">เงินบำรุง</option><option value="bankDep">ค่าเสื่อม</option></select></div>
+              <div class="field wide"><label>ชื่อบัญชี</label><input type="text" id="bk-name" placeholder="เช่น เงินบำรุง รพ.สต.บ้าน..."></div>
+              <div class="field"><label>เลขที่บัญชี</label><input type="text" id="bk-no" class="num" placeholder="020-x-xxxxx-x"></div>
+              <div class="field"><label>จำนวนเงิน (บาท)</label><input type="number" id="bk-amt" class="money" step="0.01" placeholder="0.00"></div>
+            </div>
+            <div style="margin-top:14px;display:flex;gap:10px">
+              <button class="btn" id="bk-save">บันทึกบัญชี</button>
+              <button class="btn ghost" id="bk-cancel">ยกเลิก</button>
+            </div>
+          </div>
+        </div>
+        <div class="card"><header><h3>บัญชีธนาคาร</h3>
+          <div class="hgroup"><span class="hint" id="bk-count">—</span>
+          <button class="btn sm" id="bk-add">+ เพิ่มบัญชี</button></div></header>
+          <div class="body tablewrap"><table id="t-bank"></table></div></div>
       </div>
 
       <!-- ---- บุคลากร ---- -->
@@ -529,6 +568,63 @@ table.wide th,table.wide td{padding:7px 8px}
   </main>
 </div>
 
+<div id="loan-modal" class="modal-wrap hidden">
+  <div class="modal">
+    <header><h3>คืนสัญญายืมเงิน</h3><button class="btn ghost sm" id="lm-close">ปิด</button></header>
+    <div class="modal-body">
+      <div class="formgrid">
+        <div class="field wide"><label>เลือกสัญญาที่ค้างอยู่</label><select id="lm-select"></select></div>
+        <div class="field"><label>วันที่คืน</label><input type="text" id="lm-date" readonly style="background:var(--line-2)"></div>
+        <div class="field"><label>จำนวนเงินที่คืนรวม</label><input type="number" id="lm-amt" class="money" step="0.01" min="0"></div>
+        <div class="field"><label>วิธีคืน</label><select id="lm-method">
+          <option value="cash">คืนเป็นเงิน (เงินสด/เงินฝาก)</option>
+          <option value="doc">คืนเป็นเอกสาร (ใบสำคัญจ่าย บก.)</option>
+          <option value="both">คืนทั้งเอกสารและเงินสด</option>
+        </select></div>
+        <div class="field hidden" id="lm-doc-wrap"><label>มูลค่าใบสำคัญจ่าย</label><input type="number" id="lm-doc" class="money" step="0.01" min="0"></div>
+        <div class="field hidden" id="lm-cash-wrap"><label>เงินเหลือคืน</label><input type="number" id="lm-cash" class="money" step="0.01" min="0"></div>
+        <div class="field hidden" id="lm-docgrp-wrap"><label>หมวดรายจ่ายของใบสำคัญ</label><select id="lm-docgrp"></select></div>
+        <div class="field hidden" id="lm-docsub-wrap"><label>ประเภทย่อยของใบสำคัญ</label><select id="lm-docsub"></select></div>
+        <div class="field hidden" id="lm-dest-wrap"><label>เงินคืนเข้าบัญชี</label><select id="lm-dest">
+          <option value="cash">เงินสดในมือ</option>
+          <option value="bankOp">เงินฝากธนาคาร (เงินบำรุง)</option>
+          <option value="bankDep">เงินฝากธนาคาร (ค่าเสื่อม)</option>
+        </select></div>
+        <div class="field"><label>อ้างอิง (เลขที่ใบสำคัญ/เช็ค)</label><input type="text" id="lm-ref"></div>
+        <div class="field wide"><label>รายละเอียด</label><input type="text" id="lm-note"></div>
+      </div>
+      <div class="banner info" id="lm-sum" style="margin-top:14px">—</div>
+      <div style="margin-top:14px;display:flex;gap:10px">
+        <button class="btn" id="lm-save">บันทึกการคืน</button>
+        <button class="btn ghost" id="lm-cancel">ยกเลิก</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="edit-modal" class="modal-wrap hidden">
+  <div class="modal">
+    <header><h3>แก้ไขรายการ</h3><button class="btn ghost sm" id="em-close">ปิด</button></header>
+    <div class="modal-body">
+      <div id="em-warn" class="banner hidden" style="margin-bottom:14px"></div>
+      <div class="formgrid">
+        <div class="field"><label>วันที่</label><input type="date" id="em-date"></div>
+        <div class="field"><label>ประเภท</label><input type="text" id="em-type" readonly style="background:var(--line-2)"></div>
+        <div class="field"><label>หมวด</label><select id="em-grp"></select></div>
+        <div class="field"><label>ประเภทย่อย</label><select id="em-cat"></select></div>
+        <div class="field"><label>บัญชี</label><select id="em-acc"></select></div>
+        <div class="field"><label>จำนวนเงิน (บาท)</label><input type="number" id="em-amt" class="money" step="0.01" min="0"></div>
+        <div class="field"><label>อ้างอิง</label><input type="text" id="em-ref"></div>
+        <div class="field wide"><label>รายละเอียด</label><input type="text" id="em-note"></div>
+      </div>
+      <div style="margin-top:14px;display:flex;gap:10px">
+        <button class="btn" id="em-save">บันทึกการแก้ไข</button>
+        <button class="btn ghost" id="em-cancel">ยกเลิก</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <script>
@@ -550,8 +646,21 @@ const TH_MS = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','ม
 const ACCOUNTS = [
   {k:'cash',    name:'เงินสดในมือ',                  color:'#a8791f'},
   {k:'bankOp',  name:'เงินฝากธนาคาร (เงินบำรุง)',    color:'#1c6f63'},
-  {k:'bankDep', name:'เงินฝากธนาคาร (ค่าเสื่อม)',     color:'#4f6f8a'}
+  {k:'bankDep', name:'เงินฝากธนาคาร (ค่าเสื่อม)',     color:'#4f6f8a'},
+  {k:'loan',    name:'สัญญายืมเงิน',                  color:'#9e4433'}
 ];
+/* บัญชีที่ประกอบเป็น "เงินบำรุงคงเหลือ" (loan เป็นลูกหนี้ชั่วคราว รวมอยู่ด้วย) */
+const BAL_ACCOUNTS = ['cash','bankOp','bankDep','loan'];
+/* ประเภทย่อยพิเศษของสัญญายืมเงิน */
+const SUB_LOAN_OUT = 'สัญญายืมเงิน';      // หมวดรายได้อื่น — ตั้งลูกหนี้เงินยืม
+const SUB_LOAN_BACK = 'คืนสัญญาเงินยืม';   // หมวดค่าใช้จ่ายอื่น ๆ — ล้างลูกหนี้เงินยืม
+
+/* รายชื่อธนาคารสำหรับดรอปดาวน์ตั้งค่าบัญชี */
+const BANK_LIST = ['ธ.ก.ส.','ธนาคารกรุงไทย','ธนาคารออมสิน','ธนาคารกรุงเทพ','ธนาคารกสิกรไทย',
+  'ธนาคารไทยพาณิชย์','ธนาคารกรุงศรีอยุธยา','ธนาคารทหารไทยธนชาต (ttb)','อื่น ๆ'];
+/* กองทุน: ผูกกับบัญชีคงเหลือ bankOp (เงินบำรุง) และ bankDep (ค่าเสื่อม) */
+const FUNDS = [{k:'bankOp',t:'เงินบำรุง'},{k:'bankDep',t:'ค่าเสื่อม'}];
+const fundName = k => (FUNDS.find(f=>f.k===k)||{}).t || k;
 
 const INCOME_TREE = {
   'รายรับค่ารักษาพยาบาล': [
@@ -562,7 +671,7 @@ const INCOME_TREE = {
     'รายได้รับโอน รพ.สต./สสอ.','เงินกองทุนหลักประกันสุขภาพตำบล','รายได้บริหารจัดการ (5 บาท/ประชากร)'],
   'รายได้อื่น': [
     'เงินบริจาค','ดอกเบี้ยเงินฝากธนาคาร','ภาษีหัก ณ ที่จ่าย','รายได้งบค่าเสื่อม',
-    'รายได้อื่น ๆ (ไม่รวมเงินสนับสนุน อปท.)']
+    'รายได้อื่น ๆ (ไม่รวมเงินสนับสนุน อปท.)','สัญญายืมเงิน']
 };
 
 const EXPENSE_TREE = {
@@ -588,7 +697,7 @@ const EXPENSE_TREE = {
   'ค่าที่ดินและสิ่งก่อสร้าง': ['ค่าที่ดิน','ค่าก่อสร้าง'],
   'ค่าใช้จ่ายอื่น ๆ': [
     'ค่าใช้จ่ายโครงการ CUP/กองทุน UC ตำบล','ภาษีหัก ณ ที่จ่าย','รายจ่ายงบค่าเสื่อม',
-    'รายจ่ายโอนคืน รพ.สต./สสอ.','ค่าใช้จ่ายอื่น ๆ']
+    'รายจ่ายโอนคืน รพ.สต./สสอ.','ค่าใช้จ่ายอื่น ๆ','คืนสัญญาเงินยืม']
 };
 
 const treeOf = type => type==='income' ? INCOME_TREE : EXPENSE_TREE;
@@ -659,14 +768,22 @@ async function api(action, payload={}){
 }
 
 const SEED_FAC = [
-  {code:'03900', name:'รพ.สต.บ้านเหล่าน้อย',  addr:'ต.ฟ้าห่วน อ.ค้อวัง จ.ยโสธร',  role:'user',  bank:'ธ.ก.ส. สาขาค้อวัง', acc1:'020-1-11101-1', acc2:'020-2-11101-2'},
-  {code:'03901', name:'รพ.สต.บ้านโพนเมือง',   addr:'ต.ค้อวัง อ.ค้อวัง จ.ยโสธร',   role:'user',  bank:'ธ.ก.ส. สาขาค้อวัง', acc1:'020-1-11102-1', acc2:'020-2-11102-2'},
-  {code:'03903', name:'รพ.สต.บ้านตูม',        addr:'ต.กุดน้ำใส อ.ค้อวัง จ.ยโสธร', role:'user',  bank:'ธ.ก.ส. สาขาค้อวัง', acc1:'020-1-11103-1', acc2:'020-2-11103-2'},
-  {code:'03904', name:'รพ.สต.บ้านศิริพัฒนา',  addr:'ต.น้ำอ้อม อ.ค้อวัง จ.ยโสธร',  role:'user',  bank:'ธ.ก.ส. สาขาค้อวัง', acc1:'020-1-11104-1', acc2:'020-2-11104-2'},
-  {code:'03905', name:'รพ.สต.บ้านน้ำอ้อม',    addr:'ต.น้ำอ้อม อ.ค้อวัง จ.ยโสธร',  role:'user',  bank:'ธ.ก.ส. สาขาค้อวัง', acc1:'020-1-11105-1', acc2:'020-2-11105-2'},
-  {code:'00342', name:'สสอ.ค้อวัง',           addr:'ต.ค้อวัง อ.ค้อวัง จ.ยโสธร',   role:'admin', bank:'ธ.ก.ส. สาขาค้อวัง', acc1:'020-1-10342-1', acc2:'020-2-10342-2'}
+  {code:'03900', name:'รพ.สต.บ้านเหล่าน้อย',  addr:'ต.ฟ้าห่วน อ.ค้อวัง จ.ยโสธร',  role:'user'},
+  {code:'03901', name:'รพ.สต.บ้านโพนเมือง',   addr:'ต.ค้อวัง อ.ค้อวัง จ.ยโสธร',   role:'user'},
+  {code:'03903', name:'รพ.สต.บ้านตูม',        addr:'ต.กุดน้ำใส อ.ค้อวัง จ.ยโสธร', role:'user'},
+  {code:'03904', name:'รพ.สต.บ้านศิริพัฒนา',  addr:'ต.น้ำอ้อม อ.ค้อวัง จ.ยโสธร',  role:'user'},
+  {code:'03905', name:'รพ.สต.บ้านน้ำอ้อม',    addr:'ต.น้ำอ้อม อ.ค้อวัง จ.ยโสธร',  role:'user'},
+  {code:'00342', name:'สสอ.ค้อวัง',           addr:'ต.ค้อวัง อ.ค้อวัง จ.ยโสธร',   role:'admin'}
 ];
-const demoDB = { facilities: SEED_FAC.map(f=>({...f, user:'U'+f.code, pass:'P'+f.code})), openings: [], txns: [], people: [] };
+const demoDB = { facilities: SEED_FAC.map(f=>({...f, user:'U'+f.code, pass:'P'+f.code})), openings: [], txns: [], people: [], banks: [] };
+// บัญชีธนาคารตัวอย่าง: กองทุนละ 1 บัญชีต่อสถานบริการ
+SEED_FAC.forEach((f,i)=>{
+  const n = 11101+i;
+  demoDB.banks.push({id:'BK'+f.code+'OP', code:f.code, bank:'ธ.ก.ส.', type:'ออมทรัพย์', fund:'bankOp',
+    name:'เงินบำรุง '+f.name, no:`020-1-${n}-1`, amount:0});
+  demoDB.banks.push({id:'BK'+f.code+'DEP', code:f.code, bank:'ธ.ก.ส.', type:'ออมทรัพย์', fund:'bankDep',
+    name:'ค่าเสื่อม '+f.name, no:`020-2-${n}-2`, amount:0});
+});
 
 (function seedDemo(){
   let s=7; const rnd=()=>{ s=(s*1103515245+12345)&0x7fffffff; return s/0x7fffffff; };
@@ -712,7 +829,12 @@ function demoApi(action,p){
       const f = demoDB.facilities.find(x=>x.user===p.username && x.pass===p.password);
       res(f ? {code:f.code,name:f.name,role:f.role} : null);
     }
-    else if(action==='bootstrap') res({facilities:demoDB.facilities, openings:demoDB.openings, txns:demoDB.txns, people:demoDB.people});
+    else if(action==='bootstrap') res({facilities:demoDB.facilities, openings:demoDB.openings, txns:demoDB.txns, people:demoDB.people, banks:demoDB.banks});
+    else if(action==='saveBank'){
+      const i=demoDB.banks.findIndex(x=>x.id===p.bank.id);
+      if(i>=0) demoDB.banks[i]=p.bank; else demoDB.banks.push(p.bank); res(true);
+    }
+    else if(action==='deleteBank'){ demoDB.banks=demoDB.banks.filter(x=>x.id!==p.id); res(true); }
     else if(action==='saveFacility'){
       const i=demoDB.facilities.findIndex(x=>x.code===p.facility.code);
       if(i>=0) demoDB.facilities[i]=p.facility; else demoDB.facilities.push(p.facility); res(true);
@@ -738,9 +860,9 @@ function demoApi(action,p){
    5. สถานะแอป
    ============================================================ */
 const S = {
-  user:null, facilities:[], openings:[], txns:[], people:[],
+  user:null, facilities:[], openings:[], txns:[], people:[], banks:[],
   fy:2569, facCode:'ALL', ym:null, lvIn:'group', lvEx:'group',
-  fdCode:null, fdFy:2569, fdYm:null, fdLvIn:'group', fdLvEx:'group', fdMtFy:2569,
+  fdCode:null, fdFy:2569, fdYm:null, fdLvIn:'group', fdLvEx:'group', fdMtFy:2569, fdPage:0,
   eFy:2569, eFac:null, eScope:'month', eYm:null, eTab:'income',
   rRep:'407', rFy:2569, rFac:null, rFrom:null, rTo:null,
   oFy:2569, oFac:null, editingCode:null, editingCid:null, sTab:'fac',
@@ -760,15 +882,18 @@ function opening(code, fy){
 }
 function balance(code, fy, uptoYm){
   const codes = code==='ALL' ? allFacs().map(f=>f.code) : [code];
-  let cash=0,bankOp=0,bankDep=0;
+  let cash=0,bankOp=0,bankDep=0,loan=0;
   codes.forEach(c=>{ const o=opening(c,fy); cash+=o.cash; bankOp+=o.bankOp; bankDep+=o.bankDep; });
   S.txns.forEach(t=>{
     if(codes.indexOf(t.code)<0 || +t.fy!==+fy) return;
     if(uptoYm && ymOf(t.date) > uptoYm) return;
     const s = t.type==='income' ? 1 : -1, a=+t.amount||0;
-    if(t.account==='cash') cash+=s*a; else if(t.account==='bankOp') bankOp+=s*a; else bankDep+=s*a;
+    if(t.account==='cash') cash+=s*a;
+    else if(t.account==='bankOp') bankOp+=s*a;
+    else if(t.account==='bankDep') bankDep+=s*a;
+    else if(t.account==='loan') loan+=s*a;
   });
-  return {cash,bankOp,bankDep,total:cash+bankOp+bankDep};
+  return {cash,bankOp,bankDep,loan,total:cash+bankOp+bankDep+loan};
 }
 function sumBy(list, keyFn){ const m={}; list.forEach(t=>{ const k=keyFn(t); m[k]=(m[k]||0)+(+t.amount||0); }); return m; }
 const grpOf = t => t.group || groupOfSub(t.type, t.category);
@@ -781,12 +906,15 @@ function renderLedger(el, b, caption){
     {k:ACCOUNTS[1].name, v:b.bankOp,  c:ACCOUNTS[1].color},
     {k:ACCOUNTS[2].name, v:b.bankDep, c:ACCOUNTS[2].color}
   ];
+  // แสดงการ์ดสัญญายืมเงินเฉพาะเมื่อมียอดลูกหนี้ค้างอยู่
+  if(Math.abs(b.loan||0) > 0.005) cells.push({k:ACCOUNTS[3].name, v:b.loan, c:ACCOUNTS[3].color});
+  const n = cells.length;
   el.innerHTML = cells.map((x,i)=>`
     <div class="cell">
       <div class="k"><span class="dot" style="background:${x.c}"></span>${x.k}</div>
       <div class="v num ${x.v<0?'neg':''}">${money(x.v)}</div>
       <div class="m">บาท</div>
-    </div>${i<2?'<div class="op">+</div>':''}`).join('')
+    </div>${i<n-1?'<div class="op">+</div>':''}`).join('')
     + `<div class="op">=</div>
     <div class="cell total">
       <div class="k">เงินบำรุงคงเหลือ</div>
@@ -966,7 +1094,7 @@ function renderStatusTable(){
    7. หน้ารายสถานบริการ
    ============================================================ */
 function openFacility(code){
-  S.fdCode = code; S.fdFy = S.fy; S.fdYm = S.ym; S.fdMtFy = S.fy;
+  S.fdCode = code; S.fdFy = S.fy; S.fdYm = S.ym; S.fdMtFy = S.fy; S.fdPage = 0;
   showView('facility');
 }
 function renderFacility(){
@@ -997,10 +1125,23 @@ function renderFacility(){
     options: barOpts(false), plugins:[valueLabels]
   });
 
-  const rows = S.txns.filter(t=>t.code===S.fdCode && +t.fy===+S.fdFy)
-    .sort((a,b)=>b.date.localeCompare(a.date)).slice(0,20);
+  renderFacilityMonthly();
+  renderFacilityTxns();
+}
+
+/** รายการล่าสุดของสถานบริการ แบ่งหน้า 20 รายการ + แก้ไข/ลบได้ (เมื่อมีสิทธิ์) */
+function renderFacilityTxns(){
+  const all = S.txns.filter(t=>t.code===S.fdCode && +t.fy===+S.fdFy && !t.autoPair)
+    .sort((a,b)=> b.date.localeCompare(a.date) || b.id.localeCompare(a.id));
+  const per = 20, pages = Math.max(1, Math.ceil(all.length/per));
+  if(S.fdPage>=pages) S.fdPage = 0;
+  const start = S.fdPage*per;
+  const rows = all.slice(start, start+per);
+  const canEdit = !!S.user && (isAdmin() || S.user.code===S.fdCode);
+
+  $('#fd-txn-hint').textContent = all.length ? `ทั้งหมด ${all.length} รายการ · หน้า ${S.fdPage+1}/${pages}` : '—';
   $('#t-fd-txn').innerHTML = rows.length ? `
-    <thead><tr><th class="l">วันที่</th><th class="l">หมวด / ประเภทย่อย</th><th class="l">อ้างอิง</th><th class="l">บัญชี</th><th>รับ</th><th>จ่าย</th></tr></thead>
+    <thead><tr><th class="l">วันที่</th><th class="l">หมวด / ประเภทย่อย</th><th class="l">อ้างอิง</th><th class="l">บัญชี</th><th>รับ</th><th>จ่าย</th>${canEdit?'<th class="l">จัดการ</th>':''}</tr></thead>
     <tbody>${rows.map(t=>`<tr>
       <td class="l code">${beDate(t.date)}</td>
       <td class="l"><span class="cat-g">${esc(grpOf(t))}</span><span class="cat-s">${esc(t.category)}</span>${t.note?`<span class="cat-n">${esc(t.note)}</span>`:''}</td>
@@ -1008,9 +1149,61 @@ function renderFacility(){
       <td class="l" style="font-size:13px">${accName(t.account)}</td>
       <td class="num" style="color:var(--sprout)">${t.type==='income'?money(t.amount):''}</td>
       <td class="num" style="color:var(--brick)">${t.type==='expense'?money(t.amount):''}</td>
-    </tr>`).join('')}</tbody>` : `<tbody><tr><td class="empty" colspan="6">ยังไม่มีรายการในปีงบประมาณนี้</td></tr></tbody>`;
+      ${canEdit?`<td class="l">
+        <button class="btn ghost icon" title="แก้ไข" data-ed="${t.id}">✎</button>
+        <button class="btn danger icon" title="ลบ" data-rm="${t.id}">🗑</button></td>`:''}
+    </tr>`).join('')}</tbody>` : `<tbody><tr><td class="empty" colspan="7">ยังไม่มีรายการในปีงบประมาณนี้</td></tr></tbody>`;
 
-  renderFacilityMonthly();
+  // แถบแบ่งหน้า
+  $('#fd-pager').innerHTML = pages>1 ? `
+    <button class="btn ghost sm" ${S.fdPage===0?'disabled':''} id="fd-prev">← ก่อนหน้า</button>
+    <span class="code">หน้า ${S.fdPage+1} จาก ${pages}</span>
+    <button class="btn ghost sm" ${S.fdPage>=pages-1?'disabled':''} id="fd-next">ถัดไป →</button>` : '';
+  if($('#fd-prev')) $('#fd-prev').onclick = ()=>{ S.fdPage--; renderFacilityTxns(); };
+  if($('#fd-next')) $('#fd-next').onclick = ()=>{ S.fdPage++; renderFacilityTxns(); };
+  $$('#t-fd-txn [data-ed]').forEach(b=>b.onclick=()=>openEditTxn(b.dataset.ed));
+  $$('#t-fd-txn [data-rm]').forEach(b=>b.onclick=()=>delTxnFromFacility(b.dataset.rm));
+}
+async function delTxnFromFacility(id){
+  if(!confirm('ยืนยันการลบรายการนี้ออกจากชีตของสถานบริการ')) return;
+  const t = S.txns.find(x=>x.id===id);
+  await api('deleteTxn',{code:t.code,id});
+  S.txns = S.txns.filter(x=>x.id!==id);
+  toast('ลบรายการแล้ว'); renderFacility();
+}
+
+/* ---------- แก้ไขรายการ ---------- */
+let editTxnId = null;
+function openEditTxn(id){
+  const t = S.txns.find(x=>x.id===id); if(!t) return;
+  editTxnId = id;
+  const linked = t.loanId || t.loanRef || t.loanBack || t.fromLoan;
+  $('#em-warn').classList.toggle('hidden', !linked);
+  if(linked) $('#em-warn').innerHTML = 'รายการนี้เชื่อมกับสัญญายืมเงิน การแก้ไขจะกระทบเฉพาะรายการนี้ ไม่ปรับรายการคู่ให้อัตโนมัติ หากต้องแก้ยอดยืม/คืน แนะนำให้ลบทั้งชุดแล้วบันทึกใหม่';
+  $('#em-type').value = t.type==='income' ? 'รายรับ' : 'รายจ่าย';
+  const tree = treeOf(t.type);
+  fill($('#em-grp'), Object.keys(tree).map(g=>({v:g,t:g})), grpOf(t));
+  fill($('#em-cat'), (tree[grpOf(t)]||[]).map(s=>({v:s,t:s})), t.category);
+  fill($('#em-acc'), ACCOUNTS.map(a=>({v:a.k,t:a.name})), t.account);
+  $('#em-date').value = t.date; $('#em-amt').value = t.amount;
+  $('#em-ref').value = t.ref||''; $('#em-note').value = t.note||'';
+  $('#em-grp').onchange = ()=> fill($('#em-cat'), (tree[$('#em-grp').value]||[]).map(s=>({v:s,t:s})));
+  $('#edit-modal').classList.remove('hidden');
+}
+async function submitEditTxn(){
+  const t = S.txns.find(x=>x.id===editTxnId); if(!t) return;
+  const date=$('#em-date').value, amt=parseFloat($('#em-amt').value);
+  if(!date) return toast('เลือกวันที่');
+  if(!(amt>0)) return toast('กรอกจำนวนเงินให้มากกว่า 0');
+  const fy = fyOfDate(date);
+  const upd = Object.assign({}, t, {date, fy, group:$('#em-grp').value, category:$('#em-cat').value,
+    account:$('#em-acc').value, amount:amt, ref:$('#em-ref').value.trim(), note:$('#em-note').value.trim()});
+  await api('addTxn',{code:t.code, txn:upd});   // addTxn ฝั่ง Apps Script ทำ upsert ตาม id
+  const i = S.txns.findIndex(x=>x.id===editTxnId);
+  S.txns[i] = upd;
+  $('#edit-modal').classList.add('hidden');
+  toast('บันทึกการแก้ไขแล้ว');
+  renderFacility();
 }
 
 /** ตารางข้อมูลการเงินรายเดือนของสถานบริการ (เลือกปีงบแยกได้) */
@@ -1181,7 +1374,22 @@ function initCascade(prefix, type){
   sync();
 }
 function suggestAccount(prefix){
-  if(DEP_SUBS.indexOf($('#'+prefix+'-cat').value) >= 0) $('#'+prefix+'-acc').value = 'bankDep';
+  const cat = $('#'+prefix+'-cat').value;
+  if(DEP_SUBS.indexOf(cat) >= 0) $('#'+prefix+'-acc').value = 'bankDep';
+
+  if(prefix==='i'){
+    // สัญญายืมเงิน → บัญชีรับเข้าเป็น loan และแสดงช่องบัญชีต้นทาง
+    const isLoan = (cat===SUB_LOAN_OUT);
+    $('#i-loan-src-wrap').classList.toggle('hidden', !isLoan);
+    $('#i-acc').closest('.field').classList.toggle('hidden', isLoan);
+    if(isLoan) $('#i-acc').value = 'loan';
+  }
+  if(prefix==='x'){
+    // คืนสัญญาเงินยืม → ซ่อนช่องบัญชีจ่ายออก (ใช้ฟอร์มเฉพาะแทน)
+    const isBack = (cat===SUB_LOAN_BACK);
+    $('#x-acc').closest('.field').classList.toggle('hidden', isBack);
+    $('#x-save').textContent = isBack ? 'ดำเนินการคืนสัญญายืมเงิน' : 'บันทึกรายจ่าย';
+  }
 }
 async function addTxn(type){
   const p = type==='income' ? 'i' : 'x';
@@ -1193,11 +1401,114 @@ async function addTxn(type){
   if(!(amt>0)) return toast('กรอกจำนวนเงินให้มากกว่า 0');
   const fy = fyOfDate(date);
   if(fy !== +S.eFy && !confirm(`วันที่ ${beDate(date)} อยู่ในปีงบประมาณ ${fy} ไม่ใช่ ${S.eFy} ต้องการบันทึกต่อหรือไม่`)) return;
+
+  // ---- การคืนสัญญายืมเงิน ใช้ฟอร์มเฉพาะ ----
+  if(type==='expense' && cat===SUB_LOAN_BACK){
+    return openLoanRepay(date, fy, amt, ref, note);
+  }
+
   const txn = {id:uid(), code:S.eFac, date, fy, type, group:grp, category:cat, account:acc, amount:amt, ref, note};
+
+  // ---- การยืมเงิน: ตั้งลูกหนี้ + นำเงินออกจากบัญชีเงินฝากอัตโนมัติ ----
+  if(type==='income' && cat===SUB_LOAN_OUT && acc==='loan'){
+    txn.loanId = txn.id;   // เป็นสัญญาต้นทาง
+    const src = $('#i-loan-src') ? $('#i-loan-src').value : 'bankOp';  // บัญชีที่นำเงินออก
+    const pair = {id:uid(), code:S.eFac, date, fy, type:'expense',
+      group:'ค่าใช้จ่ายอื่น ๆ', category:'ตั้งลูกหนี้เงินยืม (อัตโนมัติ)', account:src,
+      amount:amt, ref, note:`นำเงินออกจาก${accName(src)}เพื่อจ่ายเงินยืม · ${note}`.trim(), autoPair:txn.id};
+    await api('addTxn',{code:S.eFac, txn});
+    await api('addTxn',{code:S.eFac, txn:pair});
+    S.txns.push(txn, pair);
+    clearEntryForm(p);
+    toast('บันทึกสัญญายืมเงินแล้ว');
+    return renderEntry();
+  }
+
   await api('addTxn',{code:S.eFac, txn});
   S.txns.push(txn);
-  $('#'+p+'-amt').value=''; $('#'+p+'-note').value=''; $('#'+p+'-ref').value='';
+  clearEntryForm(p);
   toast(type==='income'?'บันทึกรายรับแล้ว':'บันทึกรายจ่ายแล้ว');
+  renderEntry();
+}
+function clearEntryForm(p){ $('#'+p+'-amt').value=''; $('#'+p+'-note').value=''; $('#'+p+'-ref').value=''; }
+
+/* ---------- ฟอร์มคืนสัญญายืมเงิน ---------- */
+function openLoanRepay(date, fy, amt, ref, note){
+  const loans = openLoans(S.eFac, fy);
+  if(!loans.length){ return toast('ไม่มีสัญญายืมเงินที่ค้างอยู่ในปีงบประมาณนี้'); }
+  const rows = loans.map(x=>`<option value="${x.c.id}">${beDate(x.c.date)} · ยืม ${money(x.c.amount)} · คงค้าง ${money(x.out)}${x.c.note?' · '+esc(x.c.note):''}</option>`).join('');
+  const total = loans.reduce((s,x)=>s+x.out,0);
+  $('#loan-modal').classList.remove('hidden');
+  $('#lm-select').innerHTML = rows;
+  $('#lm-date').textContent = beDate(date);
+  $('#lm-amt').value = amt.toFixed(2);
+  $('#lm-doc').value = '';
+  $('#lm-cash').value = '';
+  $('#lm-method').value = 'cash';
+  $('#lm-dest').value = 'cash';
+  $('#lm-ref').value = ref || '';
+  $('#lm-note').value = note || '';
+  loanRepayCtx = {date, fy, ref, note};
+  syncLoanRepay();
+}
+let loanRepayCtx = null;
+function syncLoanRepay(){
+  const method = $('#lm-method').value;   // doc | cash | both
+  $('#lm-doc-wrap').classList.toggle('hidden', method==='cash');
+  $('#lm-cash-wrap').classList.toggle('hidden', method==='doc');
+  $('#lm-dest-wrap').classList.toggle('hidden', method==='doc');
+  $('#lm-docgrp-wrap').classList.toggle('hidden', method==='cash');
+  $('#lm-docsub-wrap').classList.toggle('hidden', method==='cash');
+  const total = parseFloat($('#lm-amt').value)||0;
+  if(method==='cash'){ $('#lm-cash').value = total.toFixed(2); $('#lm-doc').value=''; }
+  else if(method==='doc'){ $('#lm-doc').value = total.toFixed(2); $('#lm-cash').value=''; }
+  const doc = parseFloat($('#lm-doc').value)||0, cash=parseFloat($('#lm-cash').value)||0;
+  $('#lm-sum').textContent = `รวมล้างสัญญา ${money(doc+cash)} บาท (ต้องเท่ากับยอดคืน ${money(total)})`;
+}
+async function submitLoanRepay(){
+  const loanId = $('#lm-select').value;
+  const c = S.txns.find(t=>t.id===loanId);
+  const out = loanOutstanding(c, null);
+  const method = $('#lm-method').value;
+  const total = parseFloat($('#lm-amt').value)||0;
+  const doc  = method==='cash' ? 0 : (parseFloat($('#lm-doc').value)||0);
+  const cash = method==='doc'  ? 0 : (parseFloat($('#lm-cash').value)||0);
+  const dest = $('#lm-dest').value;              // ปลายทางเงินที่คืน (cash/bankOp/bankDep)
+  const docGrp = $('#lm-docgrp').value;          // หมวดรายจ่ายจริงของใบสำคัญ
+  const {date, fy} = loanRepayCtx;
+  const ref=$('#lm-ref').value.trim(), note=$('#lm-note').value.trim();
+
+  if(!(total>0)) return toast('กรอกจำนวนเงินที่คืน');
+  if(Math.abs((doc+cash)-total) > 0.01) return toast('ยอดใบสำคัญ + เงินคืน ต้องเท่ากับยอดคืน');
+  if(total - out > 0.01) return toast(`คืนได้ไม่เกินยอดคงค้าง ${money(out)} บาท`);
+
+  const batch = [];
+  // 1) ล้างลูกหนี้เงินยืม (expense บัญชี loan) — ทั้งก้อนที่คืน
+  batch.push({id:uid(), code:S.eFac, date, fy, type:'expense',
+    group:'ค่าใช้จ่ายอื่น ๆ', category:SUB_LOAN_BACK, account:'loan',
+    amount:total, ref, note:note||`คืนสัญญายืม ${beDate(c.date)}`, loanRef:loanId});
+  // 2) ส่วนที่เป็นเงินเหลือคืน = เงินกลับเข้าบัญชีปลายทาง (income)
+  if(cash>0){
+    batch.push({id:uid(), code:S.eFac, date, fy, type:'income',
+      group:'รายได้อื่น', category:'รับคืนเงินยืม (อัตโนมัติ)', account:dest,
+      amount:cash, ref, note:`เงินเหลือคืนเข้า${accName(dest)}`, loanBack:loanId});
+  }
+  // 3) ส่วนที่เป็นใบสำคัญ = รายจ่ายจริงตามหมวด (พักเงินเข้าบัญชีปลายทางแล้วลงรายจ่าย
+  //    เพื่อให้หมวดงบในรายงาน 404 ถูกต้อง และยอดรวมไม่เพี้ยน)
+  if(doc>0){
+    const tmpAcc = dest;
+    batch.push({id:uid(), code:S.eFac, date, fy, type:'income',
+      group:'รายได้อื่น', category:'พักเงินใบสำคัญจากเงินยืม (อัตโนมัติ)', account:tmpAcc,
+      amount:doc, ref, note:'พักเงินเพื่อลงรายจ่ายจริงตามใบสำคัญ', loanBack:loanId});
+    batch.push({id:uid(), code:S.eFac, date, fy, type:'expense',
+      group:docGrp, category:$('#lm-docsub').value || ('รายจ่ายตามใบสำคัญ ('+docGrp+')'), account:tmpAcc,
+      amount:doc, ref, note:note||`ใบสำคัญจ่ายจากเงินยืม ${beDate(c.date)}`, fromLoan:loanId});
+  }
+  for(const t of batch){ await api('addTxn',{code:S.eFac, txn:t}); }
+  S.txns.push(...batch);
+  $('#loan-modal').classList.add('hidden');
+  clearEntryForm('x');
+  toast('บันทึกการคืนสัญญายืมเงินแล้ว');
   renderEntry();
 }
 
@@ -1223,13 +1534,16 @@ function balanceBefore(code, fy, dateIso){
 /** ยอดคงเหลือแยกบัญชี ณ สิ้นวัน dateIso (รวมรายการของวันนั้น) */
 function balanceOnDate(code, fy, dateIso){
   const o = opening(code, fy);
-  let cash=o.cash, bankOp=o.bankOp, bankDep=o.bankDep;
+  let cash=o.cash, bankOp=o.bankOp, bankDep=o.bankDep, loan=0;
   S.txns.forEach(t=>{
     if(t.code!==code || +t.fy!==+fy || t.date > dateIso) return;
     const s=(t.type==='income'?1:-1), a=+t.amount||0;
-    if(t.account==='cash') cash+=s*a; else if(t.account==='bankOp') bankOp+=s*a; else bankDep+=s*a;
+    if(t.account==='cash') cash+=s*a;
+    else if(t.account==='bankOp') bankOp+=s*a;
+    else if(t.account==='bankDep') bankDep+=s*a;
+    else if(t.account==='loan') loan+=s*a;
   });
-  return {cash,bankOp,bankDep,total:cash+bankOp+bankDep};
+  return {cash,bankOp,bankDep,loan,total:cash+bankOp+bankDep+loan};
 }
 
 /* ---------- ผู้ลงนาม (ดึงจากทะเบียนบุคลากร) ---------- */
@@ -1355,6 +1669,33 @@ function capOneMonth(iso){
   return `${ny}-${String(nm).padStart(2,'0')}-${String(Math.min(d,last)).padStart(2,'0')}`;
 }
 
+/* ---------- สัญญายืมเงิน ---------- */
+/** รายการยืม (ตั้งลูกหนี้) = income บัญชี loan */
+function loanContracts(code, fy){
+  return S.txns.filter(t=>t.code===code && +t.fy===+fy && t.type==='income' && t.account==='loan');
+}
+/** ยอดที่คืนแล้วของสัญญาหนึ่ง (expense บัญชี loan ที่อ้าง loanRef) ถึงวันที่กำหนด */
+function loanRepaid(loanId, uptoIso){
+  return S.txns.filter(t=>t.type==='expense' && t.account==='loan' && t.loanRef===loanId
+      && (!uptoIso || t.date<=uptoIso)).reduce((s,t)=>s+ +t.amount,0);
+}
+/** ยอดคงค้างของสัญญาหนึ่ง ณ วันที่ */
+function loanOutstanding(c, uptoIso){
+  return (+c.amount||0) - loanRepaid(c.id, uptoIso);
+}
+/** จำนวนสัญญาที่ยังปิดไม่หมด ณ วันที่ (นับเฉพาะที่เกิดก่อน/ตรงวันนั้น) */
+function openLoanCount(code, fy, dateIso){
+  return loanContracts(code, fy)
+    .filter(c=> c.date<=dateIso && loanOutstanding(c, dateIso) > 0.005).length;
+}
+/** สัญญาที่ยังค้าง (ใช้ในดรอปดาวน์คืนเงิน) */
+function openLoans(code, fy){
+  return loanContracts(code, fy)
+    .map(c=>({c, out:loanOutstanding(c, null)}))
+    .filter(x=>x.out > 0.005)
+    .sort((a,b)=>a.c.date.localeCompare(b.c.date));
+}
+
 /* ============================================================
    แบบ 407 — รายงานเงินคงเหลือประจำวัน (รูปแบบราชการ A4)
    ============================================================ */
@@ -1366,9 +1707,10 @@ function report407Model(){
   const expense = day.filter(t=>t.type==='expense');
   const bal = balanceOnDate(code, fy, date);
 
-  // จำนวนสัญญายืมเงินในวันนั้น (นับจากรายจ่ายที่อ้างถึงสัญญายืม)
-  const loanTxns = day.filter(t=>/ยืม|สัญญายืม/.test(t.category+' '+(t.note||'')));
-  const loanAmt = loanTxns.reduce((s,t)=>s+ +t.amount,0);
+  // สัญญายืมเงิน = ยอดลูกหนี้เงินยืมคงค้าง ณ วันนั้น (bal.loan)
+  // จำนวนฉบับ = สัญญาที่ยังปิดไม่หมด ณ วันนั้น (ยืม − คืน ยังเหลือ > 0)
+  const loanAmt = bal.loan;
+  const loanCount = openLoanCount(code, fy, date);
 
   // แถวรายการเงินและหลักฐานแทนตัวเงิน
   const items = [
@@ -1376,16 +1718,20 @@ function report407Model(){
     {name:'เช็ค',                                qty:'',              unit:'ฉบับ',  amount:0},
     {name:'ธนาณัติ',                             qty:'',              unit:'ฉบับ',  amount:0},
     {name:'ใบสำคัญรองจ่าย',                       qty:'',              unit:'ฉบับ',  amount:0},
-    {name:'สัญญารับรองการยืมเงิน',                 qty:loanTxns.length? String(loanTxns.length):'', unit:'ฉบับ', amount:loanAmt},
+    {name:'สัญญารับรองการยืมเงิน',                 qty:loanCount? String(loanCount):'', unit:'ฉบับ', amount:loanAmt},
     {name:'ใบเบิกเงินเพื่อจ่ายในราชการ',            qty:'',              unit:'ฉบับ',  amount:0}
   ];
-  // สมุดคู่ฝากธนาคาร — เงินบำรุง + ค่าเสื่อม
+  // สมุดคู่ฝากธนาคาร — บัญชีหลักของแต่ละกองทุน (1 กองทุน = 1 บัญชี)
+  const bankOf = fund => S.banks.find(b=>b.code===code && b.fund===fund) || null;
+  const bOp = bankOf('bankOp'), bDep = bankOf('bankDep');
   const books = [];
-  if(f.acc1 || bal.bankOp) books.push({name:`สมุดคู่ฝากธนาคาร (เงินบำรุง)`, sub:`${f.bank||''} เลขที่ ${f.acc1||'-'}`, amount:bal.bankOp});
-  if(f.acc2 || bal.bankDep) books.push({name:`สมุดคู่ฝากธนาคาร (ค่าเสื่อม)`, sub:`${f.bank||''} เลขที่ ${f.acc2||'-'}`, amount:bal.bankDep});
+  if(bOp || bal.bankOp) books.push({name:`สมุดคู่ฝากธนาคาร (เงินบำรุง)`,
+    sub: bOp? `${bOp.bank} ${bOp.type} เลขที่ ${bOp.no}` : '(ยังไม่ได้ตั้งค่าบัญชี)', amount:bal.bankOp});
+  if(bDep || bal.bankDep) books.push({name:`สมุดคู่ฝากธนาคาร (ค่าเสื่อม)`,
+    sub: bDep? `${bDep.bank} ${bDep.type} เลขที่ ${bDep.no}` : '(ยังไม่ได้ตั้งค่าบัญชี)', amount:bal.bankDep});
   const bookQty = books.length;
 
-  const total = bal.cash + loanAmt + bal.bankOp + bal.bankDep; // ต้อง = bal.total
+  const total = bal.total; // = cash + bankOp + bankDep + loan
   return {code, fy, date, f, income, expense, bal, items, books, bookQty, total,
     sumIn: income.reduce((s,t)=>s+ +t.amount,0), sumEx: expense.reduce((s,t)=>s+ +t.amount,0)};
 }
@@ -1723,6 +2069,7 @@ function renderSettings(){
     ? 'สิทธิ์ผู้ดูแลระดับอำเภอ — จัดการได้ทุกสถานบริการ'
     : `จัดการข้อมูลได้เฉพาะของ ${facName(S.user.code)}`;
   renderFacilitiesTab();
+  renderBankTab();
   renderPeopleTab();
   renderOpeningTab();
 }
@@ -1756,14 +2103,13 @@ function editFacility(code){
   $('#fc-code').value=f.code; $('#fc-code').readOnly=true;
   $('#fc-name').value=f.name; $('#fc-addr').value=f.addr||'';
   $('#fc-user').value=f.user; $('#fc-pass').value=f.pass; $('#fc-role').value=f.role||'user';
-  $('#fc-bank').value=f.bank||''; $('#fc-acc1').value=f.acc1||''; $('#fc-acc2').value=f.acc2||'';
   $('#fc-form-title').textContent='แก้ไขสถานบริการ '+code;
   $('#fc-cancel').classList.remove('hidden');
   window.scrollTo({top:0,behavior:'smooth'});
 }
 function resetFacilityForm(){
   S.editingCode=null;
-  ['#fc-code','#fc-name','#fc-addr','#fc-user','#fc-pass','#fc-bank','#fc-acc1','#fc-acc2'].forEach(i=>$(i).value='');
+  ['#fc-code','#fc-name','#fc-addr','#fc-user','#fc-pass'].forEach(i=>$(i).value='');
   $('#fc-code').readOnly = !isAdmin();
   $('#fc-role').value='user';
   $('#fc-form-title').textContent='เพิ่มสถานบริการ';
@@ -1778,8 +2124,7 @@ async function saveFacility(){
   const old = S.facilities.find(f=>f.code===code);
   const facility = {code, name, addr:$('#fc-addr').value.trim(),
     user:'U'+code, pass:$('#fc-pass').value.trim()||'P'+code,
-    role: isAdmin() ? $('#fc-role').value : (old?.role || 'user'),
-    bank:$('#fc-bank').value.trim(), acc1:$('#fc-acc1').value.trim(), acc2:$('#fc-acc2').value.trim()};
+    role: isAdmin() ? $('#fc-role').value : (old?.role || 'user')};
   await api('saveFacility',{facility});
   const i=S.facilities.findIndex(f=>f.code===code);
   if(i>=0) S.facilities[i]=facility; else S.facilities.push(facility);
@@ -1792,6 +2137,80 @@ async function removeFacility(code){
   await api('deleteFacility',{code});
   S.facilities = S.facilities.filter(f=>f.code!==code);
   renderSettings(); refreshPickers(); toast('ลบสถานบริการแล้ว');
+}
+
+/* ---- บัญชีธนาคาร (1 กองทุน = 1 บัญชีต่อสถานบริการ) ---- */
+function myBanks(){ return isAdmin() ? S.banks : S.banks.filter(b=>b.code===S.user.code); }
+function renderBankTab(){
+  const list = myBanks();
+  $('#bk-count').textContent = `${list.length} บัญชี`;
+  $('#t-bank').innerHTML = list.length ? `
+    <thead><tr><th class="l">สถานบริการ</th><th class="l">ธนาคาร</th><th class="l">ประเภทบัญชี</th>
+      <th class="l">กองทุน</th><th class="l">ชื่อบัญชี</th><th class="l">เลขที่บัญชี</th><th>จำนวนเงิน</th><th class="l">จัดการ</th></tr></thead>
+    <tbody>${list.map(b=>`<tr>
+      <td class="l">${esc(facName(b.code))}</td>
+      <td class="l">${esc(b.bank)}</td>
+      <td class="l">${esc(b.type)}</td>
+      <td class="l"><span class="tagline">${esc(fundName(b.fund))}</span></td>
+      <td class="l">${esc(b.name||'—')}</td>
+      <td class="l code">${esc(b.no||'—')}</td>
+      <td class="num">${money(b.amount)}</td>
+      <td class="l">
+        <button class="btn ghost icon" title="แก้ไข" data-bed="${b.id}">✎</button>
+        <button class="btn danger icon" title="ลบ" data-brm="${b.id}">🗑</button></td>
+    </tr>`).join('')}</tbody>`
+    : `<tbody><tr><td class="empty" colspan="8">ยังไม่มีบัญชีธนาคาร กดปุ่ม “เพิ่มบัญชี” เพื่อเริ่มบันทึก</td></tr></tbody>`;
+  $$('#t-bank [data-bed]').forEach(x=>x.onclick=()=>editBank(x.dataset.bed));
+  $$('#t-bank [data-brm]').forEach(x=>x.onclick=()=>removeBank(x.dataset.brm));
+}
+let editingBankId = null;
+function openBankForm(){
+  $('#bk-formcard').classList.remove('hidden');
+  fill($('#bk-bank'), BANK_LIST.map(b=>({v:b,t:b})));
+  fill($('#bk-fac'), myFacs().map(f=>({v:f.code,t:f.name})), S.user.code);
+  $('#bk-fac').disabled = !isAdmin();
+}
+function resetBankForm(){
+  editingBankId=null;
+  ['#bk-name','#bk-no','#bk-amt'].forEach(i=>$(i).value='');
+  $('#bk-type').value='ออมทรัพย์'; $('#bk-fund').value='bankOp'; $('#bk-fund').disabled=false;
+  $('#bk-fac').disabled=!isAdmin();
+  $('#bk-form-title').textContent='เพิ่มบัญชีธนาคาร';
+  $('#bk-formcard').classList.add('hidden');
+}
+function editBank(id){
+  const b = S.banks.find(x=>x.id===id); if(!b) return;
+  openBankForm();
+  editingBankId=id;
+  $('#bk-fac').value=b.code; $('#bk-fac').disabled=true;
+  $('#bk-bank').value=b.bank; $('#bk-type').value=b.type;
+  $('#bk-fund').value=b.fund; $('#bk-fund').disabled=true;   // เปลี่ยนกองทุนของบัญชีเดิมไม่ได้
+  $('#bk-name').value=b.name||''; $('#bk-no').value=b.no||''; $('#bk-amt').value=b.amount||'';
+  $('#bk-form-title').textContent='แก้ไขบัญชีธนาคาร';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+async function saveBank(){
+  const code = isAdmin() ? $('#bk-fac').value : S.user.code;
+  const fund = $('#bk-fund').value;
+  const no = $('#bk-no').value.trim();
+  if(!no) return toast('กรอกเลขที่บัญชี');
+  // บังคับ 1 กองทุน = 1 บัญชี ต่อสถานบริการ
+  const dup = S.banks.find(b=>b.code===code && b.fund===fund && b.id!==editingBankId);
+  if(dup && !editingBankId) return toast(`มีบัญชี${fundName(fund)}ของสถานบริการนี้แล้ว กดแก้ไขบัญชีเดิมแทน`);
+  const id = editingBankId || (dup? dup.id : 'BK'+code+(fund==='bankOp'?'OP':'DEP'));
+  const bank = {id, code, bank:$('#bk-bank').value, type:$('#bk-type').value, fund,
+    name:$('#bk-name').value.trim(), no, amount:parseFloat($('#bk-amt').value)||0};
+  await api('saveBank',{bank});
+  const i=S.banks.findIndex(x=>x.id===id);
+  if(i>=0) S.banks[i]=bank; else S.banks.push(bank);
+  resetBankForm(); renderBankTab(); toast('บันทึกบัญชีธนาคารแล้ว');
+}
+async function removeBank(id){
+  const b = S.banks.find(x=>x.id===id);
+  if(!confirm(`ลบบัญชี${fundName(b.fund)} ${b.no} ของ ${facName(b.code)}?`)) return;
+  await api('deleteBank',{id});
+  S.banks = S.banks.filter(x=>x.id!==id);
+  renderBankTab(); toast('ลบบัญชีธนาคารแล้ว');
 }
 
 /* ---- บุคลากร ---- */
@@ -1958,7 +2377,7 @@ async function boot(){
   try{
     const d = await api('bootstrap',{});
     S.facilities = d.facilities || []; S.openings = d.openings || [];
-    S.txns = d.txns || []; S.people = d.people || [];
+    S.txns = d.txns || []; S.people = d.people || []; S.banks = d.banks || [];
   }catch(err){
     toast('โหลดข้อมูลไม่สำเร็จ: '+err.message);
     return;
@@ -1995,7 +2414,7 @@ $('#f-month').onchange = e=>{ S.ym=e.target.value; renderDashboard(); };
 $('#in-level').onchange = e=>{ S.lvIn=e.target.value; renderDashboard(); };
 $('#ex-level').onchange = e=>{ S.lvEx=e.target.value; renderDashboard(); };
 
-$('#fd-fy').onchange = e=>{ S.fdFy=+e.target.value; S.fdYm=defaultYm(S.fdFy); S.fdMtFy=S.fdFy; renderFacility(); };
+$('#fd-fy').onchange = e=>{ S.fdFy=+e.target.value; S.fdYm=defaultYm(S.fdFy); S.fdMtFy=S.fdFy; S.fdPage=0; renderFacility(); };
 $('#fd-month').onchange = e=>{ S.fdYm=e.target.value; renderFacility(); };
 $('#fd-mt-fy').onchange = e=>{ S.fdMtFy=+e.target.value; renderFacilityMonthly(); };
 $('#fd-in-level').onchange = e=>{ S.fdLvIn=e.target.value; renderFacility(); };
@@ -2013,6 +2432,23 @@ $('#e-month').onchange = e=>{ S.eYm=e.target.value; renderEntry(); };
 $('#i-save').onclick = ()=>addTxn('income');
 $('#x-save').onclick = ()=>addTxn('expense');
 
+// ---- modal คืนสัญญายืมเงิน ----
+(function initLoanDocCascade(){
+  fill($('#lm-docgrp'), Object.keys(EXPENSE_TREE).map(g=>({v:g,t:g})), 'ค่าใช้จ่ายอื่น ๆ');
+  const syncSub = ()=> fill($('#lm-docsub'), (EXPENSE_TREE[$('#lm-docgrp').value]||[]).map(s=>({v:s,t:s})));
+  $('#lm-docgrp').onchange = syncSub; syncSub();
+})();
+$('#lm-method').onchange = syncLoanRepay;
+$('#lm-amt').oninput = syncLoanRepay;
+$('#lm-doc').oninput = ()=>{ const t=parseFloat($('#lm-amt').value)||0, d=parseFloat($('#lm-doc').value)||0;
+  if($('#lm-method').value==='both') $('#lm-cash').value=(t-d).toFixed(2); syncLoanRepay(); };
+$('#lm-cash').oninput = ()=>{ const t=parseFloat($('#lm-amt').value)||0, c=parseFloat($('#lm-cash').value)||0;
+  if($('#lm-method').value==='both') $('#lm-doc').value=(t-c).toFixed(2); syncLoanRepay(); };
+$('#lm-save').onclick = submitLoanRepay;
+$('#lm-close').onclick = $('#lm-cancel').onclick = ()=>$('#loan-modal').classList.add('hidden');
+$('#em-save').onclick = submitEditTxn;
+$('#em-close').onclick = $('#em-cancel').onclick = ()=>$('#edit-modal').classList.add('hidden');
+
 $$('.repbtn').forEach(b=>b.onclick=()=>{ S.rRep=b.dataset.rep; S.rFrom=S.rTo=null; renderReports(); });
 $('#r-fy').onchange  = e=>{ S.rFy=+e.target.value; S.rFrom=S.rTo=null; renderReports(); };
 $('#r-fac').onchange = e=>{ S.rFac=e.target.value; S.rFrom=S.rTo=null; renderReports(); };
@@ -2024,7 +2460,7 @@ $('#r-csv').onclick = reportExport;
 $$('.tabs [data-stab]').forEach(b=>b.onclick=()=>{
   S.sTab=b.dataset.stab;
   $$('.tabs [data-stab]').forEach(x=>x.classList.toggle('on', x===b));
-  ['fac','ppl','fin'].forEach(t=>$('#stab-'+t).classList.toggle('hidden', t!==S.sTab));
+  ['fac','bank','ppl','fin'].forEach(t=>$('#stab-'+t).classList.toggle('hidden', t!==S.sTab));
 });
 $('#fc-code').addEventListener('input', e=>{
   const c=e.target.value.trim();
@@ -2035,6 +2471,9 @@ $('#fc-save').onclick = saveFacility;
 $('#fc-cancel').onclick = resetFacilityForm;
 $('#pp-add').onclick = ()=>{ resetPersonForm(); openPersonForm(); };
 $('#pp-save').onclick = savePerson;
+$('#bk-add').onclick = ()=>{ resetBankForm(); openBankForm(); };
+$('#bk-save').onclick = saveBank;
+$('#bk-cancel').onclick = resetBankForm;
 $('#pp-cancel').onclick = resetPersonForm;
 
 $('#o-fy').onchange = e=>{ S.oFy=+e.target.value; renderOpeningTab(); };
