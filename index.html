@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MoneyPCUManagement</title>
+<title>FinancePCUManagement</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Sarabun:wght@400;500;600&display=swap" rel="stylesheet">
@@ -282,6 +282,20 @@ table.wide th,table.wide td{padding:7px 8px}
       <div class="card" style="margin-bottom:18px">
         <header><h3 id="monthly-title">เงินบำรุงคงเหลือรายเดือน</h3><span class="hint" id="monthly-hint">—</span></header>
         <div class="body"><div class="chartbox tall"><canvas id="c-monthly"></canvas></div></div>
+      </div>
+
+      <div class="card hidden" id="card-d-monthly" style="margin-bottom:18px">
+        <header><h3>ข้อมูลการเงินรายเดือน</h3>
+          <div class="hgroup"><span class="hint" id="d-mt-hint">—</span>
+          <select class="mini" id="d-mt-fy"></select></div></header>
+        <div class="body tablewrap"><table id="t-d-monthly"></table></div>
+      </div>
+
+      <div class="card hidden" id="card-d-txn" style="margin-bottom:18px">
+        <header><h3>รายการล่าสุด</h3>
+          <div class="hgroup"><span class="hint" id="d-txn-hint">—</span></div></header>
+        <div class="body tablewrap"><table id="t-d-txn"></table></div>
+        <div class="body" style="padding-top:0;display:flex;justify-content:space-between;align-items:center" id="d-pager"></div>
       </div>
 
       <div class="card" id="card-status">
@@ -861,7 +875,7 @@ function demoApi(action,p){
    ============================================================ */
 const S = {
   user:null, facilities:[], openings:[], txns:[], people:[], banks:[],
-  fy:2569, facCode:'ALL', ym:null, lvIn:'group', lvEx:'group',
+  fy:2569, facCode:'ALL', ym:null, lvIn:'group', lvEx:'group', dMtFy:2569, dPage:0,
   fdCode:null, fdFy:2569, fdYm:null, fdLvIn:'group', fdLvEx:'group', fdMtFy:2569, fdPage:0,
   eFy:2569, eFac:null, eScope:'month', eYm:null, eTab:'income',
   rRep:'407', rFy:2569, rFac:null, rFrom:null, rTo:null,
@@ -952,6 +966,10 @@ function renderDashboard(){
   // ตารางภาพรวมสองตาราง แสดงเฉพาะโหมดภาพรวมทั้งอำเภอ
   $('#card-cash').classList.toggle('hidden', !overview);
   $('#card-status').classList.toggle('hidden', !overview);
+  // ตารางรายเดือนและรายการล่าสุด แสดงเฉพาะเมื่อเจาะดูสถานบริการเดียว (และล็อกอินแล้ว)
+  const single1 = !!S.user && !overview;
+  $('#card-d-monthly').classList.toggle('hidden', !single1);
+  $('#card-d-txn').classList.toggle('hidden', !single1);
 
   const b = balance(code, S.fy, S.ym);
   const f = overview ? null : S.facilities.find(x=>x.code===code);
@@ -1012,6 +1030,28 @@ function renderDashboard(){
   }
 
   if(overview){ renderCashTable(); renderStatusTable(); }
+  if(single1){ renderDashMonthly(); renderDashTxns(); }
+}
+
+/** ตารางข้อมูลการเงินรายเดือนในแดชบอร์ด (โหมดสถานบริการเดียว) */
+function renderDashMonthly(){
+  if(!FYS.includes(+S.dMtFy)) S.dMtFy = S.fy;
+  fill($('#d-mt-fy'), FYS.map(y=>({v:y,t:'ปีงบประมาณ '+y})), S.dMtFy);
+  $('#d-mt-hint').textContent = `${facName(S.facCode)} · ปีงบประมาณ ${S.dMtFy}`;
+  $('#t-d-monthly').innerHTML = monthlyTableHTML(S.facCode, S.dMtFy);
+}
+/** ตารางรายการล่าสุดในแดชบอร์ด (โหมดสถานบริการเดียว) */
+function renderDashTxns(){
+  const canEdit = !!S.user && (isAdmin() || S.user.code===S.facCode);
+  const r = txnListHTML(S.facCode, S.fy, S.dPage, canEdit);
+  S.dPage = r.page;
+  $('#d-txn-hint').textContent = r.total ? `ทั้งหมด ${r.total} รายการ · หน้า ${S.dPage+1}/${r.pages}` : '—';
+  $('#t-d-txn').innerHTML = r.html;
+  $('#d-pager').innerHTML = pagerHTML(S.dPage, r.pages, 'd-prev', 'd-next');
+  if($('#d-prev')) $('#d-prev').onclick = ()=>{ S.dPage--; renderDashTxns(); };
+  if($('#d-next')) $('#d-next').onclick = ()=>{ S.dPage++; renderDashTxns(); };
+  $$('#t-d-txn [data-ed]').forEach(b=>b.onclick=()=>openEditTxn(b.dataset.ed, renderDashboard));
+  $$('#t-d-txn [data-rm]').forEach(b=>b.onclick=()=>delTxnFromFacility(b.dataset.rm, renderDashboard));
 }
 
 /** ตารางสถานการณ์เงินบำรุง: เงินสดในมือ · เงินฝากธนาคารรวม · เงินบำรุงคงเหลือ */
@@ -1129,18 +1169,49 @@ function renderFacility(){
   renderFacilityTxns();
 }
 
-/** รายการล่าสุดของสถานบริการ แบ่งหน้า 20 รายการ + แก้ไข/ลบได้ (เมื่อมีสิทธิ์) */
-function renderFacilityTxns(){
-  const all = S.txns.filter(t=>t.code===S.fdCode && +t.fy===+S.fdFy && !t.autoPair)
+/** สร้าง HTML ตารางข้อมูลการเงินรายเดือน (ใช้ซ้ำได้ทั้งหน้าแดชบอร์ดและหน้ารายสถานบริการ) */
+function monthlyTableHTML(code, fy){
+  const months = fyMonths(fy);
+  let inAcc=0, exAcc=0;
+  const body = months.map(m=>{
+    const list = S.txns.filter(t=>t.code===code && +t.fy===+fy && ymOf(t.date)===m.key);
+    const inM = list.filter(t=>t.type==='income').reduce((s,t)=>s+ +t.amount,0);
+    const exM = list.filter(t=>t.type==='expense').reduce((s,t)=>s+ +t.amount,0);
+    inAcc += inM; exAcc += exM;
+    const bal = balance(code, fy, m.key).total;
+    const empty = inM===0 && exM===0;
+    return `<tr${empty?' style="color:var(--ink-3)"':''}>
+      <td class="l">${m.label}</td>
+      <td class="num" style="color:${inM?'var(--sprout)':'inherit'}">${money(inM)}</td>
+      <td class="num">${money(inAcc)}</td>
+      <td class="num" style="color:${exM?'var(--brick)':'inherit'}">${money(exM)}</td>
+      <td class="num">${money(exAcc)}</td>
+      <td class="num ${bal<0?'neg':''}" style="font-weight:600">${money(bal)}</td>
+    </tr>`;
+  }).join('');
+  const op = opening(code, fy);
+  const carry = op.cash+op.bankOp+op.bankDep;
+  return `
+    <thead><tr><th class="l">เดือน</th><th>รายรับเดือนนี้</th><th>รายรับสะสม</th>
+      <th>รายจ่ายเดือนนี้</th><th>รายจ่ายสะสม</th><th>เงินบำรุงคงเหลือ</th></tr></thead>
+    <tbody>
+      <tr class="grow"><td class="l">ยอดยกมา ณ 30 ก.ย. ${fy-1}</td>
+        <td></td><td></td><td></td><td></td><td class="num">${money(carry)}</td></tr>
+      ${body}</tbody>
+    <tfoot><tr><td class="l">รวมทั้งปีงบประมาณ</td>
+      <td class="num">${money(inAcc)}</td><td class="num">${money(inAcc)}</td>
+      <td class="num">${money(exAcc)}</td><td class="num">${money(exAcc)}</td>
+      <td class="num">${money(carry+inAcc-exAcc)}</td></tr></tfoot>`;
+}
+
+/** สร้าง HTML ตารางรายการล่าสุดแบบแบ่งหน้า (ใช้ซ้ำได้) คืน {html, pages, total} */
+function txnListHTML(code, fy, page, canEdit){
+  const all = S.txns.filter(t=>t.code===code && +t.fy===+fy && !t.autoPair)
     .sort((a,b)=> b.date.localeCompare(a.date) || b.id.localeCompare(a.id));
   const per = 20, pages = Math.max(1, Math.ceil(all.length/per));
-  if(S.fdPage>=pages) S.fdPage = 0;
-  const start = S.fdPage*per;
-  const rows = all.slice(start, start+per);
-  const canEdit = !!S.user && (isAdmin() || S.user.code===S.fdCode);
-
-  $('#fd-txn-hint').textContent = all.length ? `ทั้งหมด ${all.length} รายการ · หน้า ${S.fdPage+1}/${pages}` : '—';
-  $('#t-fd-txn').innerHTML = rows.length ? `
+  if(page>=pages) page = 0;
+  const rows = all.slice(page*per, page*per+per);
+  const html = rows.length ? `
     <thead><tr><th class="l">วันที่</th><th class="l">หมวด / ประเภทย่อย</th><th class="l">อ้างอิง</th><th class="l">บัญชี</th><th>รับ</th><th>จ่าย</th>${canEdit?'<th class="l">จัดการ</th>':''}</tr></thead>
     <tbody>${rows.map(t=>`<tr>
       <td class="l code">${beDate(t.date)}</td>
@@ -1153,33 +1224,47 @@ function renderFacilityTxns(){
         <button class="btn ghost icon" title="แก้ไข" data-ed="${t.id}">✎</button>
         <button class="btn danger icon" title="ลบ" data-rm="${t.id}">🗑</button></td>`:''}
     </tr>`).join('')}</tbody>` : `<tbody><tr><td class="empty" colspan="7">ยังไม่มีรายการในปีงบประมาณนี้</td></tr></tbody>`;
+  return {html, pages, total:all.length, page};
+}
+function pagerHTML(page, pages, prevId, nextId){
+  return pages>1 ? `
+    <button class="btn ghost sm" ${page===0?'disabled':''} id="${prevId}">← ก่อนหน้า</button>
+    <span class="code">หน้า ${page+1} จาก ${pages}</span>
+    <button class="btn ghost sm" ${page>=pages-1?'disabled':''} id="${nextId}">ถัดไป →</button>` : '';
+}
 
-  // แถบแบ่งหน้า
-  $('#fd-pager').innerHTML = pages>1 ? `
-    <button class="btn ghost sm" ${S.fdPage===0?'disabled':''} id="fd-prev">← ก่อนหน้า</button>
-    <span class="code">หน้า ${S.fdPage+1} จาก ${pages}</span>
-    <button class="btn ghost sm" ${S.fdPage>=pages-1?'disabled':''} id="fd-next">ถัดไป →</button>` : '';
+/** รายการล่าสุดของสถานบริการ แบ่งหน้า 20 รายการ + แก้ไข/ลบได้ (เมื่อมีสิทธิ์) */
+function renderFacilityTxns(){
+  const canEdit = !!S.user && (isAdmin() || S.user.code===S.fdCode);
+  const r = txnListHTML(S.fdCode, S.fdFy, S.fdPage, canEdit);
+  S.fdPage = r.page;
+  $('#fd-txn-hint').textContent = r.total ? `ทั้งหมด ${r.total} รายการ · หน้า ${S.fdPage+1}/${r.pages}` : '—';
+  $('#t-fd-txn').innerHTML = r.html;
+  $('#fd-pager').innerHTML = pagerHTML(S.fdPage, r.pages, 'fd-prev', 'fd-next');
   if($('#fd-prev')) $('#fd-prev').onclick = ()=>{ S.fdPage--; renderFacilityTxns(); };
   if($('#fd-next')) $('#fd-next').onclick = ()=>{ S.fdPage++; renderFacilityTxns(); };
   $$('#t-fd-txn [data-ed]').forEach(b=>b.onclick=()=>openEditTxn(b.dataset.ed));
-  $$('#t-fd-txn [data-rm]').forEach(b=>b.onclick=()=>delTxnFromFacility(b.dataset.rm));
+  $$('#t-fd-txn [data-rm]').forEach(b=>b.onclick=()=>delTxnFromFacility(b.dataset.rm, renderFacility));
 }
-async function delTxnFromFacility(id){
+async function delTxnFromFacility(id, after){
   if(!confirm('ยืนยันการลบรายการนี้ออกจากชีตของสถานบริการ')) return;
   const t = S.txns.find(x=>x.id===id);
   await api('deleteTxn',{code:t.code,id});
   S.txns = S.txns.filter(x=>x.id!==id);
-  toast('ลบรายการแล้ว'); renderFacility();
+  toast('ลบรายการแล้ว'); (after||renderFacility)();
 }
 
 /* ---------- แก้ไขรายการ ---------- */
-let editTxnId = null;
-function openEditTxn(id){
+let editTxnId = null, editAfter = null, editOrig = null;
+function openEditTxn(id, after){
   const t = S.txns.find(x=>x.id===id); if(!t) return;
-  editTxnId = id;
-  const linked = t.loanId || t.loanRef || t.loanBack || t.fromLoan;
-  $('#em-warn').classList.toggle('hidden', !linked);
-  if(linked) $('#em-warn').innerHTML = 'รายการนี้เชื่อมกับสัญญายืมเงิน การแก้ไขจะกระทบเฉพาะรายการนี้ ไม่ปรับรายการคู่ให้อัตโนมัติ หากต้องแก้ยอดยืม/คืน แนะนำให้ลบทั้งชุดแล้วบันทึกใหม่';
+  editTxnId = id; editAfter = after || renderFacility; editOrig = Object.assign({}, t);
+  const linked = t.loanId || t.loanRef || t.loanBack || t.fromLoan || t.autoPair;
+  $('#em-warn').classList.remove('hidden');
+  $('#em-warn').className = 'banner' + (linked ? '' : ' info');
+  $('#em-warn').innerHTML = linked
+    ? '⚠️ รายการนี้เชื่อมกับสัญญายืมเงิน การแก้ไขจะกระทบเฉพาะรายการนี้ ไม่ปรับรายการคู่ให้อัตโนมัติ หากต้องแก้ยอดยืม/คืน แนะนำให้ลบทั้งชุดแล้วบันทึกใหม่'
+    : `กำลังแก้ไข${t.type==='income'?'รายการรับ':'รายการจ่าย'} วันที่ ${beDate(t.date)} · ${esc(t.category)} · ${money(t.amount)} บาท`;
   $('#em-type').value = t.type==='income' ? 'รายรับ' : 'รายจ่าย';
   const tree = treeOf(t.type);
   fill($('#em-grp'), Object.keys(tree).map(g=>({v:g,t:g})), grpOf(t));
@@ -1198,12 +1283,28 @@ async function submitEditTxn(){
   const fy = fyOfDate(date);
   const upd = Object.assign({}, t, {date, fy, group:$('#em-grp').value, category:$('#em-cat').value,
     account:$('#em-acc').value, amount:amt, ref:$('#em-ref').value.trim(), note:$('#em-note').value.trim()});
-  await api('addTxn',{code:t.code, txn:upd});   // addTxn ฝั่ง Apps Script ทำ upsert ตาม id
-  const i = S.txns.findIndex(x=>x.id===editTxnId);
-  S.txns[i] = upd;
-  $('#edit-modal').classList.add('hidden');
-  toast('บันทึกการแก้ไขแล้ว');
-  renderFacility();
+
+  // สรุปการเปลี่ยนแปลงก่อนบันทึก
+  const chg = [];
+  if(editOrig.date!==upd.date) chg.push(`วันที่ ${beDate(editOrig.date)} → ${beDate(upd.date)}`);
+  if(editOrig.category!==upd.category) chg.push(`ประเภท ${editOrig.category} → ${upd.category}`);
+  if(editOrig.account!==upd.account) chg.push(`บัญชี ${accName(editOrig.account)} → ${accName(upd.account)}`);
+  if(+editOrig.amount!==+upd.amount) chg.push(`จำนวนเงิน ${money(editOrig.amount)} → ${money(upd.amount)}`);
+  if((editOrig.ref||'')!==upd.ref) chg.push('เลขที่อ้างอิง');
+  if((editOrig.note||'')!==upd.note) chg.push('รายละเอียด');
+  if(!chg.length) return toast('ไม่มีการเปลี่ยนแปลง');
+  if(!confirm('ยืนยันการแก้ไขรายการนี้\n\n'+chg.join('\n'))) return;
+
+  $('#em-save').disabled = true;
+  try{
+    await api('addTxn',{code:t.code, txn:upd});   // addTxn ฝั่ง Apps Script ทำ upsert ตาม id
+    const i = S.txns.findIndex(x=>x.id===editTxnId);
+    S.txns[i] = upd;
+    $('#edit-modal').classList.add('hidden');
+    toast('บันทึกการแก้ไขเรียบร้อยแล้ว');
+    (editAfter||renderFacility)();
+  }catch(err){ toast('บันทึกไม่สำเร็จ: '+err.message); }
+  finally{ $('#em-save').disabled = false; }
 }
 
 /** ตารางข้อมูลการเงินรายเดือนของสถานบริการ (เลือกปีงบแยกได้) */
@@ -1211,37 +1312,7 @@ function renderFacilityMonthly(){
   if(!FYS.includes(+S.fdMtFy)) S.fdMtFy = S.fdFy;
   fill($('#fd-mt-fy'), FYS.map(y=>({v:y,t:'ปีงบประมาณ '+y})), S.fdMtFy);
   $('#fd-mt-hint').textContent = `${facName(S.fdCode)} · ปีงบประมาณ ${S.fdMtFy}`;
-  const months = fyMonths(S.fdMtFy);
-  let inAcc=0, exAcc=0;
-  const body = months.map(m=>{
-    const list = S.txns.filter(t=>t.code===S.fdCode && +t.fy===+S.fdMtFy && ymOf(t.date)===m.key);
-    const inM = list.filter(t=>t.type==='income').reduce((s,t)=>s+ +t.amount,0);
-    const exM = list.filter(t=>t.type==='expense').reduce((s,t)=>s+ +t.amount,0);
-    inAcc += inM; exAcc += exM;
-    const bal = balance(S.fdCode, S.fdMtFy, m.key).total;
-    const empty = inM===0 && exM===0;
-    return `<tr${empty?' style="color:var(--ink-3)"':''}>
-      <td class="l">${m.label}</td>
-      <td class="num" style="color:${inM?'var(--sprout)':'inherit'}">${money(inM)}</td>
-      <td class="num">${money(inAcc)}</td>
-      <td class="num" style="color:${exM?'var(--brick)':'inherit'}">${money(exM)}</td>
-      <td class="num">${money(exAcc)}</td>
-      <td class="num ${bal<0?'neg':''}" style="font-weight:600">${money(bal)}</td>
-    </tr>`;
-  }).join('');
-  const op = opening(S.fdCode, S.fdMtFy);
-  const carry = op.cash+op.bankOp+op.bankDep;
-  $('#t-fd-monthly').innerHTML = `
-    <thead><tr><th class="l">เดือน</th><th>รายรับเดือนนี้</th><th>รายรับสะสม</th>
-      <th>รายจ่ายเดือนนี้</th><th>รายจ่ายสะสม</th><th>เงินบำรุงคงเหลือ</th></tr></thead>
-    <tbody>
-      <tr class="grow"><td class="l">ยอดยกมา ณ 30 ก.ย. ${S.fdMtFy-1}</td>
-        <td></td><td></td><td></td><td></td><td class="num">${money(carry)}</td></tr>
-      ${body}</tbody>
-    <tfoot><tr><td class="l">รวมทั้งปีงบประมาณ</td>
-      <td class="num">${money(inAcc)}</td><td class="num">${money(inAcc)}</td>
-      <td class="num">${money(exAcc)}</td><td class="num">${money(exAcc)}</td>
-      <td class="num">${money(carry+inAcc-exAcc)}</td></tr></tfoot>`;
+  $('#t-fd-monthly').innerHTML = monthlyTableHTML(S.fdCode, S.fdMtFy);
 }
 
 /* ============================================================
@@ -2364,6 +2435,7 @@ async function doLogin(){
     S.user=user; msg.textContent=''; msg.className='';
     $('#lg-u').value=''; $('#lg-p').value='';
     S.eFac = S.oFac = S.rFac = isAdmin() ? S.facilities[0].code : user.code;
+    S.dMtFy = S.fy; S.dPage = 0;
     applyAuth(); refreshPickers();
     initCascade('i','income'); initCascade('x','expense');
     toast('ยินดีต้อนรับ '+user.name);
@@ -2407,9 +2479,9 @@ $('#lg-p').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
 $('#lg-u').addEventListener('keydown', e=>{ if(e.key==='Enter') $('#lg-p').focus(); });
 $('#back-dash').onclick = ()=>showView('dashboard');
 
-$('#f-fy').onchange = e=>{ S.fy=+e.target.value; S.ym=defaultYm(S.fy);
+$('#f-fy').onchange = e=>{ S.fy=+e.target.value; S.ym=defaultYm(S.fy); S.dMtFy=S.fy; S.dPage=0;
   fill($('#f-month'), fyMonths(S.fy).map(m=>({v:m.key,t:m.label})), S.ym); renderDashboard(); };
-$('#f-fac').onchange = e=>{ S.facCode=e.target.value; renderDashboard(); };
+$('#f-fac').onchange = e=>{ S.facCode=e.target.value; S.dMtFy=S.fy; S.dPage=0; renderDashboard(); };
 $('#f-month').onchange = e=>{ S.ym=e.target.value; renderDashboard(); };
 $('#in-level').onchange = e=>{ S.lvIn=e.target.value; renderDashboard(); };
 $('#ex-level').onchange = e=>{ S.lvEx=e.target.value; renderDashboard(); };
@@ -2417,6 +2489,7 @@ $('#ex-level').onchange = e=>{ S.lvEx=e.target.value; renderDashboard(); };
 $('#fd-fy').onchange = e=>{ S.fdFy=+e.target.value; S.fdYm=defaultYm(S.fdFy); S.fdMtFy=S.fdFy; S.fdPage=0; renderFacility(); };
 $('#fd-month').onchange = e=>{ S.fdYm=e.target.value; renderFacility(); };
 $('#fd-mt-fy').onchange = e=>{ S.fdMtFy=+e.target.value; renderFacilityMonthly(); };
+$('#d-mt-fy').onchange = e=>{ S.dMtFy=+e.target.value; renderDashMonthly(); };
 $('#fd-in-level').onchange = e=>{ S.fdLvIn=e.target.value; renderFacility(); };
 $('#fd-ex-level').onchange = e=>{ S.fdLvEx=e.target.value; renderFacility(); };
 
