@@ -200,7 +200,7 @@ table.wide th,table.wide td{padding:7px 8px}
   <aside class="rail">
     <div class="brand">
       <div class="mark">฿</div>
-      <div><b>ระบบบริหารการเงินการคลัง รพ.สต.</b><span>สสอ.ค้อวัง</span></div>
+      <div><b>การเงินบำรุง รพ.สต.</b><span>สสอ.ค้อวัง</span></div>
     </div>
     <nav>
       <div class="grp">ภาพรวม</div>
@@ -226,6 +226,7 @@ table.wide th,table.wide td{padding:7px 8px}
     <div id="demo-banner" class="banner hidden">
       กำลังใช้ <b>ข้อมูลตัวอย่างในเครื่อง</b> — ยังไม่ได้เชื่อม Google Sheets ข้อมูลที่บันทึกจะหายเมื่อโหลดหน้าใหม่ ตั้งค่า <code>API_URL</code> และ <code>API_KEY</code> ที่ต้นไฟล์เพื่อเชื่อมต่อจริง
     </div>
+    <div id="conn-check" class="banner hidden" style="margin-bottom:10px"></div>
 
     <!-- ================= LOGIN ================= -->
     <section id="v-login" class="hidden">
@@ -889,6 +890,29 @@ function fill(sel, items, val){ sel.innerHTML = items.map(o=>`<option value="${e
    4. ชั้นเชื่อมต่อข้อมูล
    ============================================================ */
 const DEMO = !CONFIG.API_URL;
+const APP_BUILD = '2026-08-14a';   // ต้องตรงกับ BUILD ใน Code.gs เมื่อ deploy สำเร็จ
+
+/* ตรวจว่า backend ที่ deploy อยู่เป็นเวอร์ชันที่รองรับแผนเงินบำรุงหรือยัง */
+async function checkBackendVersion(){
+  const box = $('#conn-check');
+  try{
+    const info = await api('version',{});
+    if(info && info.hasPlanSave){
+      box.classList.add('hidden');   // ผ่าน ไม่ต้องแจ้ง
+    } else {
+      box.className = 'banner';
+      box.innerHTML = '⚠️ backend ที่เชื่อมอยู่ยังไม่รองรับการบันทึกแผนเงินบำรุง — โปรด Deploy โค้ด Code.gs เวอร์ชันใหม่';
+      box.classList.remove('hidden');
+    }
+  }catch(err){
+    // version ยังไม่รู้จัก = โค้ดเก่า / deploy ไม่สำเร็จ
+    box.className = 'banner';
+    box.innerHTML = '⚠️ เชื่อมต่อ backend ได้ แต่เป็นโค้ดเวอร์ชันเก่า (ยังไม่มีคำสั่งใหม่) — '
+      + 'การบันทึกแผนเงินบำรุงจะไม่ทำงานจนกว่าจะ Deploy โค้ด Code.gs ใหม่แบบ “New version” '
+      + '<br>ทดสอบ backend ตรงๆ ได้ที่: <code>' + esc(CONFIG.API_URL) + '?action=version&apiKey=' + esc(CONFIG.API_KEY) + '</code>';
+    box.classList.remove('hidden');
+  }
+}
 
 async function api(action, payload={}){
   if(DEMO) return demoApi(action, payload);
@@ -2801,6 +2825,7 @@ async function doLogin(){
 
 async function boot(){
   $('#demo-banner').classList.toggle('hidden', !DEMO);
+  if(!DEMO) checkBackendVersion();   // ตรวจว่า backend ที่ deploy รองรับ planSave หรือยัง
   if(!DEMO){
     $('#dash-sub').textContent = 'กำลังโหลดข้อมูลจาก Google Sheet… (อาจใช้เวลาสักครู่)';
     $('#dash-ledger').innerHTML = '<div class="cell"><div class="k">กำลังเชื่อมต่อเซิร์ฟเวอร์…</div></div>';
